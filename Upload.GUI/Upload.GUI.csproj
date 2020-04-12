@@ -1,0 +1,348 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{43A0714F-87E1-4B0C-B89E-94E70D9EAA2B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Upload.GUI</RootNamespace>
+    <AssemblyName>Upload.GUI</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converter\DescriptionToStringConverter.cs" />
+    <Compile Include="Converter\NullToVisibilityConverter.cs" />
+    <Compile Include="ImageEditor.xaml.cs">
+      <DependentUpon>ImageEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ShirtCreatorView.xaml.cs">
+      <DependentUpon>ShirtCreatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShirtTypePropertiesView.xaml.cs">
+      <DependentUpon>ShirtTypePropertiesView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UploadWindow.xaml.cs">
+      <DependentUpon>UploadWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="ImageEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShirtCreatorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShirtTypePropertiesView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UploadWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
+      <Project>{59df165a-b925-4d04-a8a2-16e9e5f52eca}</Project>
+      <Name>Miscellaneous</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
+      <Project>{F18802E3-6AB3-4A0D-AFE6-880C34104FCE}</Project>
+      <Name>Upload.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\VNeckTShirtBack\Baby Blue.png" />
+    <Resource Include="Image\VNeckTShirt\Baby Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\Icon\rubbish-bin.png" />
+    <Resource Include="Image\LongSleeveTShirtBack\BLACK.png" />
+    <Resource Include="Image\LongSleeveTShirtBack\HEATHER GREY.png" />
+    <Resource Include="Image\LongSleeveTShirtBack\NAVY.png" />
+    <Resource Include="Image\LongSleeveTShirt\BLACK.png" />
+    <Resource Include="Image\LongSleeveTShirt\HEATHER GREY.png" />
+    <Resource Include="Image\LongSleeveTShirt\NAVY.png" />
+    <Resource Include="Image\PopSocketsGrip\PopSocketsGrip.png" />
+    <Resource Include="Image\PremiumTShirtBack\ASPHALT.png" />
+    <Resource Include="Image\PremiumTShirtBack\BABY BLUE.png" />
+    <Resource Include="Image\PremiumTShirtBack\BLACK.png" />
+    <Resource Include="Image\PremiumTShirtBack\BROWN.png" />
+    <Resource Include="Image\PremiumTShirtBack\CRANBERRY.png" />
+    <Resource Include="Image\PremiumTShirtBack\DARK HEATHER.png" />
+    <Resource Include="Image\PremiumTShirtBack\GRASS.png" />
+    <Resource Include="Image\PremiumTShirtBack\HEATHER BLUE.png" />
+    <Resource Include="Image\PremiumTShirtBack\HEATHER GREY.png" />
+    <Resource Include="Image\PremiumTShirtBack\KELLY GREEN.png" />
+    <Resource Include="Image\PremiumTShirtBack\LEMON.png" />
+    <Resource Include="Image\PremiumTShirtBack\NAVY.png" />
+    <Resource Include="Image\PremiumTShirtBack\OLIVE.png" />
+    <Resource Include="Image\PremiumTShirtBack\ORANGE.png" />
+    <Resource Include="Image\PremiumTShirtBack\PINK.png" />
+    <Resource Include="Image\PremiumTShirtBack\PURPLE.png" />
+    <Resource Include="Image\PremiumTShirtBack\RED.png" />
+    <Resource Include="Image\PremiumTShirtBack\ROYAL BLUE.png" />
+    <Resource Include="Image\PremiumTShirtBack\SILVER.png" />
+    <Resource Include="Image\PremiumTShirtBack\SLATE.png" />
+    <Resource Include="Image\PremiumTShirtBack\WHITE.png" />
+    <Resource Include="Image\PremiumTShirt\ASPHALT.png" />
+    <Resource Include="Image\PremiumTShirt\BABY BLUE.png" />
+    <Resource Include="Image\PremiumTShirt\BLACK.png" />
+    <Resource Include="Image\PremiumTShirt\BROWN.png" />
+    <Resource Include="Image\PremiumTShirt\CRANBERRY.png" />
+    <Resource Include="Image\PremiumTShirt\DARK HEATHER.png" />
+    <Resource Include="Image\PremiumTShirt\GRASS.png" />
+    <Resource Include="Image\PremiumTShirt\HEATHER BLUE.png" />
+    <Resource Include="Image\PremiumTShirt\HEATHER GREY.png" />
+    <Resource Include="Image\PremiumTShirt\KELLY GREEN.png" />
+    <Resource Include="Image\PremiumTShirt\LEMON.png" />
+    <Resource Include="Image\PremiumTShirt\NAVY.png" />
+    <Resource Include="Image\PremiumTShirt\OLIVE.png" />
+    <Resource Include="Image\PremiumTShirt\ORANGE.png" />
+    <Resource Include="Image\PremiumTShirt\PINK.png" />
+    <Resource Include="Image\PremiumTShirt\PURPLE.png" />
+    <Resource Include="Image\PremiumTShirt\RED.png" />
+    <Resource Include="Image\PremiumTShirt\ROYAL BLUE.png" />
+    <Resource Include="Image\PremiumTShirt\SILVER.png" />
+    <Resource Include="Image\PremiumTShirt\SLATE.png" />
+    <Resource Include="Image\PremiumTShirt\WHITE.png" />
+    <Resource Include="Image\PullOverHoodieBack\BLACK.png" />
+    <Resource Include="Image\PullOverHoodieBack\DARK HEATHER.png" />
+    <Resource Include="Image\PullOverHoodieBack\HEATHER GREY.png" />
+    <Resource Include="Image\PullOverHoodieBack\NAVY.png" />
+    <Resource Include="Image\PullOverHoodieBack\ROYAL BLUE.png" />
+    <Resource Include="Image\PullOverHoodie\BLACK.png" />
+    <Resource Include="Image\PullOverHoodie\DARK HEATHER.png" />
+    <Resource Include="Image\PullOverHoodie\HEATHER GREY.png" />
+    <Resource Include="Image\PullOverHoodie\NAVY.png" />
+    <Resource Include="Image\PullOverHoodie\ROYAL BLUE.png" />
+    <Resource Include="Image\RaglanBack\Black-Althetic Heather.png" />
+    <Resource Include="Image\RaglanBack\Black-White.png" />
+    <Resource Include="Image\RaglanBack\Dark Heather-White.png" />
+    <Resource Include="Image\RaglanBack\Navy-Athletic Heather.png" />
+    <Resource Include="Image\RaglanBack\Navy-White.png" />
+    <Resource Include="Image\RaglanBack\Red-White.png" />
+    <Resource Include="Image\RaglanBack\Royal Blue-White.png" />
+    <Resource Include="Image\Raglan\Black-Althetic Heather.png" />
+    <Resource Include="Image\Raglan\Black-White.png" />
+    <Resource Include="Image\Raglan\Dark Heather-White.png" />
+    <Resource Include="Image\Raglan\Navy-Athletic Heather.png" />
+    <Resource Include="Image\Raglan\Navy-White.png" />
+    <Resource Include="Image\Raglan\Red-White.png" />
+    <Resource Include="Image\Raglan\Royal Blue-White.png" />
+    <Resource Include="Image\StandardTShirtBack\ASPHALT.png" />
+    <Resource Include="Image\StandardTShirtBack\BABY BLUE.png" />
+    <Resource Include="Image\StandardTShirtBack\BLACK.png" />
+    <Resource Include="Image\StandardTShirtBack\BROWN.png" />
+    <Resource Include="Image\StandardTShirtBack\CRANBERRY.png" />
+    <Resource Include="Image\StandardTShirtBack\DARK HEATHER.png" />
+    <Resource Include="Image\StandardTShirtBack\GRASS.png" />
+    <Resource Include="Image\StandardTShirtBack\HEATHER BLUE.png" />
+    <Resource Include="Image\StandardTShirtBack\HEATHER GREY.png" />
+    <Resource Include="Image\StandardTShirtBack\KELLY GREEN.png" />
+    <Resource Include="Image\StandardTShirtBack\LEMON.png" />
+    <Resource Include="Image\StandardTShirtBack\NAVY.png" />
+    <Resource Include="Image\StandardTShirtBack\OLIVE.png" />
+    <Resource Include="Image\StandardTShirtBack\ORANGE.png" />
+    <Resource Include="Image\StandardTShirtBack\PINK.png" />
+    <Resource Include="Image\StandardTShirtBack\PURPLE.png" />
+    <Resource Include="Image\StandardTShirtBack\RED.png" />
+    <Resource Include="Image\StandardTShirtBack\royal.png" />
+    <Resource Include="Image\StandardTShirtBack\SILVER.png" />
+    <Resource Include="Image\StandardTShirtBack\SLATE.png" />
+    <Resource Include="Image\StandardTShirtBack\WHITE.png" />
+    <Resource Include="Image\StandardTShirt\Asphalt.png" />
+    <Resource Include="Image\StandardTShirt\BABY BLUE.png" />
+    <Resource Include="Image\StandardTShirt\BLACK.png" />
+    <Resource Include="Image\StandardTShirt\BROWN.png" />
+    <Resource Include="Image\StandardTShirt\CRANBERRY.png" />
+    <Resource Include="Image\StandardTShirt\DARK HEATHER.png" />
+    <Resource Include="Image\StandardTShirt\GRASS.png" />
+    <Resource Include="Image\StandardTShirt\HEATHER BLUE.png" />
+    <Resource Include="Image\StandardTShirt\HEATHER GREY.png" />
+    <Resource Include="Image\StandardTShirt\KELLY GREEN.png" />
+    <Resource Include="Image\StandardTShirt\LEMON.png" />
+    <Resource Include="Image\StandardTShirt\NAVY.png" />
+    <Resource Include="Image\StandardTShirt\OLIVE.png" />
+    <Resource Include="Image\StandardTShirt\ORANGE.png" />
+    <Resource Include="Image\StandardTShirt\PINK.png" />
+    <Resource Include="Image\StandardTShirt\PURPLE.png" />
+    <Resource Include="Image\StandardTShirt\RED.png" />
+    <Resource Include="Image\StandardTShirt\ROYAL.png" />
+    <Resource Include="Image\StandardTShirt\SILVER.png" />
+    <Resource Include="Image\StandardTShirt\SLATE.png" />
+    <Resource Include="Image\StandardTShirt\WHITE.png" />
+    <Resource Include="Image\SweetShirtBack\BLACK.png" />
+    <Resource Include="Image\SweetShirtBack\HEATHER GREY.png" />
+    <Resource Include="Image\SweetShirtBack\NAVY.png" />
+    <Resource Include="Image\SweetShirt\BLACK.png" />
+    <Resource Include="Image\SweetShirt\HEATHER GREY.png" />
+    <Resource Include="Image\SweetShirt\NAVY.png" />
+    <Resource Include="Image\TankTopBack\BLACK.png" />
+    <Resource Include="Image\TankTopBack\DARK HEATHER.png" />
+    <Resource Include="Image\TankTopBack\HEATHER GREY.png" />
+    <Resource Include="Image\TankTopBack\NAVY.png" />
+    <Resource Include="Image\TankTopBack\PURPLE.png" />
+    <Resource Include="Image\TankTopBack\RED.png" />
+    <Resource Include="Image\TankTopBack\ROYAL BLUE.png" />
+    <Resource Include="Image\TankTopBack\SAPPHIRE.png" />
+    <Resource Include="Image\TankTopBack\WHITE.png" />
+    <Resource Include="Image\TankTop\BLACK.png" />
+    <Resource Include="Image\TankTop\DARK HEATHER.png" />
+    <Resource Include="Image\TankTop\HEATHER GREY.png" />
+    <Resource Include="Image\TankTop\NAVY.png" />
+    <Resource Include="Image\TankTop\PURPLE.png" />
+    <Resource Include="Image\TankTop\RED.png" />
+    <Resource Include="Image\TankTop\ROYAL BLUE.png" />
+    <Resource Include="Image\TankTop\SAPPHIRE.png" />
+    <Resource Include="Image\TankTop\WHITE.png" />
+    <Resource Include="Image\VNeckTShirtBack\BLACK.png" />
+    <Resource Include="Image\VNeckTShirtBack\DARK HEATHER.png" />
+    <Resource Include="Image\VNeckTShirtBack\GREEN.png" />
+    <Resource Include="Image\VNeckTShirtBack\HEATHER GREY.png" />
+    <Resource Include="Image\VNeckTShirtBack\NAVY.png" />
+    <Resource Include="Image\VNeckTShirtBack\PINK.png" />
+    <Resource Include="Image\VNeckTShirtBack\PURPLE.png" />
+    <Resource Include="Image\VNeckTShirtBack\RED.png" />
+    <Resource Include="Image\VNeckTShirtBack\SAPPHIRE.png" />
+    <Resource Include="Image\VNeckTShirt\BLACK.png" />
+    <Resource Include="Image\VNeckTShirt\Dark Heather.png" />
+    <Resource Include="Image\VNeckTShirt\GREEN.png" />
+    <Resource Include="Image\VNeckTShirt\Heather Grey.png" />
+    <Resource Include="Image\VNeckTShirt\NAVY.png" />
+    <Resource Include="Image\VNeckTShirt\PINK.png" />
+    <Resource Include="Image\VNeckTShirt\PURPLE.png" />
+    <Resource Include="Image\VNeckTShirt\RED.png" />
+    <Resource Include="Image\VNeckTShirt\SAPPHIRE.png" />
+    <Resource Include="Image\ZipHoodieBack\Black.png" />
+    <Resource Include="Image\ZipHoodieBack\Dark Heather.png" />
+    <Resource Include="Image\ZipHoodieBack\Forest Green.png" />
+    <Resource Include="Image\ZipHoodieBack\Heather Grey.png" />
+    <Resource Include="Image\ZipHoodieBack\Navy.png" />
+    <Resource Include="Image\ZipHoodieBack\Purple.png" />
+    <Resource Include="Image\ZipHoodieBack\Red.png" />
+    <Resource Include="Image\ZipHoodieBack\Royal Blue.png" />
+    <Resource Include="Image\ZipHoodie\Black.png" />
+    <Resource Include="Image\ZipHoodie\Dark Heather.png" />
+    <Resource Include="Image\ZipHoodie\Forest Green.png" />
+    <Resource Include="Image\ZipHoodie\Heather Grey.png" />
+    <Resource Include="Image\ZipHoodie\Navy.png" />
+    <Resource Include="Image\ZipHoodie\Purple.png" />
+    <Resource Include="Image\ZipHoodie\Red.png" />
+    <Resource Include="Image\ZipHoodie\Royal Blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ico55.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Pencilcase-2.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Help.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\License.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Upload.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Upload-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image\LongSleeveTShirtBack\BLUE.png" />
+    <Resource Include="Image\LongSleeveTShirtBack\DARK HEATHER.png" />
+    <Resource Include="Image\LongSleeveTShirt\BLUE.png" />
+    <Resource Include="Image\LongSleeveTShirt\DARK HEATHER.png" />
+    <Resource Include="Image\SweetShirtBack\BLUE.png" />
+    <Resource Include="Image\SweetShirtBack\DARK HEATHER.png" />
+    <Resource Include="Image\SweetShirt\BLUE.png" />
+    <Resource Include="Image\SweetShirt\DARK HEATHER.png" />
+    <Resource Include="Image\TankTopBack\PINK.png" />
+    <Resource Include="Image\TankTop\PINK.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Browse.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\folder.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

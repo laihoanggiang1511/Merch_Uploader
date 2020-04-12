@@ -1,0 +1,267 @@
+﻿<UserControl x:Class="Upload.GUI.ShirtTypePropertiesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Upload.GUI"
+             xmlns:converter="clr-namespace:ShirtCreator.GUI.Converter"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+
+        <Style x:Key="ImageBrowseButton" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderThickness="0" Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderThickness" TargetName="border" Value="5"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="BorderThickness" TargetName="border" Value="5"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ColorToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ToolTip" Value="{Binding ColorName}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="border" Background="Transparent" BorderThickness="0.25" BorderBrush="Blue">
+                            <Grid Width="25" Height="25" Margin="2">
+                                <TextBlock Visibility="Collapsed" Name="imagePath" >
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="/Upload.GUI;component/Image/{0}/{1}.png">
+                                            <Binding Path="DataContext.SelectedShirtType.TypeName" RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                            <Binding Path ="ColorName"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <Image Source="{Binding Text, ElementName=imagePath}"       
+                                   Width="50" Height="50"
+                                   VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Fill"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderThickness" TargetName="border" Value="1.5"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="BorderThickness" TargetName="border" Value="3"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="true">
+                                <Setter Property="BorderThickness" TargetName="border" Value="3"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">-->
+    <StackPanel>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="FRONT" FontSize="16" FontWeight="DemiBold" Foreground="Blue" HorizontalAlignment="Center"/>
+                <Grid Grid.Column="0">
+                    <Image Name="ImgFront" Width="485" Height="505"
+                       Source="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.FrontMockup}"/>
+                    <Grid Margin="82,80,82,0" Height="358" VerticalAlignment="Top">
+                        <Image Source="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type Window}},
+                                    Path=DataContext.FrontImagePath}"
+                                    Height="250" Width="210"  Stretch="UniformToFill"/>
+                        <Button Width="210" Height="250"
+                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.ClickFrontImageCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext}"
+                            Style="{DynamicResource ImageBrowseButton}"/>
+                    </Grid>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickFrontImageCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
+                    </Button>
+                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="BACK" FontSize="16" FontWeight="DemiBold" Foreground="Blue" HorizontalAlignment="Center"/>
+                <Grid Grid.Column="0">
+                    <Image Width="485" Height="505"
+                       Source="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackMockup}"/>
+                    <Grid Margin="82,80,82,67">
+                        <Image Source="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type Window}},
+                                    Path=DataContext.BackImagePath}"
+                                    Height="250" Width="210"  Stretch="UniformToFill"/>
+                        <Button Width="210" Height="250"
+                            Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.ClickBackImageCmd}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext}"
+                            Style="{DynamicResource ImageBrowseButton}"/>
+                    </Grid>
+                </Grid>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickBackImageCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
+                    </Button>
+                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!--Fit Types-->
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Fit types" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+            <StackPanel Orientation="Horizontal">
+                <CheckBox Margin="10" FontSize="14" FontWeight="DemiBold"
+                          Content="Men"
+                          Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.FitTypesVisibility[0],
+                                        Converter={StaticResource BoolToVisibility}}"                          
+                          IsChecked="{Binding FitTypes[0]}"/>
+                <CheckBox Margin="10" FontSize="14" FontWeight="DemiBold"
+                          Content="Women"
+                          Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.FitTypesVisibility[1],
+                                        Converter={StaticResource BoolToVisibility}}"
+                          IsChecked="{Binding FitTypes[1]}"/>
+                <CheckBox Margin="10" FontSize="14" FontWeight="DemiBold"
+                          Content="Youth"
+                          Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.FitTypesVisibility[2],
+                                        Converter={StaticResource BoolToVisibility}}"
+                          IsChecked="{Binding FitTypes[2]}"/>
+            </StackPanel>
+        </StackPanel>
+        <!--Color picker-->
+        <StackPanel Grid.Row="2">
+            <TextBlock Text="Colors" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+            <ItemsControl ItemsSource="{Binding Colors}" HorizontalContentAlignment="Stretch">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <ToggleButton Width="30" Height="30" Margin="7"
+                                  IsChecked="{Binding IsActive}"
+                                  Style="{DynamicResource ResourceKey=ColorToggleButton}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                     AncestorType={x:Type Window}},
+                                                                     Path= DataContext.ChangeColorCmd}"
+                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="Unchecked">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                     AncestorType={x:Type Window}},
+                                                                     Path= DataContext.ChangeColorCmd}"
+                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="MouseEnter">
+                                    <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                                                     AncestorType={x:Type Window}},
+                                                                     Path= DataContext.MouseEnterCmd}"
+                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ToggleButton>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window},
+                Path=DataContext.CountColor,StringFormat=' {0} colors selected'}" 
+                       Margin="5" FontSize="14"/>
+        </StackPanel>
+        <!--Price And Market Place-->
+        <StackPanel Grid.Row="3">
+            <TextBlock Text="Marketplaces" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+            <StackPanel  Orientation="Horizontal">
+                <StackPanel Margin="40,5,40,5" 
+                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.MarketPlacesVisibility[0],
+                                        Converter={StaticResource BoolToVisibility}}">
+                    <CheckBox x:Name="check_US" Margin="0,5,5,5" Content=".com" FontSize="14"
+                              IsChecked="{Binding MarketPlaces[0]}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="$ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBox Width="60" Text="{Binding Prices[0]}" FontSize="16"
+                                 IsEnabled="{Binding IsChecked, ElementName=check_US}"/>
+                    </StackPanel>
+                    <TextBlock Text="$ 13.07-50.00" Margin="5"/>
+                </StackPanel>
+                <StackPanel Margin="40,5,40,5" 
+                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.MarketPlacesVisibility[1],
+                                        Converter={StaticResource BoolToVisibility}}">
+                    <CheckBox x:Name="check_UK" Margin="0,5,5,5" Content=".uk" FontSize="14" 
+                              IsChecked="{Binding MarketPlaces[1]}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="£ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBox Width="60" Text="{Binding Prices[1]}" FontSize="16"
+                                 IsEnabled="{Binding IsChecked, ElementName=check_UK}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Margin="40,5,40,5" 
+                            Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type Window}},
+                                        Path=DataContext.MarketPlacesVisibility[2],
+                                        Converter={StaticResource BoolToVisibility}}">
+                    <CheckBox x:Name="check_DE" Margin="0,5,5,5" Content=".de" FontSize="14"
+                              IsChecked="{Binding MarketPlaces[2]}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="€ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBox Width="60" Text="{Binding Prices[2]}" FontSize="16"
+                                 IsEnabled="{Binding IsChecked, ElementName=check_DE}"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+    <!--</ScrollViewer>-->
+</UserControl>
