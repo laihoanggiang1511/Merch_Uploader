@@ -344,5 +344,8 @@
   <ItemGroup>
     <Resource Include="Resources\folder.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Mesa de trabajo 1.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -15,6 +15,7 @@ namespace Upload.ViewModel
         public RelayCommand BrowseCmd { get; set; }
         public ImageEditorViewModel()
         {
+            ListInputPath = new ObservableCollection<string>();
         }
         private string imageSource = string.Empty;
         public string ImageSource
@@ -32,19 +33,18 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private Image image;
-        public Image Image
+        private Image currentImage;
+        public Image CurrentImage
         {
             get
             {
-                return image;
+                return currentImage;
             }
             set
             {
-                if (image == value)
+                if (currentImage == value)
                 {
-                    image = value;
-                    RaisePropertyChanged("Image");
+                    currentImage = value;
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace Upload.ViewModel
                     case 0: //Crop Top
                     case 1: break; //Crop Bottom
                     case 2: break; //Crop Both
-                    case 3: break;
+                    case 3: break; //stretch
                 }
             }
         }

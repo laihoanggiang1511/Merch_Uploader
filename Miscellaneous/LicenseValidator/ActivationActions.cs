@@ -99,18 +99,18 @@ namespace Miscellaneous
         }
         private void DeactivateCmdInvoke(object obj)
         {
-            ActivationFormViewModel activeVM = obj as ActivationFormViewModel;
-            if (activeVM != null)
-            {
-                string key = activeVM.SerialNumber;
-                if (LicenseManager.DeactivateKey(PRODUCT_ID, key))
-                {
-                    Utils.Utils.ShowInfoMessageBox($"Successfully deactive license key {key}", "Deactivation");
-                    //activeVM.SerialNumber = string.Empty;
-                    //KeyInfo = null;
-                    activeVM.LicenseKeyInfo = null;
-                }
-            }
+            //ActivationFormViewModel activeVM = obj as ActivationFormViewModel;
+            //if (activeVM != null)
+            //{
+            //    string key = activeVM.SerialNumber;
+            //    if (LicenseManager.DeactivateKey(PRODUCT_ID, key))
+            //    {
+            //        Utils.Utils.ShowInfoMessageBox($"Successfully deactive license key {key}", "Deactivation");
+            //        //activeVM.SerialNumber = string.Empty;
+            //        //KeyInfo = null;
+            //        activeVM.LicenseKeyInfo = null;
+            //    }
+            //}
         }
 
         public void ActivateCmdInvoke(object obj)

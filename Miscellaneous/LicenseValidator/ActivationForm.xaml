@@ -83,16 +83,16 @@
                 <Button Command="{Binding ActivateCmd}" CommandParameter="{Binding}"
                 Width="70" Height="25" Content="Activate" 
                 Foreground="White" Background="Green"
-                HorizontalAlignment="Left"/>
+                HorizontalAlignment="Left" BorderThickness="0"/>
                 <Button Command="{Binding DeactivateCmd}" CommandParameter="{Binding}" Visibility="Collapsed"
                 Width="70" Height="25" Content="Deactive" 
-                HorizontalAlignment="Left" />
+                HorizontalAlignment="Left" BorderThickness="0"/>
                 <Button Command="{Binding CreateTrialKeyCmd}" CommandParameter="{Binding}"
                 Width="70" Height="25" Content="Start Trial" 
-                HorizontalAlignment="Center"/>
+                HorizontalAlignment="Center" />
                 <Button Command="{Binding BuyCmd}" CommandParameter="{Binding}"
                 Width="70" Height="25" Content="Buy Now" Background="Crimson" Foreground="White"
-                HorizontalAlignment="Right"/>
+                HorizontalAlignment="Right" BorderThickness="0"/>
             </Grid>
             <Rectangle Fill="LightSlateGray" Height="1" Width="350"></Rectangle>
             <TextBlock Margin="5" FontSize="14" FontWeight="DemiBold" Text="Machine Code: "/>

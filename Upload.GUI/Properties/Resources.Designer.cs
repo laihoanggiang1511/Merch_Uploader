@@ -111,6 +111,16 @@ namespace Upload.GUI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap Mesa_de_trabajo_1 {
+            get {
+                object obj = ResourceManager.GetObject("Mesa_de_trabajo_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         public static System.Drawing.Icon Pencilcase_2 {

@@ -76,19 +76,19 @@ namespace Upload.Actions
                             {
                                 case 0://Crop top
                                     {
-                                        x = Math.Abs(outWidth - inWidth) / 2;
+                                        x = (outWidth - inWidth) / 2;
                                         y = (outHeight - inHeight);
                                         break;
                                     };
                                 case 1://Crop bottom
                                     {
-                                        x = Math.Abs(outWidth - inWidth) / 2;
+                                        x = (outWidth - inWidth) / 2;
                                         y = 0;
                                         break;
                                     };
                                 case 2://Crop both
                                     {
-                                        x = Math.Abs(outWidth - inWidth) / 2;
+                                        x = (outWidth - inWidth) / 2;
                                         y = (outHeight - inHeight) / 2;
                                         break;
                                     };

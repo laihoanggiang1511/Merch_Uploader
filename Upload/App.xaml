@@ -3,6 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Upload">
     <Application.Resources>
-         
+        <ResourceDictionary Source="ResourceDict.xaml"/>
     </Application.Resources>
 </Application>
