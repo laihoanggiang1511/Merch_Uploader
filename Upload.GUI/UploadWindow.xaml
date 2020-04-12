@@ -49,7 +49,7 @@
             <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"/>
             <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete"/>
             <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Open Chrome"/>
-            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload"/>
+            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource ButtonBlueStyle}"/>
             <Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
             <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>
         </StackPanel>
