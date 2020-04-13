@@ -152,7 +152,7 @@
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10" Height="25">
                     <Button Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
-                                Background="Green"  Width="100" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}">
+                            Width="100" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}" Style="{StaticResource ButtonBlueStyle}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <!--<Image Height="20" Source="pack://siteoforigin:,,,/Resources/ico18.ico" Margin="0,0,5,0"/>-->
@@ -161,7 +161,7 @@
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
-                                Background="Green" Foreground="White" Width="120" Margin="5,0,5,0">
+                                Width="120" Margin="5,0,5,0" Style="{StaticResource ButtonBlueStyle}">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <!--<Image Height="20" Source="pack://siteoforigin:,,,/Resources/ico165.ico" Margin="0,0,5,0"/>-->
@@ -170,7 +170,7 @@
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding SaveCmd}" CommandParameter="{Binding}"
-                                Background="Crimson" Foreground="White" Width="100" Margin="5,0,5,0">
+                                 Width="100" Margin="5,0,5,0" Style="{StaticResource ButtonBlueStyle}" Background="Crimson">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal">
                                 <!--<Image Height="20" Source="pack://siteoforigin:,,,/Resources/ico116.ico" Margin="0,0,5,0"/>-->

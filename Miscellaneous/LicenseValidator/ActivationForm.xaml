@@ -7,6 +7,29 @@
         mc:Ignorable="d"
         Title="Activation Form" Height="400" Width="450" WindowStartupLocation="CenterScreen"
         ResizeMode="CanMinimize">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid Margin="5">
         <StackPanel  Visibility="{Binding PurchaseFormEnable}">
             <StackPanel Orientation="Horizontal">
@@ -82,8 +105,10 @@
             <Grid Margin="10,0,10,10">
                 <Button Command="{Binding ActivateCmd}" CommandParameter="{Binding}"
                 Width="70" Height="25" Content="Activate" 
-                Foreground="White" Background="Green"
-                HorizontalAlignment="Left" BorderThickness="0"/>
+                Background="Green"
+                HorizontalAlignment="Left"
+                Style="{StaticResource ButtonStyle}"/>
+                
                 <Button Command="{Binding DeactivateCmd}" CommandParameter="{Binding}" Visibility="Collapsed"
                 Width="70" Height="25" Content="Deactive" 
                 HorizontalAlignment="Left" BorderThickness="0"/>
@@ -91,8 +116,8 @@
                 Width="70" Height="25" Content="Start Trial" 
                 HorizontalAlignment="Center" />
                 <Button Command="{Binding BuyCmd}" CommandParameter="{Binding}"
-                Width="70" Height="25" Content="Buy Now" Background="Crimson" Foreground="White"
-                HorizontalAlignment="Right" BorderThickness="0"/>
+                Width="70" Height="25" Content="Buy Now" Background="Crimson" Style="{StaticResource ButtonStyle}"
+                HorizontalAlignment="Right" />
             </Grid>
             <Rectangle Fill="LightSlateGray" Height="1" Width="350"></Rectangle>
             <TextBlock Margin="5" FontSize="14" FontWeight="DemiBold" Text="Machine Code: "/>

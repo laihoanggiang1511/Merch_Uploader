@@ -123,13 +123,12 @@ namespace Upload.ViewModel
                         EnableSelectMode = false;
                         TopHeight = 0;
                         BotHeight = 0;
+                        SelectedModeIndex = 2;//crop both
                     }
                     else if (outputTypeIndex == 1)//hoodie
                     {
                         EnableSelectMode = true;
-                        SelectedModeIndex = 2;//crop both
                     }
-
                     RaisePropertyChanged("OutputTypeIndex");
                 }
             }
