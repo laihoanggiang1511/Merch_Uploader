@@ -1,5 +1,4 @@
-﻿using Miscellaneous.Utils;
-using SKM.V3;
+﻿using SKM.V3;
 using SKM.V3.Methods;
 using SKM.V3.Models;
 using System;
@@ -20,12 +19,6 @@ namespace Miscellaneous
         private const string TOKEN_TRIALKEY = "WyIxNzc2NSIsIkcvS08waE85VDVoeTZ3SWhDNVRCb0tpbzROajBZbnBucnRiNnhKQ0ciXQ==";
         private const string RSAPUBKEY = "<RSAKeyValue><Modulus>4w9gNFEZZ4W4yMNEQ1V3NXJiC0Qz7swWOE/C6kniCEbLEKuN+ELOdROJgvycRjXUQFMz1kO/6h/f7aMfH8mUXTcoghwCFZgB7rLSBcHw9cRST3IiIzJYcdATdT9SEDNybrZNutSPfTBWziJtDxkn/TBTMbJ63zYEb5qMsRtQa+n9gAeG4I3g0FR0XxcWmMSUpEixD8leQtu8ude4AxOS4eAoNQXPrMv1wlDxkp6d6XNM4/YUCeYGgaofWba2H9ZJmxk9XNhLuj5if8hK93Bjx+ETxMLqhdujAIEkw53JtbTWqzaxIowZEhLxrn+u3W4ONSuLlyolzXParVVH1NqkLQ==</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
-        //public KeyInfoResult KeyInfo { get; set; }
-        //public LicenseManager(int productId = 5961, KeyInfoResult keyInfo = null)
-        //{
-        //    //this.PRODUCT_ID = productId;
-        //    this.KeyInfo = keyInfo;
-        //}
         public static bool DeactivateKey(int PRODUCT_ID, string licenseKey)
         {
             if (!string.IsNullOrEmpty(licenseKey))
@@ -67,7 +60,6 @@ namespace Miscellaneous
                 {
                     MessageBox.Show("License key activation fail!", "License key activation fail!", MessageBoxButton.OK, MessageBoxImage.Error);
                     return null;
-
                 }
                 else if (result.Result == ResultType.Error ||
                     !result.LicenseKey.HasValidSignature(RSAPubKey).IsValid())
@@ -185,7 +177,7 @@ namespace Miscellaneous
                 }
                 else
                 {
-                    Utils.Utils.ShowErrorMessageBox(newTrialKey.Message);
+                    Utils.ShowErrorMessageBox(newTrialKey.Message);
                     return string.Empty;
                 }
             }

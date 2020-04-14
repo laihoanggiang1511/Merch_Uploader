@@ -1,25 +1,19 @@
-﻿using Miscellaneous.Utils;
-using SKM.V3.Models;
+﻿using SKM.V3.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Cryptlex;
+using Miscellaneous.LicenseValidator;
 
 namespace Miscellaneous
 {
     public class ActivationActions
     {
-        readonly int PRODUCT_ID;
-        public RelayCommand ShowMainWindow;
-
-        public ActivationActions(int PRODUCT_ID)
-        {
-            this.PRODUCT_ID = PRODUCT_ID;
-        }
-
-        public void ShowActivationForm(KeyInfoResult KeyInfo, List<PurchaseOption> PurchaseOptions)
+        public Action ShowMainWindow;
+        public void ShowActivationForm()
         {
             string errorMessage = string.Empty;
             ActivationFormViewModel activationFormVM = new ActivationFormViewModel
@@ -33,27 +27,48 @@ namespace Miscellaneous
                 SerialNumber = LicenseManager.LoadLicense(),
 
             };
-
-            activationFormVM.PurchaseOptions = new System.Collections.ObjectModel.ObservableCollection<PurchaseOption>();
-            PurchaseOptions.ForEach(x => activationFormVM.PurchaseOptions.Add(x));
-            activationFormVM.LicenseKeyInfo = KeyInfo;
             ActivationForm activationFrm = new ActivationForm();
             activationFrm.DataContext = activationFormVM;
             activationFrm.Closed += CloseActivationForm;
             activationFrm.Show();
         }
+
+        //public void ShowActivationForm()
+        //{
+        //    string errorMessage = string.Empty;
+        //    ActivationFormViewModel activationFormVM = new ActivationFormViewModel
+        //    {
+        //        ActivateCmd = new RelayCommand(ActivateCmdInvoke),
+        //        DeactivateCmd = new RelayCommand(DeactivateCmdInvoke),
+        //        BackToActivationCmd = new RelayCommand(BackToActivationCmdInvoke),
+        //        BuyCmd = new RelayCommand(BuyCmdInvoke),
+        //        PurchaseCmd = new RelayCommand(PurchaseCmdInvoke),
+        //        CreateTrialKeyCmd = new RelayCommand(CreateTrialKeyCmdInvoke),
+        //        SerialNumber = LicenseManager.LoadLicense(),
+        //    };
+
+        //    ActivationForm activationFrm = new ActivationForm();
+        //    activationFrm.DataContext = activationFormVM;
+        //    activationFrm.Closed += CloseActivationForm;
+        //    activationFrm.Show();
+        //}
+
         private void CreateTrialKeyCmdInvoke(object obj)
         {
             if (obj is ActivationFormViewModel activateVM)
             {
-                string trialkey = LicenseManager.CreateTrialKey(PRODUCT_ID);
-                if (!string.IsNullOrEmpty(trialkey))
+                if (CryptlexLicenseManager.CreateTrialKey())
                 {
-                    activateVM.SerialNumber = trialkey;
-                    activateVM.ActivateCmd.Execute(activateVM);
+                    UpdateLicenseInfo(activateVM);
+                    //activateVM.ActivateCmd.Execute(activateVM);
                 }
             }
         }
+        private void UpdateLicenseInfo(ActivationFormViewModel activeVM)
+        {
+
+        }
+
         private void PurchaseCmdInvoke(object obj)
         {
             if (obj is string purchaseURL)
@@ -82,20 +97,7 @@ namespace Miscellaneous
 
         public void CloseActivationForm(object sender, EventArgs e)
         {
-            if (sender is ActivationForm activationForm)
-            {
-                if (activationForm.DataContext is ActivationFormViewModel activateVM)
-                {
-                    if (activateVM.LicenseKeyInfo != null)
-                    {
-                        ShowMainWindow.Execute(activateVM.LicenseInfo);
-                    }
-                    else
-                    {
-                        Environment.Exit(0);
-                    }
-                }
-            }
+            ShowMainWindow.Invoke();
         }
         private void DeactivateCmdInvoke(object obj)
         {
@@ -118,13 +120,14 @@ namespace Miscellaneous
             ActivationFormViewModel activeVM = obj as ActivationFormViewModel;
             if (activeVM != null)
             {
-                KeyInfoResult licenseKeyInfo = LicenseManager.ActivateKey(PRODUCT_ID, activeVM.SerialNumber);
-                if (licenseKeyInfo != null)
-                {
-                    LicenseManager.SaveLicense(licenseKeyInfo.LicenseKey.Key);
-                    activeVM.LicenseKeyInfo = licenseKeyInfo;
-                    //KeyInfo = licenseKeyInfo;
-                }
+                CryptlexLicenseManager.ActivateKey(activeVM.SerialNumber);
+                //KeyInfoResult licenseKeyInfo = LicenseManager.ActivateKey(activeVM.SerialNumber);
+                //if (licenseKeyInfo != null)
+                //{
+                //    LicenseManager.SaveLicense(licenseKeyInfo.LicenseKey.Key);
+                //    activeVM.LicenseKeyInfo = licenseKeyInfo;
+                //    //KeyInfo = licenseKeyInfo;
+                //}
             }
         }
     }

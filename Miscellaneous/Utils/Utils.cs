@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Miscellaneous.Utils
+namespace Miscellaneous
 {
     public class Utils
     {

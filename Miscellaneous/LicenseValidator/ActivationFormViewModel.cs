@@ -16,19 +16,19 @@ namespace Miscellaneous
     public class ActivationFormViewModel : ViewModelBase
     {
 
-        private KeyInfoResult licenseKeyInfo;
-        public KeyInfoResult LicenseKeyInfo
-        {
-            get { return licenseKeyInfo; }
-            set
-            {
-                if (licenseKeyInfo != value)
-                {
-                    licenseKeyInfo = value;
-                }
-                UpdateKeyInfo(licenseKeyInfo);
-            }
-        }
+        //private KeyInfoResult licenseKeyInfo;
+        //public KeyInfoResult LicenseKeyInfo
+        //{
+        //    get { return licenseKeyInfo; }
+        //    set
+        //    {
+        //        if (licenseKeyInfo != value)
+        //        {
+        //            licenseKeyInfo = value;
+        //        }
+        //        UpdateKeyInfo(licenseKeyInfo);
+        //    }
+        //}
         public RelayCommand ActivateCmd { get; set; }
 
         private string serialNumber = string.Empty;
