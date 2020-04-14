@@ -27,7 +27,7 @@ namespace Upload.Actions
         public void ShowMainWindow()
         {
             string licenseKey = RegistryIO.GetKey();
-            if (string.IsNullOrEmpty(licenseKey))
+            if (!string.IsNullOrEmpty(licenseKey))
             {
                 LexActivator.SetLicenseKey(licenseKey);
             }

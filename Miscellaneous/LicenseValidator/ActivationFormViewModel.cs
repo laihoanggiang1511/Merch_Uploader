@@ -47,6 +47,22 @@ namespace Miscellaneous
                 }
             }
         }
+        private string expiryDate = string.Empty;
+        public string ExpiryDate
+        {
+            get
+            {
+                return expiryDate;
+            }
+            set
+            {
+                if (expiryDate != value)
+                {
+                    expiryDate = value;
+                    RaisePropertyChanged("SerialNumber");
+                }
+            }
+        }
         private string status = string.Empty;
         public string Status
         {
@@ -60,6 +76,23 @@ namespace Miscellaneous
                 {
                     status = value;
                     RaisePropertyChanged("Status");
+                }
+            }
+        }
+
+        private int dayLeft = 0;
+        public int DayLeft
+        {
+            get
+            {
+                return dayLeft;
+            }
+            set
+            {
+                if (dayLeft != value)
+                {
+                    dayLeft = value;
+                    RaisePropertyChanged("DayLeft");
                 }
             }
         }

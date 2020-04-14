@@ -120,10 +120,17 @@
                 HorizontalAlignment="Right" />
             </Grid>
             <Rectangle Fill="LightSlateGray" Height="1" Width="350"></Rectangle>
-            <TextBlock Margin="5" FontSize="14" FontWeight="DemiBold" Text="Machine Code: "/>
-            <TextBox Margin="5" FontSize="14" Text="{Binding MachineCode}" BorderThickness="0" IsReadOnly="True"/>
+            <!--<TextBlock Margin="5" FontSize="14" FontWeight="DemiBold" Text="Machine Code: "/>
+            <TextBox Margin="5" FontSize="14" Text="{Binding MachineCode}" BorderThickness="0" IsReadOnly="True"/>-->
             <TextBlock Text="License Info:" Margin="5" FontSize="14" FontWeight="DemiBold"/>
-            <TextBlock Text="{Binding LicenseInfo}" Margin="5"/>
+            <TextBlock Margin="5">
+                <Run>Day left: </Run>
+                <Run Text="{Binding DayLeft}"></Run>
+            </TextBlock>
+            <TextBlock Margin="5">
+                <Run>Expiry date: </Run>
+                <Run Text="{Binding ExpiryDate}"></Run>
+            </TextBlock>
         </StackPanel>
     </Grid>
 </Window>

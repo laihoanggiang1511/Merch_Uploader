@@ -79,5 +79,13 @@ namespace Miscellaneous.LicenseValidator
         {
             return (uint)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
         }
+        public static DateTime GetExpiryDate()
+        {
+            uint period = LexActivator.GetLicenseExpiryDate();
+            TimeSpan span = TimeSpan.FromSeconds(period);
+            DateTime startDate = new DateTime(1970, 1, 1);
+            DateTime expiryDate = startDate + span;
+            return expiryDate;
+        }
     }
 }

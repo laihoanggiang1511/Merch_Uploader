@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Cryptlex;
 using Miscellaneous.LicenseValidator;
+using System.Windows.Media;
 
 namespace Miscellaneous
 {
@@ -21,15 +22,15 @@ namespace Miscellaneous
                 ActivateCmd = new RelayCommand(ActivateCmdInvoke),
                 DeactivateCmd = new RelayCommand(DeactivateCmdInvoke),
                 BackToActivationCmd = new RelayCommand(BackToActivationCmdInvoke),
-                BuyCmd = new RelayCommand(BuyCmdInvoke),
+                BuyCmd = new RelayCommand(PurchaseCmdInvoke),
                 PurchaseCmd = new RelayCommand(PurchaseCmdInvoke),
                 CreateTrialKeyCmd = new RelayCommand(CreateTrialKeyCmdInvoke),
-                SerialNumber = LicenseManager.LoadLicense(),
-
+                SerialNumber = RegistryIO.GetKey(),
             };
             ActivationForm activationFrm = new ActivationForm();
             activationFrm.DataContext = activationFormVM;
             activationFrm.Closed += CloseActivationForm;
+            UpdateLicenseInfo(activationFormVM);
             activationFrm.Show();
         }
 
@@ -59,6 +60,7 @@ namespace Miscellaneous
             {
                 if (CryptlexLicenseManager.CreateTrialKey())
                 {
+                    RegistryIO.SaveKey(LexActivator.GetLicenseKey());
                     UpdateLicenseInfo(activateVM);
                     //activateVM.ActivateCmd.Execute(activateVM);
                 }
@@ -66,7 +68,23 @@ namespace Miscellaneous
         }
         private void UpdateLicenseInfo(ActivationFormViewModel activeVM)
         {
+            activeVM.SerialNumber = LexActivator.GetLicenseKey();
 
+            if (LexActivator.IsLicenseGenuine()==LexStatusCodes.LA_OK)
+            {
+                activeVM.Status = "Activated";
+                activeVM.StatusColor = new SolidColorBrush(Colors.Green);
+                activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
+                DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
+                activeVM.ExpiryDate = string.Format("{0: MMMM/dd/yyyy}", expiryDate);
+            }
+            else
+            {
+                activeVM.Status = "Not Activated";
+                activeVM.StatusColor = new SolidColorBrush(Colors.Crimson);
+                activeVM.DayLeft = 0;
+                activeVM.ExpiryDate = string.Empty;
+            }
         }
 
         private void PurchaseCmdInvoke(object obj)
@@ -120,7 +138,19 @@ namespace Miscellaneous
             ActivationFormViewModel activeVM = obj as ActivationFormViewModel;
             if (activeVM != null)
             {
-                CryptlexLicenseManager.ActivateKey(activeVM.SerialNumber);
+                LexActivator.SetLicenseKey(activeVM.SerialNumber);
+                if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK)
+                {
+                    RegistryIO.SaveKey(activeVM.SerialNumber);
+                    UpdateLicenseInfo(activeVM);
+                }
+                else if (CryptlexLicenseManager.ActivateKey(activeVM.SerialNumber))
+                {
+                    RegistryIO.SaveKey(activeVM.SerialNumber);
+                    UpdateLicenseInfo(activeVM);
+                }
+
+
                 //KeyInfoResult licenseKeyInfo = LicenseManager.ActivateKey(activeVM.SerialNumber);
                 //if (licenseKeyInfo != null)
                 //{

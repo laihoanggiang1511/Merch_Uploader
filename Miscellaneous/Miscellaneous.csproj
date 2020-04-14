@@ -73,7 +73,6 @@
   <ItemGroup>
     <Compile Include="LicenseValidator\ActivationActions.cs" />
     <Compile Include="LicenseValidator\CryptlexLicenseManager.cs" />
-    <Compile Include="LicenseValidator\ILicenseManager.cs" />
     <Compile Include="LicenseValidator\LicenseModel.cs" />
     <Compile Include="LicenseValidator\PurchaseOption.cs" />
     <Compile Include="Utils\FingerPrint.cs" />
@@ -125,8 +124,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="product_vb1ca06a5-d046-46bb-a6ab-9347495cac1d.dat" />
-    <None Include="rsa_pub_product_vb1ca06a5-d046-46bb-a6ab-9347495cac1d.pem" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Cryptlex.LexActivator.3.9.0\build\Cryptlex.LexActivator.targets" Condition="Exists('..\packages\Cryptlex.LexActivator.3.9.0\build\Cryptlex.LexActivator.targets')" />
