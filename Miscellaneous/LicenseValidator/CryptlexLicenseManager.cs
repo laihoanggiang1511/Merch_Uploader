@@ -15,6 +15,15 @@ namespace Miscellaneous.LicenseValidator
         {
             uint expiryDate = LexActivator.GetLicenseExpiryDate();
             int daysLeft = (int)(expiryDate - unixTimestamp()) / 86400;
+            if (daysLeft <= 0)
+            {
+                expiryDate = LexActivator.GetTrialExpiryDate();
+                daysLeft = (int)(expiryDate - unixTimestamp()) / 86400;
+            }
+            if (daysLeft <= 0)
+            {
+                daysLeft = 0;
+            }
             return daysLeft;
         }
         public static bool ActivateKey(string licenseKey)
@@ -24,20 +33,20 @@ namespace Miscellaneous.LicenseValidator
                 LexActivator.SetLicenseKey(licenseKey);
                 //LexActivator.SetActivationMetadata("key1", "value1");
                 int status = LexActivator.ActivateLicense();
-                if (status == LexStatusCodes.LA_OK || status == LexStatusCodes.LA_EXPIRED || status == LexStatusCodes.LA_SUSPENDED)
+                if (status == LexStatusCodes.LA_OK)
                 {
-                    Utils.ShowInfoMessageBox("Activation Successful :" + status.ToString());
+                    Utils.ShowInfoMessageBox("Activation Successful!");
                     return true;
                 }
                 else
                 {
-                    Utils.ShowInfoMessageBox("Error activating the license: " + status.ToString());
+                    Utils.ShowInfoMessageBox("Error activating the license:\n" + status.ToString());
                     return false;
                 }
             }
             catch (LexActivatorException ex)
             {
-                Utils.ShowErrorMessageBox("Error code: " + ex.Code.ToString() + " Error message: " + ex.Message);
+                Utils.ShowErrorMessageBox("Error code: " + ex.Code.ToString() + "\nError message: " + ex.Message);
                 return false;
             }
         }
@@ -82,6 +91,10 @@ namespace Miscellaneous.LicenseValidator
         public static DateTime GetExpiryDate()
         {
             uint period = LexActivator.GetLicenseExpiryDate();
+            if (period <= 0)
+            {
+                period = LexActivator.GetTrialExpiryDate();
+            }
             TimeSpan span = TimeSpan.FromSeconds(period);
             DateTime startDate = new DateTime(1970, 1, 1);
             DateTime expiryDate = startDate + span;

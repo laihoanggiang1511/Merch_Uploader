@@ -25,8 +25,9 @@ namespace Miscellaneous
                 BuyCmd = new RelayCommand(PurchaseCmdInvoke),
                 PurchaseCmd = new RelayCommand(PurchaseCmdInvoke),
                 CreateTrialKeyCmd = new RelayCommand(CreateTrialKeyCmdInvoke),
-                SerialNumber = RegistryIO.GetKey(),
             };
+            activationFormVM.SerialNumber = LexActivator.GetLicenseKey();
+
             ActivationForm activationFrm = new ActivationForm();
             activationFrm.DataContext = activationFormVM;
             activationFrm.Closed += CloseActivationForm;
@@ -60,7 +61,6 @@ namespace Miscellaneous
             {
                 if (CryptlexLicenseManager.CreateTrialKey())
                 {
-                    RegistryIO.SaveKey(LexActivator.GetLicenseKey());
                     UpdateLicenseInfo(activateVM);
                     //activateVM.ActivateCmd.Execute(activateVM);
                 }
@@ -70,9 +70,17 @@ namespace Miscellaneous
         {
             activeVM.SerialNumber = LexActivator.GetLicenseKey();
 
-            if (LexActivator.IsLicenseGenuine()==LexStatusCodes.LA_OK)
+            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK)
             {
-                activeVM.Status = "Activated";
+                activeVM.Status = "Activated!";
+                activeVM.StatusColor = new SolidColorBrush(Colors.Green);
+                activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
+                DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
+                activeVM.ExpiryDate = string.Format("{0: MMMM/dd/yyyy}", expiryDate);
+            }
+            else if (LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
+            {
+                activeVM.Status = "Trial Activated!";
                 activeVM.StatusColor = new SolidColorBrush(Colors.Green);
                 activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
                 DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
@@ -80,11 +88,12 @@ namespace Miscellaneous
             }
             else
             {
-                activeVM.Status = "Not Activated";
+                activeVM.Status = "Not Activated!";
                 activeVM.StatusColor = new SolidColorBrush(Colors.Crimson);
                 activeVM.DayLeft = 0;
                 activeVM.ExpiryDate = string.Empty;
             }
+
         }
 
         private void PurchaseCmdInvoke(object obj)
@@ -149,15 +158,6 @@ namespace Miscellaneous
                     RegistryIO.SaveKey(activeVM.SerialNumber);
                     UpdateLicenseInfo(activeVM);
                 }
-
-
-                //KeyInfoResult licenseKeyInfo = LicenseManager.ActivateKey(activeVM.SerialNumber);
-                //if (licenseKeyInfo != null)
-                //{
-                //    LicenseManager.SaveLicense(licenseKeyInfo.LicenseKey.Key);
-                //    activeVM.LicenseKeyInfo = licenseKeyInfo;
-                //    //KeyInfo = licenseKeyInfo;
-                //}
             }
         }
     }

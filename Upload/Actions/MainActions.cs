@@ -31,8 +31,8 @@ namespace Upload.Actions
             {
                 LexActivator.SetLicenseKey(licenseKey);
             }
-            int licenseStatus = LexActivator.IsLicenseGenuine();
-            if (licenseStatus==LexStatusCodes.LA_OK)
+            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK||
+                LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
             {
                 MainWindow mainWindow = new MainWindow();
                 MainViewModel mainVM = new MainViewModel

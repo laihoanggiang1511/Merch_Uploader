@@ -12,7 +12,7 @@ namespace Upload.ViewModel
         public RelayCommand CreateWindowCmd { get; set; }
         public RelayCommand UploadWindowCmd { get; set; }
         public RelayCommand LicenseWindowCmd { get; set; }
-        private bool enableCreate=false;
+        private bool enableCreate = false;
         public bool EnableCreate
         {
             get { return enableCreate; }
