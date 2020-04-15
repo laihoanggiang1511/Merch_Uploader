@@ -45,7 +45,8 @@ namespace Upload.Actions
                     if (enableCreate)
                         mainVM.EnableCreate = true;
                     else
-                        mainVM.EnableCreate = false;
+                        //mainVM.EnableCreate = false;
+                        mainVM.EnableCreate = true;
                 }
                 else
                     mainVM.EnableCreate = true;

@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Upload.GUI"
-             mc:Ignorable="d" Height="400" Width="550"
+             mc:Ignorable="d" Height="500" Width="550"
              MinHeight="350" MinWidth="500"
-             Title="Upload">
+             Title="Upload"
+                 TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+         TextElement.FontWeight="Regular"
+         TextElement.FontSize="13"
+         TextOptions.TextFormattingMode="Ideal"
+         TextOptions.TextRenderingMode="Auto"
+         Background="{DynamicResource MaterialDesignPaper}"
+         FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
     </Window.Resources>
@@ -42,16 +49,18 @@
                 <PasswordBox Grid.Row ="2" Grid.Column="1" x:Name="password" Margin="5,5,5,10" HorizontalAlignment="Stretch" Grid.ColumnSpan="2"/>
             </Grid>
         </StackPanel>
-        <Button Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Content ="Choose Folder"  Grid.Column="2" Margin="10,10,10,0" Height="22" VerticalAlignment="Top" Style="{StaticResource ButtonBlueStyle}" Background="Green"></Button>
+        <Button Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Content ="Choose Folder"  Grid.Column="2" Margin="10,10,10,0" Height="22" VerticalAlignment="Top" FontSize="10"></Button>
         <Separator Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Bottom" Margin="0"/>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,0,0,0">
-            <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Style="{StaticResource ButtonBlueStyle}" Background="Green"/>
-            <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt" Style="{StaticResource ButtonBlueStyle}" Background="Green"/>
-            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete" Style="{StaticResource ButtonBlueStyle}" Background="Green"/>
-            <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Manual Log in"  Style="{StaticResource ButtonBlueStyle}" Background="Green"/>
-            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource ButtonBlueStyle}" Background="Crimson"/>
-            <Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
-            <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>
+            <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." FontSize="12"/>
+            <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt" FontSize="12"/>
+            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete" FontSize="12"/>
+            <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Manual Log in" FontSize="10"/>
+            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" FontSize="12"/>
+            <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
+
+            <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
+            <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>-->
         </StackPanel>
         <ListView Name="lstShirt" ItemsSource="{Binding Shirts}" SelectedItem="{Binding SelectedShirt}" Grid.Row="1" Width="400" Margin="10,10,10,10.5" Grid.ColumnSpan="2">
             <ListView.ItemTemplate>
@@ -60,7 +69,10 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ProgressBar Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" Margin="10,0,10,10.5" VerticalAlignment="Bottom" Height="14" Grid.Row="1" Grid.Column="2" IsIndeterminate="true"/>
+        <!--<Grid Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}">
+            <ProgressBar  Height="15" IsIndeterminate="true"/>
+            <TextBlock Text="Uploading" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" />
+        </Grid>-->
         <ScrollViewer MaxHeight="130" Grid.Row="2" Grid.ColumnSpan="3" 
                       Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}"
                       VerticalScrollBarVisibility="Auto">

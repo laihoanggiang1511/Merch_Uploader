@@ -5,7 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Upload.GUI"
         mc:Ignorable="d"
-        Title="Merch Uploader" Height="180" Width="450" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow">
+        Title="Merch Uploader" Height="180" Width="450" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow"
+         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+         TextElement.FontWeight="Regular"
+         TextElement.FontSize="13"
+         TextOptions.TextFormattingMode="Ideal"
+         TextOptions.TextRenderingMode="Auto"
+         Background="{DynamicResource MaterialDesignPaper}"
+         FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="10,0,10,0"/>
@@ -39,7 +46,7 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-        <Button IsEnabled="{Binding EnableUpload}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="110" IsEnabled="{Binding EnableUpload}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Grid.Column="1">
             <Button.Content>
                 <StackPanel Orientation="Vertical">
