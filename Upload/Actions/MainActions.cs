@@ -28,7 +28,7 @@ namespace Upload.Actions
             {
                 LexActivator.SetLicenseKey(licenseKey);
             }
-            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK||
+            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK ||
                 LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
             {
                 MainWindow mainWindow = new MainWindow();
@@ -39,16 +39,16 @@ namespace Upload.Actions
                     LicenseWindowCmd = new RelayCommand(LicenseWindowCmdInvoke),
                 };
                 mainWindow.DataContext = mainVM;
-                //if (keyInfo.LicenseKey.F3 == true ||
-                //    keyInfo.LicenseKey.F2 == true)
-                   mainVM.EnableCreate = true;
-                //else
-                //    mainVM.EnableCreate = false;
-                //if (keyInfo.LicenseKey.F2 == true ||
-                //    keyInfo.LicenseKey.F3 == true)
-                    mainVM.EnableUpload = true;
-                //else
-                //    mainVM.EnableUpload = false;
+                string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
+                if (bool.TryParse(metaData, out bool enableCreate))
+                {
+                    if (enableCreate)
+                        mainVM.EnableCreate = true;
+                    else
+                        mainVM.EnableCreate = false;
+                }
+                else
+                    mainVM.EnableCreate = true;
 
                 mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", CryptlexLicenseManager.GetDayLeft());
                 mainWindow.Show();
