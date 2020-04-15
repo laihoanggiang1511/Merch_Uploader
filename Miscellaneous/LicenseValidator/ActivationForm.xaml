@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Miscellaneous"
         mc:Ignorable="d"
         Title="Activation Form" Height="400" Width="450" WindowStartupLocation="CenterScreen"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize"
+         TextElement.FontSize="13">
     <Window.Resources>
         <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
@@ -104,19 +105,18 @@
             <TextBox Margin="0,0,0,10" Text="{Binding SerialNumber}" FontSize="16"/>
             <Grid Margin="10,0,10,10">
                 <Button Command="{Binding ActivateCmd}" CommandParameter="{Binding}"
-                Width="70" Height="25" Content="Activate" 
+                Width="100" Height="30" Content="Activate" 
                 Background="Green"
-                HorizontalAlignment="Left"
-                Style="{StaticResource ButtonStyle}"/>
+                HorizontalAlignment="Left"/>
                 
                 <Button Command="{Binding DeactivateCmd}" CommandParameter="{Binding}" Visibility="Collapsed"
-                Width="70" Height="25" Content="Deactive" 
+                Width="70" Height="30" Content="Deactive" 
                 HorizontalAlignment="Left" BorderThickness="0"/>
                 <Button Command="{Binding CreateTrialKeyCmd}" CommandParameter="{Binding}"
-                Width="70" Height="25" Content="Start Trial" 
+                Width="100" Height="30" Content="Start Trial" 
                 HorizontalAlignment="Center" />
                 <Button Command="{Binding BuyCmd}" CommandParameter="{Binding}"
-                Width="70" Height="25" Content="Buy Now" Background="Crimson" Style="{StaticResource ButtonStyle}"
+                Width="100" Height="30" Content="Buy Now" Background="Crimson"
                 HorizontalAlignment="Right" />
             </Grid>
             <Rectangle Fill="LightSlateGray" Height="1" Width="350"></Rectangle>

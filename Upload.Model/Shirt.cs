@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Upload.Model
 {
-    public class Shirt
+    public class Shirt : ICloneable
     {
         public string FrontStdPath { get; set; }
         public string BackStdPath { get; set; }
@@ -89,6 +90,25 @@ namespace Upload.Model
             this.TankTop = new TankTop();
             this.VNeckTShirt = new VNeckTShirt();
             this.ZipHoodie = new ZipHoodie();
+        }
+        public object Clone()
+        {
+            try
+            {
+                Shirt s = new Shirt();
+                PropertyInfo[] properties = this.GetType().GetProperties();
+                foreach (PropertyInfo property in properties)
+                {
+                    if (property.CanWrite)
+                        property.SetValue(s, property.GetValue(this));
+
+                }
+                return s;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

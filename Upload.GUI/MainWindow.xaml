@@ -38,6 +38,7 @@
         </Grid.ColumnDefinitions>
         <Button Command="{Binding CreateWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 IsEnabled="{Binding EnableCreate}"
+                Style="{StaticResource MaterialDesignFlatButton}" Height="110"
                 Grid.Column="0">
             <Button.Content>
                 <StackPanel Orientation="Vertical">
@@ -46,7 +47,7 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-            <Button Style="{StaticResource MaterialDesignRaisedButton}" Height="110" IsEnabled="{Binding EnableUpload}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+            <Button Style="{StaticResource MaterialDesignFlatButton}" Height="110" IsEnabled="{Binding EnableUpload}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Grid.Column="1">
             <Button.Content>
                 <StackPanel Orientation="Vertical">
@@ -55,7 +56,8 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-        <Button Grid.Column="2" Command="{Binding LicenseWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+        <Button Grid.Column="2" Command="{Binding LicenseWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                Style="{StaticResource MaterialDesignFlatButton}" Height="110">
             <Button.Content>
                 <StackPanel Orientation="Vertical">
                     <Image Width="90" Height="80" Source="Resources/License.ico"/>
@@ -63,7 +65,8 @@
                 </StackPanel>
             </Button.Content>
         </Button>
-        <Button Grid.Column="3" Command="{Binding HelpCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+        <Button Grid.Column="3" Command="{Binding HelpCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                Style="{StaticResource MaterialDesignFlatButton}" Height="110">
             <Button.Content>
                 <StackPanel Orientation="Vertical">
                     <Image Width="90" Height="80" Source="Resources/Help.ico"/>

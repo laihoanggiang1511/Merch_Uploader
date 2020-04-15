@@ -29,8 +29,10 @@ namespace Upload.ViewModel
         public ICommand ImageEditCmd { get; set; }
         public ShirtCreatorViewModel()
         {
-            SelectedShirt = new Shirt();
+            Shirt s = new Shirt();
             Shirts = new ObservableCollection<Shirt>();
+            Shirts.Add(s);
+            SelectedShirt = Shirts[0];
         }
 
         bool createMode = true;
@@ -106,29 +108,30 @@ namespace Upload.ViewModel
                 if (selectedShirtType != value)
                 {
                     selectedShirtType = value;
-                    if (selectedShirtType != null)
-                    {
-                        NullToFalseConverter(selectedShirtType.FitTypes, FitTypesVisibility);
-                        NullToFalseConverter(selectedShirtType.MarketPlaces, MarketPlacesVisibility);
-                        RaisePropertyChanged("MarketPlacesVisibility");
-                        RaisePropertyChanged("FitTypesVisibility");
-                        RaisePropertyChanged("FrontImagePath");
-                        RaisePropertyChanged("BackImagePath");
-                        RaisePropertyChanged("CountColor");
-                        if (SelectedShirtType.Colors != null)
-                        {
-                            var firstActiveColor = SelectedShirtType.Colors[0];
-                            FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/" + firstActiveColor.ColorName + ".png";
-                            BackMockup = RootFolderPath + SelectedShirtType.TypeName + "Back" + "/" + firstActiveColor.ColorName + ".png";
-                        }
-                        else //PopsocketsGrip
-                        {
-                            FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/PopSocketsGrip.png";
-                            BackMockup = RootFolderPath + SelectedShirtType.TypeName + "/PopSocketsGrip.png";
-                        }
-                    }
                     RaisePropertyChanged("SelectedShirtType");
                 }
+                if (selectedShirtType != null)
+                {
+                    NullToFalseConverter(selectedShirtType.FitTypes, FitTypesVisibility);
+                    NullToFalseConverter(selectedShirtType.MarketPlaces, MarketPlacesVisibility);
+                    RaisePropertyChanged("MarketPlacesVisibility");
+                    RaisePropertyChanged("FitTypesVisibility");
+                    RaisePropertyChanged("FrontImagePath");
+                    RaisePropertyChanged("BackImagePath");
+                    RaisePropertyChanged("CountColor");
+                    if (SelectedShirtType.Colors != null)
+                    {
+                        var firstActiveColor = SelectedShirtType.Colors[0];
+                        FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/" + firstActiveColor.ColorName + ".png";
+                        BackMockup = RootFolderPath + SelectedShirtType.TypeName + "Back" + "/" + firstActiveColor.ColorName + ".png";
+                    }
+                    else //PopsocketsGrip
+                    {
+                        FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/PopSocketsGrip.png";
+                        BackMockup = RootFolderPath + SelectedShirtType.TypeName + "/PopSocketsGrip.png";
+                    }
+                }
+
             }
         }
 

@@ -50,12 +50,12 @@ namespace Upload.Actions
         {
             if (obj is ShirtCreatorViewModel shirtVM)
             {
-                if(shirtVM.SelectedShirtType is StandardTShirt)
+                if (shirtVM.SelectedShirtType is StandardTShirt)
                 {
                     new ImageEditorActions().ShowImageEditorWindow(shirtVM.FrontImagePath);
                 }
             }
-            else if(obj is string strImagePath)
+            else if (obj is string strImagePath)
             {
                 new ImageEditorActions().ShowImageEditorWindow(strImagePath);
             }
@@ -199,10 +199,13 @@ namespace Upload.Actions
         {
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
             if (shirtCreatorVM != null)
-            {   string[] browseResult = Utils.BrowseForFilePath(multiselect: true);
-                if (browseResult.Length == 1)
+            {
+                string[] browseResult = Utils.BrowseForFilePath(multiselect: shirtCreatorVM.MultiMode);
+                if (shirtCreatorVM.MultiMode == false)
                 {
-                    string imagePath = Utils.BrowseForFilePath()[0];
+                    string imagePath = browseResult[0];
+                    if (!string.IsNullOrEmpty(shirtCreatorVM.SelectedShirt.DesignTitle))
+                        shirtCreatorVM.SelectedShirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
                     if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
                         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
                         shirtCreatorVM.SelectedShirtType is Raglan ||
@@ -238,10 +241,56 @@ namespace Upload.Actions
                         }
                     }
                 }
+                else
+                {
+                    if (shirtCreatorVM.Shirts == null)
+                        shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
+                    foreach (string imagePath in browseResult)
+                    {
+                        Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
 
+                        if (!string.IsNullOrEmpty(shirt.DesignTitle))
+                            shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
+
+                        if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
+                             shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
+                             shirtCreatorVM.SelectedShirtType is Raglan ||
+                             shirtCreatorVM.SelectedShirtType is StandardTShirt ||
+                             shirtCreatorVM.SelectedShirtType is SweetShirt ||
+                             shirtCreatorVM.SelectedShirtType is TankTop ||
+                             shirtCreatorVM.SelectedShirtType is VNeckTShirt)
+                        {
+                            if (ValidateImage(imagePath, 4500, 5400))
+                            {
+                                shirt.FrontStdPath = imagePath;
+                                shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontStdPath;
+                            }
+                        }
+                        else
+                        if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
+                                shirtCreatorVM.SelectedShirtType is ZipHoodie)
+                        {
+                            if (ValidateImage(imagePath, 4500, 4050))
+                            {
+                                shirt.FrontHoodiePath = imagePath;
+                                shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontHoodiePath;
+                            }
+                        }
+                        else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
+                        {
+                            if (ValidateImage(imagePath, 485, 485))
+                            {
+                                shirt.PopSocketsGripPath = imagePath;
+                                shirtCreatorVM.FrontImagePath = imagePath;
+                                shirtCreatorVM.BackImagePath = imagePath;
+                            }
+                        }
+                        shirtCreatorVM.Shirts.Add(shirt);
+                        shirt = null;
+                    }
+                }
             }
         }
-
         private void ClickBackImageCmdInvoke(object obj)
         {
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
@@ -365,7 +414,7 @@ namespace Upload.Actions
                     {
                         MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
                             "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
-                        if (result == MessageBoxResult.Yes||
+                        if (result == MessageBoxResult.Yes ||
                             result == MessageBoxResult.OK)
                         {
                             ImageEditCmdInvoke(path);

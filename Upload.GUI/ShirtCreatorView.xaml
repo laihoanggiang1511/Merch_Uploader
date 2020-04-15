@@ -12,7 +12,7 @@
          TextOptions.TextRenderingMode="Auto"
          Background="{DynamicResource MaterialDesignPaper}"
          FontFamily="{DynamicResource MaterialDesignFont}"
-         mc:Ignorable="d" Title="Shirt Creator" WindowState="Maximized" MinWidth="600">
+         mc:Ignorable="d" Title="Shirt Creator" WindowState="Maximized" MinWidth="600" d:DesignWidth="1000">
     <Window.Resources>
         <Style TargetType="{x:Type Window}">
             <Setter Property="FontSize" Value="14" />
@@ -62,7 +62,7 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--Shirt Type Selection-->
-                <StackPanel Grid.Column="0" MaxWidth="200">
+                <StackPanel Grid.Column="0" Width="150">
                     <TextBlock Text="Shirt Types" Margin="5" FontWeight="DemiBold" Foreground="Blue"/>
 
                     <ListView ItemsSource="{Binding SelectedShirt.ShirtTypes}" BorderThickness="0">
@@ -84,6 +84,10 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="X" FontSize="20" Width="25" Height="25" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="Crimson"/>
+                        <Button Content="Save All" FontSize="12" Width="80" Height="25" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
                     </StackPanel>
                 </StackPanel>
 
