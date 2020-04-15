@@ -47,8 +47,25 @@ namespace Upload.ViewModel
                     createMode = value;
                     if (createMode == false)
                     {
-
+                        
                     }
+                    RaisePropertyChanged("CreateMode");
+                }
+            }
+        }
+        private bool multiMode = false;
+        public bool MultiMode
+        {
+            get
+            {
+                return multiMode;
+            }
+            set
+            {
+                if (multiMode != value)
+                {
+                    multiMode = value;
+                    RaisePropertyChanged("MultiMode");
                 }
             }
         }

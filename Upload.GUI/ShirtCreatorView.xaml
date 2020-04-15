@@ -44,129 +44,136 @@
             </MenuItem>
             <MenuItem Header="Image Editor" Command="{Binding ImageEditCmd}" CommandParameter="{Binding}"/>
         </Menu>
-        
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <TextBlock Text="Multi Mode"/>
+            <ToggleButton Grid.Row="0"  Height="20" Width="50" Margin="10,0,20,0"
+                      Style="{DynamicResource SwitchTypeToggleButton}" IsChecked="{Binding MultiMode}"/>
+        </StackPanel>
         <ScrollViewer Grid.Row="1" PanningMode="VerticalFirst" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid Margin="5">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MaxWidth="200"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <!--Shirt Type Selection-->
-        <StackPanel Grid.Column="0" MaxWidth="200">
-            <TextBlock Text="Shirt Types" Margin="5" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" MaxWidth="200"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <!--Shirt Type Selection-->
+                <StackPanel Grid.Column="0" MaxWidth="200">
+                    <TextBlock Text="Shirt Types" Margin="5" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
 
-            <ListView ItemsSource="{Binding SelectedShirt.ShirtTypes}" BorderThickness="0">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Height="22" Width="Auto" MaxWidth="200" Content="{Binding TypeName}" IsChecked="{Binding IsActive}"
-                                          VerticalAlignment="Center"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <!--<TextBlock Text="Shirts" Margin="10" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
-                    <ListView ItemsSource="{Binding Shirts}"
-                              SelectedItem="{Binding SelectedShirt}">
+                    <ListView ItemsSource="{Binding SelectedShirt.ShirtTypes}" BorderThickness="0">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding DesignTitle}" Width="200"/>
+                                <CheckBox Height="22" Width="Auto" MaxWidth="200" Content="{Binding TypeName}" IsChecked="{Binding IsActive}"
+                                          VerticalAlignment="Center"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
-                    </ListView>-->
-        </StackPanel>
+                    </ListView>
+                    <StackPanel Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}">
+                        <TextBlock Text="Shirts" Margin="5" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+                        <ListView ItemsSource="{Binding Shirts}" 
+                              SelectedItem="{Binding SelectedShirt}"
+                              Height="200">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DesignTitle}" MaxWidth="250"/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </StackPanel>
 
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
-                    <TabControl x:Name="propertyView" SelectedItem="{Binding SelectedShirtType}" ItemsSource="{Binding SelectedShirt.ShirtTypes}">
-                        <TabControl.ItemContainerStyle>
-                            <Style TargetType="TabItem">
-                                <Setter Property="IsEnabled" Value="{Binding IsActive}"/>
-                                <Setter Property="Visibility" Value="{Binding IsActive, Converter={StaticResource BooleanToVisibility}}"/>
-                                <Setter Property="Header" Value="{Binding TypeName}"/>
-                            </Style>
-                        </TabControl.ItemContainerStyle>
-                        <TabControl.ContentTemplate>
-                            <DataTemplate>
-                                <Grid Margin="5,0,5,0">
-                                    <local:ShirtTypePropertiesView IsEnabled="{Binding IsActive}" 
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <TabControl x:Name="propertyView" SelectedItem="{Binding SelectedShirtType}" ItemsSource="{Binding SelectedShirt.ShirtTypes}">
+                            <TabControl.ItemContainerStyle>
+                                <Style TargetType="TabItem">
+                                    <Setter Property="IsEnabled" Value="{Binding IsActive}"/>
+                                    <Setter Property="Visibility" Value="{Binding IsActive, Converter={StaticResource BooleanToVisibility}}"/>
+                                    <Setter Property="Header" Value="{Binding TypeName}"/>
+                                </Style>
+                            </TabControl.ItemContainerStyle>
+                            <TabControl.ContentTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="5,0,5,0">
+                                        <local:ShirtTypePropertiesView IsEnabled="{Binding IsActive}" 
                                                                         Visibility="{Binding IsActive,Converter={StaticResource BooleanToVisibility}}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </TabControl.ContentTemplate>
-                    </TabControl>
-                </Grid>
-                <StackPanel Grid.Row="1">
-                    <TextBlock Text="Descriptions" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
-                    <Grid Width="{Binding ElementName=propertyView, Path=ActualWidth}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="180"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,10,0" Width="Auto">
-                            <TextBlock Text="" Height="30"></TextBlock>
-                            <TextBlock Text="{Binding BrandNameLength,StringFormat='Brand Name ({0}/50)'}" FontSize="16"/>
-                            <TextBlock Text="{Binding DesignTitleLength,StringFormat='Design Title ({0}/60)'}" FontSize="16"/>
-                            <TextBlock Text="{Binding Feature1Length,StringFormat='Feature Bullet 1 ({0}/256)'}" FontSize="16"/>
-                            <TextBlock Text="{Binding Feature2Length,StringFormat='Feature Bullet 2 ({0}/256)'}" FontSize="16"/>
-                            <TextBlock Text="{Binding DescriptionLength,StringFormat='Description ({0}/2000)'}" FontSize="16"/>
-                        </StackPanel>
-                        <!--<StackPanel Grid.Column="1">-->
-                        <TabControl Name="Descriptions" Grid.Column="1" SelectedIndex="{Binding SelectedDescriptionIndex}">
-                            <TabItem Header="English" FontSize="16">
-                                <TabItem.Content>
-                                    <TextBox Text="{Binding Descriptions, UpdateSourceTrigger=PropertyChanged}"
+                                    </Grid>
+                                </DataTemplate>
+                            </TabControl.ContentTemplate>
+                        </TabControl>
+                    </Grid>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Text="Descriptions" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
+                        <Grid Width="{Binding ElementName=propertyView, Path=ActualWidth}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="180"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,10,0" Width="Auto">
+                                <TextBlock Text="" Height="30"></TextBlock>
+                                <TextBlock Text="{Binding BrandNameLength,StringFormat='Brand Name ({0}/50)'}" FontSize="16"/>
+                                <TextBlock Text="{Binding DesignTitleLength,StringFormat='Design Title ({0}/60)'}" FontSize="16"/>
+                                <TextBlock Text="{Binding Feature1Length,StringFormat='Feature Bullet 1 ({0}/256)'}" FontSize="16"/>
+                                <TextBlock Text="{Binding Feature2Length,StringFormat='Feature Bullet 2 ({0}/256)'}" FontSize="16"/>
+                                <TextBlock Text="{Binding DescriptionLength,StringFormat='Description ({0}/2000)'}" FontSize="16"/>
+                            </StackPanel>
+                            <!--<StackPanel Grid.Column="1">-->
+                            <TabControl Name="Descriptions" Grid.Column="1" SelectedIndex="{Binding SelectedDescriptionIndex}">
+                                <TabItem Header="English" FontSize="16">
+                                    <TabItem.Content>
+                                        <TextBox Text="{Binding Descriptions, UpdateSourceTrigger=PropertyChanged}"
                                                  MaxHeight="120" Grid.Column="1" Width="Auto" SpellCheck.IsEnabled="True" TextWrapping="Wrap" AcceptsReturn="True"
                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                  ScrollViewer.CanContentScroll="True" FontSize="16"/>
-                                </TabItem.Content>
-                            </TabItem>
-                            <TabItem Header="German" FontSize="16">
-                                <TabItem.Content>
-                                    <TextBox Text="{Binding Descriptions, UpdateSourceTrigger=PropertyChanged}"
+                                    </TabItem.Content>
+                                </TabItem>
+                                <TabItem Header="German" FontSize="16">
+                                    <TabItem.Content>
+                                        <TextBox Text="{Binding Descriptions, UpdateSourceTrigger=PropertyChanged}"
                                                  MaxHeight="120" Grid.Column="1" Width="Auto" SpellCheck.IsEnabled="False" TextWrapping="Wrap" AcceptsReturn="True"
                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                  ScrollViewer.CanContentScroll="True" FontSize="16"/>
-                                </TabItem.Content>
-                            </TabItem>
-                        </TabControl>
-                        <!--<TextBox Text="{Binding DescriptionsGerman}" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" SpellCheck.IsEnabled="True" TextWrapping="Wrap" AcceptsReturn="True" AutoWordSelection="True"/>
+                                    </TabItem.Content>
+                                </TabItem>
+                            </TabControl>
+                            <!--<TextBox Text="{Binding DescriptionsGerman}" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" SpellCheck.IsEnabled="True" TextWrapping="Wrap" AcceptsReturn="True" AutoWordSelection="True"/>
                             </StackPanel>-->
-                    </Grid>
-                    <Grid Margin="180,10,0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Text="{Binding ReplaceText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
-                        <TextBox Grid.Column="1" Text="{Binding ReplaceWithText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
-                        <Button Grid.Column="2" Command="{Binding ReplaceCmd}"
+                        </Grid>
+                        <Grid Margin="180,10,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding ReplaceText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
+                            <TextBox Grid.Column="1" Text="{Binding ReplaceWithText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
+                            <Button Grid.Column="2" Command="{Binding ReplaceCmd}"
                                         CommandParameter="{Binding}"
                                         Content="Replace" Width="60" Height="25"
                                         Style="{StaticResource ButtonBlueStyle}"/>
 
-                    </Grid>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
-                    <Button Content ="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
+                        </Grid>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
+                        <Button Content ="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
                             Width="100" Height="30" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}" Style="{StaticResource ButtonBlueStyle}" Background="Green">
 
-                    </Button>
-                    <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
+                        </Button>
+                        <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
                                 Width="120" Margin="5,0,5,0" Style="{StaticResource ButtonBlueStyle}" Background="Green">
-                    </Button>
-                    <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
+                        </Button>
+                        <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
                                  Width="100" Margin="5,0,5,0" Style="{StaticResource ButtonBlueStyle}" Background="Crimson">
-                    </Button>
+                        </Button>
 
-                </StackPanel>
+                    </StackPanel>
+                </Grid>
+
             </Grid>
-
-    </Grid>
-    </ScrollViewer>
+        </ScrollViewer>
     </Grid>
 </Window>

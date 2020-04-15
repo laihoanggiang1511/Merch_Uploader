@@ -71,9 +71,6 @@
     <Reference Include="Cryptlex.LexActivator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Cryptlex.LexActivator.3.9.0\lib\net45\Cryptlex.LexActivator.dll</HintPath>
     </Reference>
-    <Reference Include="Cryptolens.Licensing, Version=4.0.23.1, Culture=neutral, PublicKeyToken=30182975912ff1ef, processorArchitecture=MSIL">
-      <HintPath>..\packages\Cryptolens.Licensing.4.0.23\lib\net40\Cryptolens.Licensing.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.19\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
     </Reference>
