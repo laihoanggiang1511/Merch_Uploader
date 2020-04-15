@@ -74,7 +74,18 @@ namespace Miscellaneous.LicenseValidator
                 return false;
             }
         }
-
+        public static string GetLicenseMetadata(string key)
+        {
+            try
+            {
+                string value = LexActivator.GetLicenseMetadata(key);
+                return value;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
         public static bool DeactiveKey(string licenseKey)
         {
             throw new NotImplementedException();

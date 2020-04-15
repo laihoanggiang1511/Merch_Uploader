@@ -38,7 +38,7 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private bool enableUpload = false;
+        private bool enableUpload = true;
         public bool EnableUpload
         {
             get { return enableUpload; }
