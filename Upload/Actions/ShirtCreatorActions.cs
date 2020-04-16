@@ -34,6 +34,9 @@ namespace Upload.Actions
             shirtVM.ReplaceCmd = new RelayCommand(ReplaceCmdInvoke);
             shirtVM.SaveAsCmd = new RelayCommand(SaveAsCmdInvoke);
             shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
+            shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
+            shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
+
             if (editShirt != null)
             {
                 shirtVM.SelectedShirt = editShirt;
@@ -44,6 +47,74 @@ namespace Upload.Actions
                 shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        private void SaveAllCmdInvoke(object obj)
+        {
+            try
+            {
+                if (obj is ShirtCreatorViewModel shirtVM)
+                {
+                    Dictionary<Shirt, ShirtStatus> dictError = new Dictionary<Shirt, ShirtStatus>();
+                    foreach (Shirt shirt in shirtVM.Shirts)
+                    {
+                        ShirtStatus errorCode = 0;
+
+                        if (ValidateShirt(shirt, ref errorCode))
+                        {
+                            XMLDataAccess dataAccess = new XMLDataAccess();
+                            dataAccess.SaveShirt(shirtVM.SelectedShirt);
+                        }
+                        else
+                        {
+                            dictError.Add(shirt, errorCode);
+                        }
+                    }
+                    if (dictError.Count > 0)
+                    {
+                        string errorMessage = "Following shirt(s) are invalid:\n";
+                        foreach (var error in dictError)
+                        {
+                            errorMessage += error.Key.DesignTitle + ": " + GetErrorMessage(error.Value) + "\n";
+                        }
+                        Utils.ShowErrorMessageBox(errorMessage);
+                    }
+                    else
+                    {
+                        ShowPopup(shirtVM,"Shirts saved!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Utils.ShowErrorMessageBox(ex.Message);
+            }
+
+        }
+        private void ShowPopup(ShirtCreatorViewModel viewModel,string message)
+        {
+
+            if (viewModel != null)
+            {
+                viewModel.PopupText = message;
+                viewModel.IsOpenPopup = true;
+               
+                //System.Threading.Thread.Sleep(5000);
+                //viewModel.IsOpenPopup = false;
+
+            }
+        }
+        private void DeleteCmdInvoke(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+                if (shirtVM.Shirts != null)
+                {
+                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count>1)
+                        shirtVM.Shirts.Remove(shirtVM.SelectedShirt);
+                    shirtVM.SelectedShirt = shirtVM.Shirts[0];
+                }
+            }
         }
 
         private void ImageEditCmdInvoke(object obj)
@@ -204,7 +275,7 @@ namespace Upload.Actions
                 if (shirtCreatorVM.MultiMode == false)
                 {
                     string imagePath = browseResult[0];
-                    if (!string.IsNullOrEmpty(shirtCreatorVM.SelectedShirt.DesignTitle))
+                    if (string.IsNullOrEmpty(shirtCreatorVM.SelectedShirt.DesignTitle))
                         shirtCreatorVM.SelectedShirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
                     if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
                         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
@@ -249,7 +320,7 @@ namespace Upload.Actions
                     {
                         Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
 
-                        if (!string.IsNullOrEmpty(shirt.DesignTitle))
+                        if (string.IsNullOrEmpty(shirt.DesignTitle))
                             shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
 
                         if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
@@ -358,7 +429,8 @@ namespace Upload.Actions
                         }
                         else
                         {
-                            Utils.ShowWarningMessageBox(GetErrorMessage(errorCode));
+                            ShowPopup(shirtCreatorVM, GetErrorMessage(errorCode));
+                            //Utils.ShowWarningMessageBox(GetErrorMessage(errorCode));
                         }
                     }
                 }
@@ -371,7 +443,7 @@ namespace Upload.Actions
 
         public static string GetErrorMessage(ShirtStatus errorCode)
         {
-            string result = "Shirt is invalid!\n\n";
+            string result = "Shirt is invalid!\n";
             switch (errorCode)
             {
                 case ShirtStatus.ImageDimensionFail:
@@ -393,7 +465,7 @@ namespace Upload.Actions
                     result += "Description must be 75-2000 characters, please check again";
                     break;
                 case ShirtStatus.ColorFail:
-                    result += "Number of color selected must be from 0 to 10, please check again";
+                    result += "Please select at least 1 or at most 10 colors ";
                     break;
             }
             return result;

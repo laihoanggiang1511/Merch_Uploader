@@ -1,5 +1,4 @@
-﻿using SKM.V3.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -151,51 +150,51 @@ namespace Miscellaneous
         public RelayCommand BuyCmd { get; set; }
         public RelayCommand CreateTrialKeyCmd { get; set; }
 
-        public void UpdateKeyInfo(KeyInfoResult licenseKeyInfo)
-        {
-            if (licenseKeyInfo != null)
-            {
-                LicenseInfo = string.Format("Date Created: {0}\n\nPeriod: {1}\n\nDayleft: {2}\n",
-                                        licenseKeyInfo.LicenseKey.Created.ToString("MMM/dd/yyyy"),
-                                        licenseKeyInfo.LicenseKey.Period.ToString(),
-                                        licenseKeyInfo.LicenseKey.DaysLeft().ToString());
-                SerialNumber = licenseKeyInfo.LicenseKey.Key;
-                Status = "Activated!";
-                StatusColor = new SolidColorBrush(Colors.Green);
-            }
-            else
-            {
-                LicenseInfo = string.Format("Date Created: {0}\n\nPeriod: {1}\n\nDayleft: {2}\n", "", "", "");
-                Status = "Not Activated!";
-                StatusColor = new SolidColorBrush(Colors.Red);
-                //SerialNumber = string.Empty;
-            }
-        }
-        private string GetFeature(KeyInfoResult licenseKeyInfo)
-        {
-            try
-            {
-                string result = string.Empty;
-                Type myType = licenseKeyInfo.LicenseKey.GetType();
-                for (int i = 1; i < 9; i++)
-                {
-                    PropertyInfo props = myType.GetProperty("F" + i.ToString());
-                    object value = props.GetValue(licenseKeyInfo.LicenseKey);
-                    if (value.GetType() == typeof(bool))
-                    {
-                        if ((bool)value == true)
-                        {
-                            result += $"Feature {i}, ";
-                        }
-                    }
-                }
-                return result;
-            }
-            catch
-            {
-                return string.Empty;
-            }
-        }
+        //public void UpdateKeyInfo(KeyInfoResult licenseKeyInfo)
+        //{
+        //    if (licenseKeyInfo != null)
+        //    {
+        //        LicenseInfo = string.Format("Date Created: {0}\n\nPeriod: {1}\n\nDayleft: {2}\n",
+        //                                licenseKeyInfo.LicenseKey.Created.ToString("MMM/dd/yyyy"),
+        //                                licenseKeyInfo.LicenseKey.Period.ToString(),
+        //                                licenseKeyInfo.LicenseKey.DaysLeft().ToString());
+        //        SerialNumber = licenseKeyInfo.LicenseKey.Key;
+        //        Status = "Activated!";
+        //        StatusColor = new SolidColorBrush(Colors.Green);
+        //    }
+        //    else
+        //    {
+        //        LicenseInfo = string.Format("Date Created: {0}\n\nPeriod: {1}\n\nDayleft: {2}\n", "", "", "");
+        //        Status = "Not Activated!";
+        //        StatusColor = new SolidColorBrush(Colors.Red);
+        //        //SerialNumber = string.Empty;
+        //    }
+        //}
+        //private string GetFeature(KeyInfoResult licenseKeyInfo)
+        //{
+        //    try
+        //    {
+        //        string result = string.Empty;
+        //        Type myType = licenseKeyInfo.LicenseKey.GetType();
+        //        for (int i = 1; i < 9; i++)
+        //        {
+        //            PropertyInfo props = myType.GetProperty("F" + i.ToString());
+        //            object value = props.GetValue(licenseKeyInfo.LicenseKey);
+        //            if (value.GetType() == typeof(bool))
+        //            {
+        //                if ((bool)value == true)
+        //                {
+        //                    result += $"Feature {i}, ";
+        //                }
+        //            }
+        //        }
+        //        return result;
+        //    }
+        //    catch
+        //    {
+        //        return string.Empty;
+        //    }
+        //}
 
 
         private Visibility purchaseFormEnable = Visibility.Collapsed;

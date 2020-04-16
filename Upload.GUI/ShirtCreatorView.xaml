@@ -86,8 +86,10 @@
                         </ListView>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="X" FontSize="20" Width="25" Height="25" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="Crimson"/>
-                        <Button Content="Save All" FontSize="12" Width="80" Height="25" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+                        <Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}"
+                                FontSize="20" Width="25" Height="25" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="Crimson"/>
+                        <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
+                                FontSize="12" Width="80" Height="25" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -155,13 +157,17 @@
                         </Grid>
                         <Grid Margin="180,10,0,10">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBox Grid.Column="0" Text="{Binding ReplaceText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
-                            <TextBox Grid.Column="1" Text="{Binding ReplaceWithText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
-                            <Button Grid.Column="2" Command="{Binding ReplaceCmd}"
+                            <TextBlock Text="Replace" VerticalAlignment="Center" Grid.Column="0" Margin="5"/>
+                            <TextBox Grid.Column="1" Text="{Binding ReplaceText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
+                            <TextBlock Text="With" VerticalAlignment="Center" Grid.Column="2" Margin="5"/>
+                            <TextBox Grid.Column="3" Text="{Binding ReplaceWithText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
+                            <Button Grid.Column="4" Command="{Binding ReplaceCmd}"
                                         CommandParameter="{Binding}"
                                         Content="Replace" Width="80" Height="25"
                                         Style="{StaticResource MaterialDesignRaisedLightButton}"/>
@@ -180,14 +186,13 @@
                         <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
                                  Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
                         </Button>
-
                     </StackPanel>
                 </Grid>
 
             </Grid>
-        </ScrollViewer>
-        <Popup IsOpen="True" Placement="Right" PopupAnimation="Slide" StaysOpen="True" Visibility="Visible">
             
-        </Popup>
+        </ScrollViewer>
+        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" />
+
     </Grid>
 </Window>

@@ -17,6 +17,8 @@ namespace Upload.ViewModel
         public const string RootFolderPath = "Image/";
         public ICommand SaveCmd { get; set; }
         public ICommand OpenCmd { get; set; }
+        public ICommand DeleteCmd { get; set; }
+        public ICommand SaveAllCmd { get; set; }
         public ICommand ClickFrontImageCmd { get; set; }
         public ICommand ClickBackImageCmd { get; set; }
         public ICommand ChangeColorCmd { get; set; }
@@ -132,6 +134,39 @@ namespace Upload.ViewModel
                     }
                 }
 
+            }
+        }
+
+        private bool isOpenPopup = false;
+        public bool IsOpenPopup
+        {
+            get
+            {
+                return isOpenPopup;
+            }
+            set
+            {
+                if (isOpenPopup != value)
+                {
+                    isOpenPopup = value;
+                    RaisePropertyChanged("IsOpenPopup");
+                }
+            }
+        }
+        private string popupText = string.Empty;
+        public string PopupText
+        {
+            get
+            {
+                return popupText;
+            }
+            set
+            {
+                if (popupText != value)
+                {
+                    popupText = value;
+                    RaisePropertyChanged("PopupText");
+                }
             }
         }
 
@@ -491,6 +526,7 @@ namespace Upload.ViewModel
                 }
             }
         }
+
 
         private void NullToFalseConverter(Array source, bool[] target)
         {

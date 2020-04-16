@@ -76,20 +76,20 @@ namespace Upload.Actions
                             {
                                 case 0://Crop top
                                     {
-                                        x = (outWidth - inWidth) / 2;
-                                        y = (outHeight - inHeight);
+                                        x = (inWidth - outWidth) / 2;
+                                        y = (inHeight - outHeight);
                                         break;
                                     };
                                 case 1://Crop bottom
                                     {
-                                        x = (outWidth - inWidth) / 2;
+                                        x = (inWidth - outWidth) / 2;
                                         y = 0;
                                         break;
                                     };
                                 case 2://Crop both
                                     {
-                                        x = (outWidth - inWidth) / 2;
-                                        y = (outHeight - inHeight) / 2;
+                                        x = (inWidth-outWidth) / 2;
+                                        y = (inHeight - outHeight) / 2;
                                         break;
                                     };
                             }

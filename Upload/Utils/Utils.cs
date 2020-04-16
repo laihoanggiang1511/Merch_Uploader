@@ -23,6 +23,9 @@ namespace Upload
         {
             MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
         }
+
+
+
         public static bool ShowWarningMessageBox(string message, string caption = null)
         {
             MessageBoxResult result = MessageBox.Show(message, caption, MessageBoxButton.OKCancel, MessageBoxImage.Warning);

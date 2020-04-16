@@ -33,21 +33,7 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private Image currentImage;
-        public Image CurrentImage
-        {
-            get
-            {
-                return currentImage;
-            }
-            set
-            {
-                if (currentImage == value)
-                {
-                    currentImage = value;
-                }
-            }
-        }
+
         public ObservableCollection<string> ListInputPath { get; set; }
 
         private string inputFilePath = string.Empty;
@@ -118,19 +104,20 @@ namespace Upload.ViewModel
                 if (outputTypeIndex != value)
                 {
                     outputTypeIndex = value;
-                    if (outputTypeIndex == 0)//standard t-shirt
-                    {
-                        EnableSelectMode = false;
-                        TopHeight = 0;
-                        BotHeight = 0;
-                        SelectedModeIndex = 2;//crop both
-                    }
-                    else if (outputTypeIndex == 1)//hoodie
-                    {
-                        EnableSelectMode = true;
-                    }
-                    RaisePropertyChanged("OutputTypeIndex");
                 }
+                if (outputTypeIndex == 0)//standard t-shirt
+                {
+                    EnableSelectMode = false;
+                    TopHeight = 0;
+                    BotHeight = 0;
+                    SelectedModeIndex = 2;//crop both
+                }
+                else if (outputTypeIndex == 1)//hoodie
+                {
+                    EnableSelectMode = true;
+                }
+                RaisePropertyChanged("OutputTypeIndex");
+
             }
         }
         private int topHeight = 0;
