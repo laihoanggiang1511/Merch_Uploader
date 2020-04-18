@@ -97,19 +97,22 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
                                         AncestorType={x:Type Window}},
                                         Path=DataContext}"
-                            Style="{DynamicResource ImageBrowseButton}"/>
+                            Style="{DynamicResource MaterialDesignFlatButton}"/>
                     </Grid>
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                    <Button ToolTip="Browse For Image"
+                        Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickFrontImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
-                            Style="{StaticResource MaterialDesignFloatingActionButton}">
+                            Style="{StaticResource MaterialDesignIconButton}">
                         <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
                     </Button>
-                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                    <Button ToolTip="Remove Image"
+                        Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
+                            Style="{StaticResource MaterialDesignIconButton}">
                         <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
                     </Button>
                 </StackPanel>
@@ -130,18 +133,22 @@
                             CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
                                         AncestorType={x:Type Window}},
                                         Path=DataContext}"
-                            Style="{DynamicResource ImageBrowseButton}"/>
+                            Style="{DynamicResource MaterialDesignFlatButton}"/>
                     </Grid>
                 </Grid>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                    <Button ToolTip="Browse for Image"
+                        Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickBackImageCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
+                        Style="{StaticResource MaterialDesignIconButton}">
                         <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
                     </Button>
-                    <Button Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
+                    <Button ToolTip="Remove Image"
+                        Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
-                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}">
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
+                        Style="{StaticResource MaterialDesignIconButton}">
                         <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
                     </Button>
                 </StackPanel>
@@ -229,11 +236,11 @@
                     <CheckBox x:Name="check_US" Margin="0,5,5,5" Content=".com" FontSize="14"
                               IsChecked="{Binding MarketPlaces[0]}"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="$ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBlock Text="$ " FontSize="16" FontWeight="DemiBold" VerticalAlignment="Center"/>
                         <TextBox Width="60" Text="{Binding Prices[0]}" FontSize="16"
                                  IsEnabled="{Binding IsChecked, ElementName=check_US}"/>
                     </StackPanel>
-                    <TextBlock Text="$ 13.07-50.00" Margin="5"/>
+                    <!--<TextBlock Text="$ 13.07-50.00" Margin="5"/>-->
                 </StackPanel>
                 <StackPanel Margin="40,5,40,5" 
                             Visibility="{Binding RelativeSource={RelativeSource FindAncestor, 
@@ -243,7 +250,7 @@
                     <CheckBox x:Name="check_UK" Margin="0,5,5,5" Content=".uk" FontSize="14" 
                               IsChecked="{Binding MarketPlaces[1]}"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="£ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBlock Text="£ " FontWeight="DemiBold" VerticalAlignment="Center"/>
                         <TextBox Width="60" Text="{Binding Prices[1]}" FontSize="16"
                                  IsEnabled="{Binding IsChecked, ElementName=check_UK}"/>
                     </StackPanel>
@@ -256,7 +263,7 @@
                     <CheckBox x:Name="check_DE" Margin="0,5,5,5" Content=".de" FontSize="14"
                               IsChecked="{Binding MarketPlaces[2]}"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="€ " FontSize="16" FontWeight="DemiBold"/>
+                        <TextBlock Text="€ " FontWeight="DemiBold" VerticalAlignment="Center"/>
                         <TextBox Width="60" Text="{Binding Prices[2]}" FontSize="16"
                                  IsEnabled="{Binding IsChecked, ElementName=check_DE}"/>
                     </StackPanel>

@@ -16,6 +16,29 @@ namespace Upload.Model
         public string BackHoodiePath { get; set; }
         public string PopSocketsGripPath { get; set; }
 
+        public string[] PNGPaths
+        {
+            get
+            {
+                string[] paths = new string[]
+                {
+                    this.FrontStdPath,
+                    this.BackStdPath,
+                    this.FrontHoodiePath,
+                    this.BackHoodiePath,
+                    this.PopSocketsGripPath,
+                };
+                return paths;
+            }
+        }
+        public string DefaultPNGPath
+        {
+            get
+            {
+                return PNGPaths.FirstOrDefault(x => string.IsNullOrEmpty(x) == false);
+            }
+        }
+
         public string BrandName { get; set; }
         public string DesignTitle { get; set; }
         public string FeatureBullet1 { get; set; }

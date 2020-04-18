@@ -41,22 +41,22 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Chrome user folder:" Margin="5" Grid.Row ="0" Grid.Column="0"/>
-                <TextBox Text="{Binding UserFolderPath}" FontSize="10" Height="17" HorizontalAlignment="Stretch" Margin="5" Grid.Row ="0" Grid.Column="1" Grid.ColumnSpan="2"></TextBox>
+                <TextBlock Text="Chrome user folder:" Margin="5" Grid.Row ="0" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding UserFolderPath}" Height="25" HorizontalAlignment="Stretch" Margin="5" Grid.Row ="0" Grid.Column="1" Grid.ColumnSpan="2"></TextBox>
                 <!--<TextBlock Grid.Row ="1" Grid.Column="0" Text="Email:" Margin="5"/>
                 <TextBox Text="{Binding Email}" Grid.Row ="1" Grid.Column="1" Margin="5" HorizontalAlignment="Stretch"/>-->
-                <TextBlock Grid.Row ="2" Grid.Column="0" Text="Merch Password:" Margin="5"/>
+                <TextBlock Grid.Row ="2" Grid.Column="0" Text="Merch Password:" Margin="5" VerticalAlignment="Center"/>
                 <PasswordBox Grid.Row ="2" Grid.Column="1" x:Name="password" Margin="5,5,5,10" HorizontalAlignment="Stretch" Grid.ColumnSpan="2"/>
             </Grid>
         </StackPanel>
-        <Button Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Content ="Choose Folder"  Grid.Column="2" Margin="10,10,10,0" Height="22" VerticalAlignment="Top" FontSize="10"></Button>
+        <Button Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Content ="Choose Folder"  Grid.Column="2" Margin="10,10,10,0" Height="25" VerticalAlignment="Top" FontSize="10"></Button>
         <Separator Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Bottom" Margin="0"/>
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,0,0,0">
-            <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." FontSize="12"/>
-            <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt" FontSize="12"/>
-            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete" FontSize="12"/>
-            <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Manual Log in" FontSize="10"/>
-            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" FontSize="12"/>
+            <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
+            <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>
+            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete"  Height="25" VerticalAlignment="Center" FontSize="12"/>
+            <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Manual Log in" FontSize="10"  Height="25" VerticalAlignment="Center"/>
+            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
             <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
 
             <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>

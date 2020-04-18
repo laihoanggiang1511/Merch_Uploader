@@ -1,8 +1,10 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,7 +15,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace ChromeAPI
 {
-    public class Utils
+    public class Helper
     {
         public static ChromeDriver OpenChrome(ChromeDriver driver = null, string userFolderPath = null)
         {
@@ -24,16 +26,29 @@ namespace ChromeAPI
                 {
                     if (userFolderPath != null && userFolderPath != string.Empty)
                     {
+                        List<string> lst = new List<string>()
+                        {
+                            "enable-automation",
+                        };
+
                         ChromeOptions chrOption = new ChromeOptions();
-                        //chrOption.AddArgument("headless");
-                        chrOption.AddArguments("disable-infobars");
+                        //chrOption.AddAdditionalCapability("useAutomationExtension", false);
+                        //chrOption.AddAdditionalCapability("excludeSwitches", new String[] { "enable-automation" });
+
                         chrOption.AddArguments("user-data-dir=" + userFolderPath);
                         var chromeDriverService = ChromeDriverService.CreateDefaultService();
                         chromeDriverService.HideCommandPromptWindow = true;
                         driver = new ChromeDriver(chromeDriverService, chrOption);
                     }
                     else
-                        driver = new ChromeDriver();
+                    {
+                        ChromeOptions chrOption = new ChromeOptions();
+                        //chrOption.AddAdditionalCapability("useAutomationExtension", false);
+                        //chrOption.AddAdditionalCapability("excludeSwitches", "enable-automation");
+                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                        chromeDriverService.HideCommandPromptWindow = true;
+                        driver = new ChromeDriver(chromeDriverService, chrOption);
+                    }
                 }
                 else
                 {
@@ -45,11 +60,13 @@ namespace ChromeAPI
             {
                 if (driver != null)
                 {
-                    driver.Quit();
-                }
-                if (ex is InvalidOperationException || ex is WebDriverException)
-                {
-                    return OpenChrome(null, userFolderPath);
+                    QuitDriver(driver);
+                    //if (ex is InvalidOperationException ||ex is WebDriverException)
+                    //{
+                    //    return OpenChrome(null, userFolderPath);
+                    //}
+                    //else
+                        return null;
                 }
                 else
                 {
@@ -138,6 +155,25 @@ namespace ChromeAPI
             }
             else
                 return false;
+        }
+        public static void QuitDriver(ChromeDriver driver)
+        {
+            try
+            {
+                if (driver != null)
+                {
+                    driver.Close();
+                    driver.Quit();
+                }
+                Process[] procs = Process.GetProcessesByName("chromedriver.exe");
+                foreach (Process proc in procs)
+                {
+                    proc.Kill();
+                }
+            }
+            catch
+            {
+            }
         }
     }
 

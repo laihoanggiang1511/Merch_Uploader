@@ -15,12 +15,12 @@ namespace ChromeAPI
                 if (driver.Url.Contains("www.amazon.com/ap/signin"))
                 {
                     if (!string.IsNullOrEmpty(email) && 
-                        Utils.GetElementWithWait(driver, By.Id("ap_email"),10) != null)
+                        Helper.GetElementWithWait(driver, By.Id("ap_email"),10) != null)
                     {
-                        Utils.SendKeysElement(driver, By.Id("ap_email"), email);
+                        Helper.SendKeysElement(driver, By.Id("ap_email"), email);
                     }
-                    Utils.SendKeysElement(driver, By.Id("ap_password"), password);
-                    Utils.ClickElement(driver, By.Id("signInSubmit"));
+                    Helper.SendKeysElement(driver, By.Id("ap_password"), password);
+                    Helper.ClickElement(driver, By.Id("signInSubmit"));
                     System.Threading.Thread.Sleep(3000);
                     return true;
                 }
@@ -39,7 +39,7 @@ namespace ChromeAPI
                 {
                     driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
 
-                    while (Utils.GetElementWithWait(driver, By.Id("select-marketplace-button"),20) == null)
+                    while (Helper.GetElementWithWait(driver, By.Id("select-marketplace-button"),20) == null)
                     {
                         driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
                     }
@@ -48,7 +48,7 @@ namespace ChromeAPI
                     if (!UploadFilePNG(driver, shirt))
                         return false;
                     // Select Products
-                    if (!Utils.ClickElement(driver, By.Id("select-marketplace-button")))
+                    if (!Helper.ClickElement(driver, By.Id("select-marketplace-button")))
                         return false;
                     if (!SelectProduct(driver, shirt))
                         return false;
@@ -62,13 +62,13 @@ namespace ChromeAPI
                         if (s.IsActive)
                         {
                             // Edit Detail-Standard
-                            Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/div[{column}]/product-card/div/button"));
+                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/div[{column}]/product-card/div/button"));
                             // Choose Fit type
                             if (s.FitTypes != null && s.FitTypes.Length > 1)
                             {
                                 for (int j = 0; j < s.FitTypes.Length; j++)
                                 {
-                                    Utils.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor" +
+                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor" +
                                         $"/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
                                         s.FitTypes[j]);
                                 }
@@ -77,7 +77,7 @@ namespace ChromeAPI
                             for (int j = 0; j < s.Colors.Length; j++)
                             {
                                 Color color = s.Colors[j];
-                                Utils.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
                                                                         $"/div[{j + 1}]/colorcheckbox/span", color.IsActive);
                             }
                             // Set Price
@@ -86,7 +86,7 @@ namespace ChromeAPI
                                 if (s.MarketPlaces[j])
                                 {
                                     //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                    Utils.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
                                                             s.Prices[j].ToString());
                                 }
                             }
@@ -94,25 +94,25 @@ namespace ChromeAPI
                     }
 
                     // Set English Descriptions
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandName);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitle);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.Description);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandName);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitle);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.Description);
 
                     //Set German Description
-                    Utils.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandNameGerman);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitleGerman);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1German);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2German);
-                    Utils.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.DescriptionGerman);
+                    Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandNameGerman);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitleGerman);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1German);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2German);
+                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.DescriptionGerman);
 
                     // Submit
-                    if (Utils.GetElementWithWait(driver, By.Id("submit-button"), 15) == null)
+                    if (Helper.GetElementWithWait(driver, By.Id("submit-button"), 15) == null)
                         return false;
-                    Utils.ClickElement(driver, By.Id("submit-button"));
-                    Utils.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button[2]"));
+                    Helper.ClickElement(driver, By.Id("submit-button"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button[2]"));
                     System.Threading.Thread.Sleep(3000);
                     return true;
                 }
@@ -133,7 +133,7 @@ namespace ChromeAPI
                     for (int j = 0; j < sb.MarketPlaces.Length; j++)
                     {
                         
-                        if(!Utils.ClickCheckBox(driver, $"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
+                        if(!Helper.ClickCheckBox(driver, $"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
                                                 sb.IsActive && sb.MarketPlaces[j]))
                         {
                             return false;
@@ -141,7 +141,7 @@ namespace ChromeAPI
                     }
                 }
                 // next button
-                if(!Utils.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button")))
+                if(!Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button")))
                 {
                     return false;
                 }
@@ -174,20 +174,20 @@ namespace ChromeAPI
                 }
                 if (!string.IsNullOrEmpty(shirt.BackStdPath))
                 {
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
                     IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
                     webElement.SendKeys(shirt.BackStdPath);
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
 
                 }
                 if (!string.IsNullOrEmpty(shirt.BackHoodiePath))
                 {
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
                     IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
                     webElement.SendKeys(shirt.BackStdPath);
-                    Utils.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
                 }
                 return true;
             }

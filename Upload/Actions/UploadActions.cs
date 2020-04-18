@@ -18,6 +18,7 @@ using ChromeAPI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Upload.Definitions;
+using System.Diagnostics;
 
 namespace Upload.Actions
 {
@@ -95,11 +96,7 @@ namespace Upload.Actions
                     }
                 }
                 Properties.Settings.Default.Save();
-                if (driver != null)
-                {
-                    driver.Close();
-                    driver.Quit();
-                }
+                Helper.QuitDriver(driver);
             }
             catch
             {
@@ -132,7 +129,12 @@ namespace Upload.Actions
         private void OpenChromeCmdInvoke(object obj)
         {
             UploadWindowViewModel mainVM = (obj as UploadWindowViewModel);
-            driver = ChromeAPI.Utils.OpenChrome(driver, mainVM.UserFolderPath);
+            driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
+            //if still null, try again
+            if (driver == null)
+            {
+                driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
+            }
             if (driver != null)
             {
                 driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
@@ -184,7 +186,11 @@ namespace Upload.Actions
                         Utils.ShowErrorMessageBox(message);
                         return;
                     }
-                    driver = ChromeAPI.Utils.OpenChrome(driver, mainVM.UserFolderPath);
+                    driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
+                    if (driver == null)
+                    {
+                        driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
+                    }
                     if (driver != null)
                     {
                         UploadMerch upload = new UploadMerch();

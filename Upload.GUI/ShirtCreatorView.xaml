@@ -80,16 +80,16 @@
                               Height="200">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding DesignTitle}" MaxWidth="250"/>
+                                    <TextBlock Text="{Binding DefaultPNGPath}" MaxWidth="250"/>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}"
-                                FontSize="20" Width="25" Height="25" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="Crimson"/>
-                        <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
-                                FontSize="12" Width="80" Height="25" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}" ToolTip="Delete"
+                                FontSize="20" Width="25" Height="25" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="DarkRed"/>
+                            <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
+                                FontSize="12" Width="80" Height="25" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
 
@@ -192,7 +192,6 @@
             </Grid>
             
         </ScrollViewer>
-        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" />
-
+        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="30"/>
     </Grid>
 </Window>
