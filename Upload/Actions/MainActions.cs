@@ -23,7 +23,7 @@ namespace Upload.Actions
         //KeyInfoResult keyInfo;
         public void ShowMainWindow()
         {
-            string licenseKey = RegistryIO.GetKey();
+            string licenseKey = LexActivator.GetLicenseKey();
             if (!string.IsNullOrEmpty(licenseKey))
             {
                 LexActivator.SetLicenseKey(licenseKey);

@@ -80,6 +80,7 @@ namespace Miscellaneous
             else if (LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
             {
                 activeVM.Status = "Trial Activated!";
+                activeVM.SerialNumber = string.Empty;
                 activeVM.StatusColor = new SolidColorBrush(Colors.Green);
                 activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
                 DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
