@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ImageEditorViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
+    <Compile Include="MultiReplaceViewModel.cs" />
     <Compile Include="ShirtCreatorViewModel.cs" />
     <Compile Include="UploadWindowViewModel.cs" />
     <Compile Include="MVVMCore\RelayCommand.cs" />

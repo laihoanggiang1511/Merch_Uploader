@@ -167,11 +167,16 @@
                             <TextBox Grid.Column="1" Text="{Binding ReplaceText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
                             <TextBlock Text="With" VerticalAlignment="Center" Grid.Column="2" Margin="5"/>
                             <TextBox Grid.Column="3" Text="{Binding ReplaceWithText}" Width="Auto" Margin="10,0,10,0" FontSize="16"/>
-                            <Button Grid.Column="4" Command="{Binding ReplaceCmd}"
+                            <StackPanel Grid.Column="4" Orientation="Horizontal">
+                                <Button  Command="{Binding ReplaceCmd}" Margin="5"
                                         CommandParameter="{Binding}"
-                                        Content="Replace" Width="80" Height="25"
+                                        Content="Replace" Width="85" Height="25"
                                         Style="{StaticResource MaterialDesignRaisedLightButton}"/>
-
+                                <Button Command="{Binding MultiReplaceCmd}" CommandParameter="{Binding}"
+                                    Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}" 
+                                    Content="Multi-Replace" Width="120" Height="25"
+                                        Style="{StaticResource MaterialDesignRaisedLightButton}"/>
+                            </StackPanel>
                         </Grid>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
@@ -190,7 +195,7 @@
                 </Grid>
 
             </Grid>
-            
+
         </ScrollViewer>
         <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="30"/>
     </Grid>

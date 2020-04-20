@@ -27,8 +27,11 @@ namespace Upload.ViewModel
         public ICommand RemoveBackImageCmd { get; set; }
         public ICommand ReplaceCmd { get; set; }
         public ICommand SaveAsCmd { get; set; }
+        public ICommand MultiReplaceCmd { get; set; }
 
         public ICommand ImageEditCmd { get; set; }
+
+
         public ShirtCreatorViewModel()
         {
             Shirt s = new Shirt();
@@ -36,6 +39,8 @@ namespace Upload.ViewModel
             Shirts.Add(s);
             SelectedShirt = Shirts[0];
         }
+
+        public MultiReplaceViewModel MultiReplaceVM { get; set; }
 
         bool createMode = true;
         public bool CreateMode
@@ -90,7 +95,7 @@ namespace Upload.ViewModel
                     {
                         SelectedShirtType = SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                         SelectedDescriptionIndex = 0;
-                        UpdateDescriptions();
+                        UpdateDescriptions(SelectedShirt);
 
                     }
                     RaisePropertyChanged("SelectedShirt");
@@ -277,7 +282,7 @@ namespace Upload.ViewModel
                 if (selectedDescriptionIndex != value)
                 {
                     selectedDescriptionIndex = value;
-                    UpdateDescriptions();
+                    UpdateDescriptions(SelectedShirt);
                     RaisePropertyChanged("SelectedDescriptionIdex");
                 }
             }
@@ -426,23 +431,23 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private void UpdateDescriptions()
+        public void UpdateDescriptions(Shirt shirt)
         {
             if (SelectedDescriptionIndex == 0)
             {
-                Descriptions = SelectedShirt.BrandName + "\n" +
-                    SelectedShirt.DesignTitle + "\n" +
-                    SelectedShirt.FeatureBullet1 + "\n" +
-                    SelectedShirt.FeatureBullet2 + "\n" +
-                    SelectedShirt.Description + "\n";
+                Descriptions = shirt.BrandName + "\n" +
+                    shirt.DesignTitle + "\n" +
+                    shirt.FeatureBullet1 + "\n" +
+                    shirt.FeatureBullet2 + "\n" +
+                    shirt.Description + "\n";
             }
             else
             {
-                Descriptions = SelectedShirt.BrandNameGerman + "\n" +
-                    SelectedShirt.DesignTitleGerman + "\n" +
-                    SelectedShirt.FeatureBullet1German + "\n" +
-                    SelectedShirt.FeatureBullet2German + "\n" +
-                    SelectedShirt.DescriptionGerman + "\n";
+                Descriptions = shirt.BrandNameGerman + "\n" +
+                    shirt.DesignTitleGerman + "\n" +
+                    shirt.FeatureBullet1German + "\n" +
+                    shirt.FeatureBullet2German + "\n" +
+                    shirt.DescriptionGerman + "\n";
             }
         }
         #endregion

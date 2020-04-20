@@ -36,6 +36,7 @@ namespace Upload.Actions
             shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
             shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
             shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
+            shirtVM.MultiReplaceCmd = new RelayCommand(MultiReplaceCmdInvoke);
 
             if (editShirt != null)
             {
@@ -47,6 +48,37 @@ namespace Upload.Actions
                 shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        private void MultiReplaceCmdInvoke(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+                ShowMultiReplaceWindow(shirtVM);
+            }
+        }
+
+        private void ShowMultiReplaceWindow(ShirtCreatorViewModel shirtVM)
+        {
+            if (shirtVM != null)
+            {
+                shirtVM.MultiReplaceVM = new MultiReplaceViewModel();
+                if (shirtVM.MultiReplaceVM.ListShirts == null)
+                    shirtVM.MultiReplaceVM.ListShirts = new System.Collections.ObjectModel.ObservableCollection<DataGridModel>();
+                shirtVM.MultiReplaceVM.ListShirts.Clear();
+                foreach ( Shirt s in shirtVM.Shirts)
+                {
+                    shirtVM.UpdateDescriptions(s);
+                    shirtVM.MultiReplaceVM.ListShirts.Add(new DataGridModel()
+                    {
+                        PNGPath = s.DefaultPNGPath,
+                        Descriptions = shirtVM.Descriptions
+                    });
+                }
+                MultiReplace multiReplaceView = new MultiReplace();
+                multiReplaceView.DataContext = shirtVM.MultiReplaceVM;
+                multiReplaceView.ShowDialog();
+            }
         }
 
         private void SaveAllCmdInvoke(object obj)
