@@ -8,7 +8,7 @@ using System.Windows.Data;
 
 namespace ShirtCreator.GUI.Converter
 {
-    class NullToVisibilityConverter : IValueConverter
+    public class NullToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

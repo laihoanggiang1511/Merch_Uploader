@@ -95,7 +95,7 @@ namespace Upload.ViewModel
                     {
                         SelectedShirtType = SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                         SelectedDescriptionIndex = 0;
-                        UpdateDescriptions(SelectedShirt);
+                        UpdateDescriptionsFromShirt(SelectedShirt);
 
                     }
                     RaisePropertyChanged("SelectedShirt");
@@ -282,7 +282,7 @@ namespace Upload.ViewModel
                 if (selectedDescriptionIndex != value)
                 {
                     selectedDescriptionIndex = value;
-                    UpdateDescriptions(SelectedShirt);
+                    UpdateDescriptionsFromShirt(SelectedShirt);
                     RaisePropertyChanged("SelectedDescriptionIdex");
                 }
             }
@@ -299,52 +299,52 @@ namespace Upload.ViewModel
             {
                 if (descriptions != value)
                 {
-
-                    string strDescription = value;
-                    strDescription = strDescription.Replace("\r", "");
-                    char c = char.Parse("\n");
-                    string[] temp = strDescription.Split(c);
-                    for (int i = 0; i < temp.Length; i++)
-                    {
-                        switch (i)
-                        {
-                            case 0:
-                                BrandNameLength = temp[0].Length;
-                                if (SelectedDescriptionIndex == 0)
-                                    SelectedShirt.BrandName = temp[i];
-                                else
-                                    SelectedShirt.BrandNameGerman = temp[i];
-                                break;
-                            case 1:
-                                DesignTitleLength = temp[1].Length;
-                                if (SelectedDescriptionIndex == 0)
-                                    SelectedShirt.DesignTitle = temp[i];
-                                else
-                                    SelectedShirt.DesignTitleGerman = temp[i];
-                                break;
-                            case 2:
-                                Feature1Length = temp[2].Length;
-                                if (SelectedDescriptionIndex == 0)
-                                    SelectedShirt.FeatureBullet1 = temp[i];
-                                else
-                                    SelectedShirt.FeatureBullet1German = temp[i];
-                                break;
-                            case 3:
-                                Feature2Length = temp[3].Length;
-                                if (SelectedDescriptionIndex == 0)
-                                    SelectedShirt.FeatureBullet2 = temp[i];
-                                else
-                                    SelectedShirt.FeatureBullet2German = temp[i];
-                                break;
-                            case 4:
-                                DescriptionLength = temp[4].Length;
-                                if (SelectedDescriptionIndex == 0)
-                                    SelectedShirt.Description = temp[i];
-                                else
-                                    SelectedShirt.DescriptionGerman = temp[i];
-                                break;
-                        }
-                    }
+                    UpdateDescriptionsToShirt(SelectedShirt, value);
+                    //string strDescription = value;
+                    //strDescription = strDescription.Replace("\r", "");
+                    //char c = char.Parse("\n");
+                    //string[] temp = strDescription.Split(c);
+                    //for (int i = 0; i < temp.Length; i++)
+                    //{
+                    //    switch (i)
+                    //    {
+                    //        case 0:
+                    //            BrandNameLength = temp[0].Length;
+                    //            if (SelectedDescriptionIndex == 0)
+                    //                SelectedShirt.BrandName = temp[i];
+                    //            else
+                    //                SelectedShirt.BrandNameGerman = temp[i];
+                    //            break;
+                    //        case 1:
+                    //            DesignTitleLength = temp[1].Length;
+                    //            if (SelectedDescriptionIndex == 0)
+                    //                SelectedShirt.DesignTitle = temp[i];
+                    //            else
+                    //                SelectedShirt.DesignTitleGerman = temp[i];
+                    //            break;
+                    //        case 2:
+                    //            Feature1Length = temp[2].Length;
+                    //            if (SelectedDescriptionIndex == 0)
+                    //                SelectedShirt.FeatureBullet1 = temp[i];
+                    //            else
+                    //                SelectedShirt.FeatureBullet1German = temp[i];
+                    //            break;
+                    //        case 3:
+                    //            Feature2Length = temp[3].Length;
+                    //            if (SelectedDescriptionIndex == 0)
+                    //                SelectedShirt.FeatureBullet2 = temp[i];
+                    //            else
+                    //                SelectedShirt.FeatureBullet2German = temp[i];
+                    //            break;
+                    //        case 4:
+                    //            DescriptionLength = temp[4].Length;
+                    //            if (SelectedDescriptionIndex == 0)
+                    //                SelectedShirt.Description = temp[i];
+                    //            else
+                    //                SelectedShirt.DescriptionGerman = temp[i];
+                    //            break;
+                    //    }
+                    //}
                     descriptions = value;
                     RaisePropertyChanged("Descriptions");
                 }
@@ -431,7 +431,7 @@ namespace Upload.ViewModel
                 }
             }
         }
-        public void UpdateDescriptions(Shirt shirt)
+        public void UpdateDescriptionsFromShirt(Shirt shirt)
         {
             if (SelectedDescriptionIndex == 0)
             {
@@ -450,6 +450,56 @@ namespace Upload.ViewModel
                     shirt.DescriptionGerman + "\n";
             }
         }
+        public void UpdateDescriptionsToShirt(Shirt shirt,string input)
+        {
+            string strDescription = input;
+            strDescription = strDescription.Replace("\r", "");
+            char c = char.Parse("\n");
+            string[] temp = strDescription.Split(c);
+            for (int i = 0; i < temp.Length; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        BrandNameLength = temp[0].Length;
+                        if (SelectedDescriptionIndex == 0)
+                            shirt.BrandName = temp[i];
+                        else
+                            shirt.BrandNameGerman = temp[i];
+                        break;
+                    case 1:
+                        DesignTitleLength = temp[1].Length;
+                        if (SelectedDescriptionIndex == 0)
+                            shirt.DesignTitle = temp[i];
+                        else
+                            shirt.DesignTitleGerman = temp[i];
+                        break;
+                    case 2:
+                        Feature1Length = temp[2].Length;
+                        if (SelectedDescriptionIndex == 0)
+                            shirt.FeatureBullet1 = temp[i];
+                        else
+                            shirt.FeatureBullet1German = temp[i];
+                        break;
+                    case 3:
+                        Feature2Length = temp[3].Length;
+                        if (SelectedDescriptionIndex == 0)
+                            shirt.FeatureBullet2 = temp[i];
+                        else
+                            shirt.FeatureBullet2German = temp[i];
+                        break;
+                    case 4:
+                        DescriptionLength = temp[4].Length;
+                        if (SelectedDescriptionIndex == 0)
+                            shirt.Description = temp[i];
+                        else
+                            shirt.DescriptionGerman = temp[i];
+                        break;
+                }
+            }
+        }
+
+
         #endregion
 
         private string frontMockup = RootFolderPath + "StandardTShirt" + "/Asphalt.png";

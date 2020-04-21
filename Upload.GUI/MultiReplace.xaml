@@ -6,21 +6,31 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Upload.GUI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" >
-    <StackPanel Orientation="Vertical">
-        <DataGrid ItemsSource="{Binding ListShirts}">
-            <!--<DataGrid.Columns>
+             Height="600"  Width="800" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterOwner" Title="Descriptions">
+    <Grid DataContext="{Binding MultiReplaceVM}">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <DataGrid ItemsSource="{Binding ListShirts}" AutoGenerateColumns="False"
+                  SelectionMode="Extended" AlternatingRowBackground="AliceBlue" CanUserReorderColumns="False" CanUserSortColumns="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="All" VerticalScrollBarVisibility="Auto" 
+                  VerticalGridLinesBrush="Black" HorizontalGridLinesBrush="Black" HorizontalAlignment="Stretch"
+                  Margin="5" Grid.Row="0" BorderBrush="AliceBlue">
+            <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding PNGPath}" CanUserResize="True" Header="PNG Path" IsReadOnly="True" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Descriptions}" CanUserResize="True" Header="Descriptions" Width="300"/>
-                <DataGridTextColumn Binding="{Binding Replace}" Header="Replace" Width="150"/>
-                <DataGridTextColumn Binding="{Binding With}" Header="With" Width="150"/>
-            </DataGrid.Columns>-->
+                <DataGridTextColumn Binding="{Binding Descriptions}" CanUserResize="True" Header="Descriptions"/>
+                <DataGridTextColumn Binding="{Binding ReplaceText}" Header="Replace" Width="150"/>
+                <DataGridTextColumn Binding="{Binding ReplaceByText}" Header="With" Width="150"/>
+            </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Orientation="Horizontal">
-            <Button Content="Replace All" Margin="5" Width="120"/>
-            <Button Content="Get File Name" Margin="5" Width="120"/>
-            <Button Content="Close" Margin="5" Width="120"/>
-
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Button Content="Replace All" Command="{Binding ReplaceAllCmd}" CommandParameter="{Binding}" Margin="5" Width="120"/>
+            <Button Content="Get File Name" Command="{Binding GetFileNameCmd}" CommandParameter="{Binding}" Margin="5" Width="120"/>
+            <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}" Margin="5" Width="120" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+            <Button Content="Cancel" Command="{Binding CloseCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Width="120"/>
         </StackPanel>
-    </StackPanel>
+
+    </Grid>
 </Window>

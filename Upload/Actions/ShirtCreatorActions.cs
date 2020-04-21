@@ -50,37 +50,6 @@ namespace Upload.Actions
             shirtCreatorWindow.Show();
         }
 
-        private void MultiReplaceCmdInvoke(object obj)
-        {
-            if (obj is ShirtCreatorViewModel shirtVM)
-            {
-                ShowMultiReplaceWindow(shirtVM);
-            }
-        }
-
-        private void ShowMultiReplaceWindow(ShirtCreatorViewModel shirtVM)
-        {
-            if (shirtVM != null)
-            {
-                shirtVM.MultiReplaceVM = new MultiReplaceViewModel();
-                if (shirtVM.MultiReplaceVM.ListShirts == null)
-                    shirtVM.MultiReplaceVM.ListShirts = new System.Collections.ObjectModel.ObservableCollection<DataGridModel>();
-                shirtVM.MultiReplaceVM.ListShirts.Clear();
-                foreach ( Shirt s in shirtVM.Shirts)
-                {
-                    shirtVM.UpdateDescriptions(s);
-                    shirtVM.MultiReplaceVM.ListShirts.Add(new DataGridModel()
-                    {
-                        PNGPath = s.DefaultPNGPath,
-                        Descriptions = shirtVM.Descriptions
-                    });
-                }
-                MultiReplace multiReplaceView = new MultiReplace();
-                multiReplaceView.DataContext = shirtVM.MultiReplaceVM;
-                multiReplaceView.ShowDialog();
-            }
-        }
-
         private void SaveAllCmdInvoke(object obj)
         {
             try
@@ -113,7 +82,7 @@ namespace Upload.Actions
                     }
                     else
                     {
-                        ShowPopup(shirtVM,"Shirts saved!");
+                        ShowPopup(shirtVM, "Shirts saved!");
                     }
                 }
             }
@@ -123,7 +92,7 @@ namespace Upload.Actions
             }
 
         }
-        private void ShowPopup(ShirtCreatorViewModel viewModel,string message)
+        private void ShowPopup(ShirtCreatorViewModel viewModel, string message)
         {
 
             if (viewModel != null)
@@ -159,7 +128,7 @@ namespace Upload.Actions
             {
                 if (shirtVM.Shirts != null)
                 {
-                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count>0)
+                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count > 0)
                         shirtVM.Shirts.Remove(shirtVM.SelectedShirt);
                 }
                 if (shirtVM.Shirts.Count == 0)
@@ -325,7 +294,7 @@ namespace Upload.Actions
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
             if (shirtCreatorVM != null)
             {
-                if(shirtCreatorVM.MultiMode && !string.IsNullOrEmpty(shirtCreatorVM.BackImagePath))
+                if (shirtCreatorVM.MultiMode && !string.IsNullOrEmpty(shirtCreatorVM.BackImagePath))
                 {
                     ShowPopup(shirtCreatorVM, "Multi-Mode only support 1 image per shirt");
                     return;
@@ -375,7 +344,7 @@ namespace Upload.Actions
                 {
                     if (shirtCreatorVM.Shirts == null)
                         shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
-                    
+
                     foreach (string imagePath in browseResult)
                     {
                         Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
@@ -796,5 +765,97 @@ namespace Upload.Actions
                 shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
             }
         }
+        #region Batch Replace
+        private void MultiReplaceCmdInvoke(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+                ShowMultiReplaceWindow(shirtVM);
+            }
+        }
+
+        private void ShowMultiReplaceWindow(ShirtCreatorViewModel shirtVM)
+        {
+            if (shirtVM != null)
+            {
+                shirtVM.MultiReplaceVM = new MultiReplaceViewModel();
+                if (shirtVM.MultiReplaceVM.ListShirts == null)
+                    shirtVM.MultiReplaceVM.ListShirts = new System.Collections.ObjectModel.ObservableCollection<DataGridModel>();
+                shirtVM.MultiReplaceVM.ListShirts.Clear();
+                foreach (Shirt s in shirtVM.Shirts)
+                {
+                    shirtVM.UpdateDescriptionsFromShirt(s);
+                    shirtVM.MultiReplaceVM.ListShirts.Add(new DataGridModel()
+                    {
+                        PNGPath = Path.GetFileName(s.DefaultPNGPath),
+                        Descriptions = shirtVM.Descriptions
+                    });
+                }
+                MultiReplace multiReplaceView = new MultiReplace();
+                shirtVM.MultiReplaceVM.SaveCmd = new RelayCommand(ReplaceSaveCmdInvoke);
+                shirtVM.MultiReplaceVM.ReplaceAllCmd = new RelayCommand(ReplaceAllCmdInvoke);
+                shirtVM.MultiReplaceVM.CloseCmd = new RelayCommand(ReplaceCloseCmdInvoke);
+                shirtVM.MultiReplaceVM.GetFileNameCmd = new RelayCommand(ReplaceGetFileNameCmdInvoke);
+                multiReplaceView.DataContext = shirtVM;
+                multiReplaceView.ShowDialog();
+
+
+            }
+        }
+
+        private void ReplaceGetFileNameCmdInvoke(object obj)
+        {
+            if (obj is MultiReplaceViewModel replaceVM)
+            {
+                foreach (DataGridModel item in replaceVM.ListShirts)
+                {
+                    string s = item.PNGPath;
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        item.ReplaceByText = s.TrimEnd(new char[] { '.', 'p', 'n', 'g' });
+                    }
+                }
+            }
+        }
+
+        private void ReplaceCloseCmdInvoke(object obj)
+        {
+            if (obj is MultiReplace replaceView)
+            {
+                replaceView.Close();
+            }
+        }
+
+        private void ReplaceAllCmdInvoke(object obj)
+        {
+            if (obj is MultiReplaceViewModel replaceVM)
+            {
+                foreach (DataGridModel item in replaceVM.ListShirts)
+                {
+                    if (!string.IsNullOrEmpty(item.ReplaceText))
+                    {
+                        string s = item.Descriptions.Replace(item.ReplaceText, item.ReplaceByText);
+                        item.Descriptions = s;
+                    }
+                }
+            }
+        }
+
+        private void ReplaceSaveCmdInvoke(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+
+                for (int i = 0; i < shirtVM.Shirts.Count; i++)
+                {
+                    shirtVM.UpdateDescriptionsToShirt(shirtVM.Shirts[i], shirtVM.MultiReplaceVM.ListShirts[i].Descriptions);
+                }
+                shirtVM.SelectedShirt = shirtVM.Shirts[0];
+            }
+        }
+
+
+        #endregion
     }
+
 }
