@@ -222,7 +222,7 @@
             </ItemsControl>
             <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=Window},
                 Path=DataContext.CountColor,StringFormat=' {0} colors selected'}" 
-                       Margin="5" FontSize="14"/>
+                       Margin="5"/>
         </StackPanel>
         <!--Price And Market Place-->
         <StackPanel Grid.Row="3">

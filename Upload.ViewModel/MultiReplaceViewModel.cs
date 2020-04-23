@@ -16,6 +16,8 @@ namespace Upload.ViewModel
         public RelayCommand CloseCmd { get; set; }
 
         public RelayCommand SaveCmd { get; set; }
+        public RelayCommand EnterKeyCmd { get; set; }
+
 
         public MultiReplaceViewModel()
         {

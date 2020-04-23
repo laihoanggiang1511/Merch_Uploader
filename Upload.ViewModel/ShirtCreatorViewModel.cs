@@ -28,6 +28,8 @@ namespace Upload.ViewModel
         public ICommand ReplaceCmd { get; set; }
         public ICommand SaveAsCmd { get; set; }
         public ICommand MultiReplaceCmd { get; set; }
+        public ICommand EnterKeyCmd { get; set; }
+
 
         public ICommand ImageEditCmd { get; set; }
 

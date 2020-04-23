@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Miscellaneous;
 using System.IO;
+using System.Reflection;
 
 namespace Miscellaneous.LicenseValidator
 {
@@ -59,7 +60,10 @@ namespace Miscellaneous.LicenseValidator
                 int status = LexActivator.ActivateTrial();
                 if (status != LexStatusCodes.LA_OK)
                 {
-                    string message = "Error activating the trial: " + status.ToString();
+                    var props = typeof(LexStatusCodes).GetFields(BindingFlags.Public | BindingFlags.Static);
+                    var wantedProp = props.FirstOrDefault(prop => (int)prop.GetValue(null) == status);
+                    string message = "Error activating the trial: " + wantedProp.Name.ToString().TrimStart(new char[] {'L','A','_' });
+                    Utils.ShowInfoMessageBox(message);
                     return false;
                 }
                 else

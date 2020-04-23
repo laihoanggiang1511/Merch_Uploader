@@ -796,11 +796,24 @@ namespace Upload.Actions
                 shirtVM.MultiReplaceVM.ReplaceAllCmd = new RelayCommand(ReplaceAllCmdInvoke);
                 shirtVM.MultiReplaceVM.CloseCmd = new RelayCommand(ReplaceCloseCmdInvoke);
                 shirtVM.MultiReplaceVM.GetFileNameCmd = new RelayCommand(ReplaceGetFileNameCmdInvoke);
+                shirtVM.MultiReplaceVM.EnterKeyCmd = new RelayCommand(EnterKeyCmdInvoke);
+                //shirtVM.EnterKeyCmd = new RelayCommand(EnterKeyCmdInvoke);
+
                 multiReplaceView.DataContext = shirtVM;
                 multiReplaceView.ShowDialog();
 
 
             }
+        }
+
+        private void EnterKeyCmdInvoke(object obj)
+        {
+            if(obj is System.Windows.Controls.TextBox txb)
+            {
+                txb.Text += "\n";
+                //shirtVM.MultiReplaceVM.
+            }
+
         }
 
         private void ReplaceGetFileNameCmdInvoke(object obj)
