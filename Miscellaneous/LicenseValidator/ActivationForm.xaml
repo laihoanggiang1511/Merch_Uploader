@@ -94,7 +94,10 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <TextBlock Text="Liên hệ: "/>
+            <TextBlock>
+                <Run Text="Support Group: "/>
+                <Hyperlink NavigateUri="http://www.facebook.com"/>
+            </TextBlock>
         </StackPanel>
         <StackPanel Visibility="{Binding ActivationFormEnable}">
             <StackPanel Orientation="Horizontal">
@@ -127,9 +130,13 @@
                 <Run>Day left: </Run>
                 <Run Text="{Binding DayLeft}"></Run>
             </TextBlock>
-            <TextBlock Margin="5" FontSize="14">
+            <TextBlock Margin="5" FontSize="16">
                 <Run>Expiry date: </Run>
                 <Run Text="{Binding ExpiryDate}"></Run>
+            </TextBlock>
+            <TextBlock Margin="5" FontSize="16">
+                <!--<Run Text="Support Group: "/>-->
+                <Hyperlink NavigateUri="https://www.facebook.com/"> Support Group </Hyperlink>
             </TextBlock>
         </StackPanel>
     </Grid>

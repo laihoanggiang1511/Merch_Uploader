@@ -35,10 +35,9 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Binding="{Binding ReplaceText}" Header="Replace" Width="150"/>
+                <DataGridTextColumn Binding="{Binding ReplaceText}" Header="Replace" Width="150"/>
                 <DataGridTextColumn Binding="{Binding ReplaceByText}" Header="With" Width="150"/>
             </DataGrid.Columns>
-
         </DataGrid>
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Button Content="Replace All" Command="{Binding ReplaceAllCmd}" CommandParameter="{Binding}" Margin="5" Width="120"/>

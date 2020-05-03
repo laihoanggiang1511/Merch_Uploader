@@ -41,7 +41,7 @@ namespace Miscellaneous.LicenseValidator
                 }
                 else
                 {
-                    Utils.ShowInfoMessageBox("Error activating the license:\n" + status.ToString());
+                    Utils.ShowInfoMessageBox("Error activating the license:\n" + GetErrorMessage(status));
                     return false;
                 }
             }
@@ -52,6 +52,23 @@ namespace Miscellaneous.LicenseValidator
             }
         }
 
+        public static string GetErrorMessage(int errorCode)
+        {
+            try
+            {
+                var props = typeof(LexStatusCodes).GetFields(BindingFlags.Public | BindingFlags.Static);
+                var wantedProp = props.FirstOrDefault(prop => (int)prop.GetValue(null) == errorCode);
+                string message = wantedProp.Name.ToString().TrimStart(new char[] { 'L', 'A', '_' });
+
+                return message;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+
+        }
+
         public static bool CreateTrialKey()
         {
             try
@@ -60,9 +77,7 @@ namespace Miscellaneous.LicenseValidator
                 int status = LexActivator.ActivateTrial();
                 if (status != LexStatusCodes.LA_OK)
                 {
-                    var props = typeof(LexStatusCodes).GetFields(BindingFlags.Public | BindingFlags.Static);
-                    var wantedProp = props.FirstOrDefault(prop => (int)prop.GetValue(null) == status);
-                    string message = "Error activating the trial: " + wantedProp.Name.ToString().TrimStart(new char[] {'L','A','_' });
+                    string message = "Error activating the trial: " + GetErrorMessage(status);
                     Utils.ShowInfoMessageBox(message);
                     return false;
                 }

@@ -60,15 +60,17 @@ namespace Upload.Actions
                     foreach (Shirt shirt in shirtVM.Shirts)
                     {
                         ShirtStatus errorCode = 0;
-
-                        if (ValidateShirt(shirt, ref errorCode))
+                        if (!string.IsNullOrEmpty(shirt.DefaultPNGPath))
                         {
-                            XMLDataAccess dataAccess = new XMLDataAccess();
-                            dataAccess.SaveShirt(shirtVM.SelectedShirt);
-                        }
-                        else
-                        {
-                            dictError.Add(shirt, errorCode);
+                            if (ValidateShirt(shirt, ref errorCode))
+                            {
+                                XMLDataAccess dataAccess = new XMLDataAccess();
+                                dataAccess.SaveShirt(shirt);
+                            }
+                            else
+                            {
+                                dictError.Add(shirt, errorCode);
+                            }
                         }
                     }
                     if (dictError.Count > 0)
@@ -78,7 +80,7 @@ namespace Upload.Actions
                         {
                             errorMessage += error.Key.DesignTitle + ": " + GetErrorMessage(error.Value) + "\n";
                         }
-                        ShowPopup(shirtVM, errorMessage);
+                        Utils.ShowErrorMessageBox(errorMessage);
                     }
                     else
                     {
@@ -313,7 +315,7 @@ namespace Upload.Actions
                         shirtCreatorVM.SelectedShirtType is TankTop ||
                         shirtCreatorVM.SelectedShirtType is VNeckTShirt)
                     {
-                        if (/*ValidateImage(imagePath, 4500, 5400)*/true)
+                        if (ValidateImage(imagePath, 4500, 5400))
                         {
                             shirtCreatorVM.SelectedShirt.FrontStdPath = imagePath;
                             shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontStdPath;
@@ -324,7 +326,7 @@ namespace Upload.Actions
                     if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
                             shirtCreatorVM.SelectedShirtType is ZipHoodie)
                     {
-                        if (/*ValidateImage(imagePath, 4500, 4050)*/true)
+                        if (ValidateImage(imagePath, 4500, 4050))
                         {
                             shirtCreatorVM.SelectedShirt.FrontHoodiePath = imagePath;
                             shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontHoodiePath;
@@ -332,7 +334,7 @@ namespace Upload.Actions
                     }
                     else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
                     {
-                        if (/*ValidateImage(imagePath, 485, 485)*/true)
+                        if (ValidateImage(imagePath, 485, 485))
                         {
                             shirtCreatorVM.SelectedShirt.PopSocketsGripPath = imagePath;
                             shirtCreatorVM.FrontImagePath = imagePath;
@@ -425,7 +427,7 @@ namespace Upload.Actions
                     if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
                             shirtCreatorVM.SelectedShirtType is ZipHoodie)
                     {
-                        if (ValidateImage(imagePath, 4500, 4050))
+                        if (ValidateImage(imagePath, 4500, 5400))
                         {
                             shirtCreatorVM.SelectedShirt.BackHoodiePath = imagePath;
                             shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackHoodiePath;
@@ -808,7 +810,7 @@ namespace Upload.Actions
 
         private void EnterKeyCmdInvoke(object obj)
         {
-            if(obj is System.Windows.Controls.TextBox txb)
+            if (obj is System.Windows.Controls.TextBox txb)
             {
                 txb.Text += "\n";
                 //shirtVM.MultiReplaceVM.
