@@ -33,7 +33,7 @@ namespace Upload.Actions
         {
             if (obj is ImageEditorViewModel imageVM)
             {
-                List<string> temp = Utils.BrowseForFilePath("PNG file |*.PNG| All Files |*.*", true).ToList();
+                List<string> temp = Utils.BrowseForFilePath("PNG file,JPG file |*.PNG;*.JPG| All Files |*.*", true).ToList();
                 if (imageVM.ListInputPath == null)
                     imageVM.ListInputPath = new ObservableCollection<string>();
                 temp.ForEach(x => imageVM.ListInputPath.Add(x));

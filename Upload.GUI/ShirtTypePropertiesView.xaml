@@ -57,15 +57,15 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="BorderThickness" TargetName="border" Value="1.5"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="MediumPurple"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="BorderThickness" TargetName="border" Value="3"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="MediumPurple"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="true">
                                 <Setter Property="BorderThickness" TargetName="border" Value="3"/>
-                                <Setter Property="BorderBrush" TargetName="border" Value="LightSalmon"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="MediumPurple"/>
 
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -146,7 +146,7 @@
                     </Button>
                     <Button ToolTip="Remove Image"
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
-                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
+                        Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveBackImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
                         Style="{StaticResource MaterialDesignIconButton}">
                         <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>

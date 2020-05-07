@@ -56,31 +56,33 @@ namespace Upload.Actions
             {
                 if (obj is ShirtCreatorViewModel shirtVM)
                 {
-                    Dictionary<Shirt, ShirtStatus> dictError = new Dictionary<Shirt, ShirtStatus>();
-                    foreach (Shirt shirt in shirtVM.Shirts)
+                    Dictionary<int, ShirtStatus> dictError = new Dictionary<int, ShirtStatus>();
+                    for (int i=0;i<shirtVM.Shirts.Count;i++)
                     {
+                        Shirt _shirt = shirtVM.Shirts[i];
                         ShirtStatus errorCode = 0;
-                        if (!string.IsNullOrEmpty(shirt.DefaultPNGPath))
+                        if (!string.IsNullOrEmpty(_shirt.DefaultPNGPath))
                         {
-                            if (ValidateShirt(shirt, ref errorCode))
+                            if (ValidateShirt(_shirt, ref errorCode))
                             {
                                 XMLDataAccess dataAccess = new XMLDataAccess();
-                                dataAccess.SaveShirt(shirt);
+                                dataAccess.SaveShirt(_shirt);
                             }
                             else
                             {
-                                dictError.Add(shirt, errorCode);
+                                dictError.Add(i, errorCode);
                             }
                         }
                     }
                     if (dictError.Count > 0)
                     {
-                        string errorMessage = "Following shirt(s) are invalid:\n";
-                        foreach (var error in dictError)
-                        {
-                            errorMessage += error.Key.DesignTitle + ": " + GetErrorMessage(error.Value) + "\n";
-                        }
-                        Utils.ShowErrorMessageBox(errorMessage);
+                        string errorMessage = $"{shirtVM.Shirts.Count-dictError.Count} shirt(s) saved\n";
+                        errorMessage += $"{dictError.Count} shirt(s) cannot be saved:\n";
+                        //foreach (var error in dictError)
+                        //{
+                        //    errorMessage += error.Key + ": " + GetErrorMessage(error.Value) + "\n";
+                        //}
+                        ShowPopup(shirtVM,errorMessage);
                     }
                     else
                     {
@@ -543,16 +545,16 @@ namespace Upload.Actions
                     result += "No image selected!";
                     break;
                 case ShirtStatus.BrandNameFail:
-                    result += "Brand must be 3-50 characters, please check again";
+                    result += "Brand must be 3-50 characters";
                     break;
                 case ShirtStatus.TitleFail:
-                    result += "Design Title must be 3-60 characters, please check again";
+                    result += "Design Title must be 3-60 characters";
                     break;
                 case ShirtStatus.FeatureBulletFail:
-                    result += "Feature Bullet must be 256 characters or fewer, please check again";
+                    result += "Feature Bullet must be 256 characters or fewer";
                     break;
                 case ShirtStatus.DescriptionFail:
-                    result += "Description must be 75-2000 characters, please check again";
+                    result += "Description must be 75-2000 characters";
                     break;
                 case ShirtStatus.ColorFail:
                     result += "Please select at least 1 or at most 10 colors ";
@@ -574,7 +576,7 @@ namespace Upload.Actions
                     }
                     else
                     {
-                        MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
+                        MessageBoxResult result = System.Windows.MessageBox.Show($"The image must be {width}x{height}px\nDo you want to resize this image?",
                             "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
                         if (result == MessageBoxResult.Yes ||
                             result == MessageBoxResult.OK)
