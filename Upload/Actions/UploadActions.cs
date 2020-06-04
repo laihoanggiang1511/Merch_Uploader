@@ -25,12 +25,10 @@ namespace Upload.Actions
     public class UploadActions
     {
         UploadWindowViewModel mainVM = null;
-        UploadWindow uploadWindow = null;
-        ChromeDriver driver = null;
 
         public void ShowWindow()
         {
-            uploadWindow = new UploadWindow();
+            UploadWindow uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
             mainVM = new UploadWindowViewModel
             {
@@ -87,7 +85,7 @@ namespace Upload.Actions
                 //Save Setting
                 Properties.Settings.Default.UserFolderPath = mainVM.UserFolderPath;
                 Properties.Settings.Default.Email = Miscellaneous.Crypt.Encrypt(mainVM.Email, true);
-                if (uploadWindow != null)
+                if (sender is UploadWindow uploadWindow)
                 {
                     PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
                     if (passwordBox != null)
@@ -96,7 +94,7 @@ namespace Upload.Actions
                     }
                 }
                 Properties.Settings.Default.Save();
-                Helper.QuitDriver(driver);
+                UploadMerch.QuitDriver();
             }
             catch
             {
@@ -128,17 +126,7 @@ namespace Upload.Actions
         }
         private void OpenChromeCmdInvoke(object obj)
         {
-            UploadWindowViewModel mainVM = (obj as UploadWindowViewModel);
-            driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-            //if still null, try again
-            if (driver == null)
-            {
-                driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-            }
-            if (driver != null)
-            {
-                driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-            }
+            UploadMerch.OpenChrome(mainVM.UserFolderPath);
         }
         private void UploadCmdInvoke(object obj)
         {
@@ -186,23 +174,19 @@ namespace Upload.Actions
                         Utils.ShowErrorMessageBox(message);
                         return;
                     }
-                    driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-                    if (driver == null)
+                    UploadMerch upload = new UploadMerch();
+                    UploadMerch.OpenChrome(mainVM.UserFolderPath);
+
+                    if (UploadMerch.driver != null)
                     {
-                        driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-                    }
-                    if (driver != null)
-                    {
-                        UploadMerch upload = new UploadMerch();
                         try
                         {
-                            driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-
-                            upload.Log_In(driver, mainVM.Password);
+                            UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                            upload.Log_In(mainVM.Password);
                             for (int i = 0; i < mainVM.Shirts.Count; i++)
                             {
                                 mainVM.SelectedShirt = mainVM.Shirts[i];
-                                if (!upload.Upload(driver, mainVM.Shirts[i]))
+                                if (!upload.Upload(mainVM.Shirts[i]))
                                     failShirts.Add(mainVM.Shirts[i]);
                             }
                             if (failShirts == null || failShirts.Count == 0)

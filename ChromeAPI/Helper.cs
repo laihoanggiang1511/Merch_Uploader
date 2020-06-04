@@ -17,64 +17,7 @@ namespace ChromeAPI
 {
     public class Helper
     {
-        public static ChromeDriver OpenChrome(ChromeDriver driver = null, string userFolderPath = null)
-        {
-            try
-            {
-                Cursor.Current = Cursors.WaitCursor;
-                if (driver == null)
-                {
-                    if (userFolderPath != null && userFolderPath != string.Empty)
-                    {
-                        List<string> lst = new List<string>()
-                        {
-                            "enable-automation",
-                        };
-
-                        ChromeOptions chrOption = new ChromeOptions();
-                        //chrOption.AddAdditionalCapability("useAutomationExtension", false);
-                        //chrOption.AddAdditionalCapability("excludeSwitches", new String[] { "enable-automation" });
-
-                        chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
-                        driver = new ChromeDriver(chromeDriverService, chrOption);
-                    }
-                    else
-                    {
-                        ChromeOptions chrOption = new ChromeOptions();
-                        //chrOption.AddAdditionalCapability("useAutomationExtension", false);
-                        //chrOption.AddAdditionalCapability("excludeSwitches", "enable-automation");
-                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
-                        driver = new ChromeDriver(chromeDriverService, chrOption);
-                    }
-                }
-                else
-                {
-                    driver.Navigate().GoToUrl("https://google.com/");
-                }
-                return driver;
-            }
-            catch (Exception ex)
-            {
-                if (driver != null)
-                {
-                    QuitDriver(driver);
-                    //if (ex is InvalidOperationException ||ex is WebDriverException)
-                    //{
-                    //    return OpenChrome(null, userFolderPath);
-                    //}
-                    //else
-                        return null;
-                }
-                else
-                {
-                    ShowErrorMessageBox(ex.Message);
-                    return null;
-                }
-            }
-        }
+ 
         public static bool ClickElement(ChromeDriver driver, By by)
         {
             IWebElement webElement = GetElementWithWait(driver, by);
@@ -155,25 +98,6 @@ namespace ChromeAPI
             }
             else
                 return false;
-        }
-        public static void QuitDriver(ChromeDriver driver)
-        {
-            try
-            {
-                if (driver != null)
-                {
-                    driver.Close();
-                    driver.Quit();
-                }
-                Process[] procs = Process.GetProcessesByName("chromedriver.exe");
-                foreach (Process proc in procs)
-                {
-                    proc.Kill();
-                }
-            }
-            catch
-            {
-            }
         }
     }
 

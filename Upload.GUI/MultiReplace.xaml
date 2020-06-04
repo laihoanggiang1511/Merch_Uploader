@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:Upload.GUI"
              mc:Ignorable="d" 
              Height="600"  Width="800" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterOwner" Title="Descriptions">
+
     <Grid DataContext="{Binding MultiReplaceVM}">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -20,7 +21,13 @@
                   Margin="5" Grid.Row="0" BorderBrush="AliceBlue">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding PNGPath}" CanUserResize="True" Header="PNG Path" IsReadOnly="True" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Descriptions}" CanUserResize="True" Header="Descriptions"/>
+                <DataGridTextColumn Binding="{Binding Descriptions}" CanUserResize="True" Header="Descriptions">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding ReplaceText}" Header="Replace" Width="150"/>
                 <DataGridTextColumn Binding="{Binding ReplaceByText}" Header="With" Width="150"/>
             </DataGrid.Columns>

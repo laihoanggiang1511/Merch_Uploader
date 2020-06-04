@@ -28,8 +28,8 @@ namespace Upload.Actions
             {
                 LexActivator.SetLicenseKey(licenseKey);
             }
-            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK ||
-                LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
+            if (/*LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK ||
+                LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK*/true)
             {
                 MainWindow mainWindow = new MainWindow();
                 MainViewModel mainVM = new MainViewModel

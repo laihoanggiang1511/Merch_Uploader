@@ -172,13 +172,13 @@
         "Entry"
         {
         "MsmKey" = "8:_9FC3E269E48243B926516D2C30B4D309"
-        "OwnerKey" = "8:_61A5D18B104A4AFB805BDB2231776410"
+        "OwnerKey" = "8:_A66A5E40391BA01D65B0960F3822E464"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_9FC3E269E48243B926516D2C30B4D309"
-        "OwnerKey" = "8:_A66A5E40391BA01D65B0960F3822E464"
+        "OwnerKey" = "8:_61A5D18B104A4AFB805BDB2231776410"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -406,12 +406,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9FC3E269E48243B926516D2C30B4D309"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EF204634C2BC464693129C19AA390630"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -502,6 +496,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_9FC3E269E48243B926516D2C30B4D309"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_23016E1DEA0B487800BE4FA00E7A2232"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -574,10 +574,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5.2"
                     {
-                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
-                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    "Name" = "8:Microsoft .NET Framework 4.5.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.5.2"
                     }
                 }
             }
@@ -680,6 +680,11 @@
             "AssemblyAsmDisplayName" = "8:Cryptlex.LexActivator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_054CFAA274A2F79DEFB6D67FCC901219"
+                    {
+                    "Name" = "8:Cryptlex.LexActivator.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Cryptlex.LexActivator.dll"
             "TargetName" = "8:"
@@ -757,6 +762,11 @@
             "AssemblyAsmDisplayName" = "8:ChromeAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_23016E1DEA0B487800BE4FA00E7A2232"
+                    {
+                    "Name" = "8:ChromeAPI.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:ChromeAPI.dll"
             "TargetName" = "8:"
@@ -803,6 +813,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.Definitions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_581F3516AF62F4C789987CD2CD8E2310"
+                    {
+                    "Name" = "8:Upload.Definitions.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.Definitions.dll"
             "TargetName" = "8:"
@@ -829,6 +844,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.DataAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_88A4070B89F787CD2D68A128AE0C13BB"
+                    {
+                    "Name" = "8:Upload.DataAccess.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.DataAccess.dll"
             "TargetName" = "8:"
@@ -855,6 +875,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_97E50B97B803D85EAB4B8DEF3A9060C8"
+                    {
+                    "Name" = "8:Upload.Model.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.Model.dll"
             "TargetName" = "8:"
@@ -912,6 +937,11 @@
             "AssemblyAsmDisplayName" = "8:Miscellaneous, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A66A5E40391BA01D65B0960F3822E464"
+                    {
+                    "Name" = "8:Miscellaneous.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Miscellaneous.dll"
             "TargetName" = "8:"
@@ -938,6 +968,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.GUI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_A7FF84E3692C22E8E1F1A7BFD1DC62C2"
+                    {
+                    "Name" = "8:Upload.GUI.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.GUI.dll"
             "TargetName" = "8:"
@@ -1128,6 +1163,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.Definitions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_E8CEAAF93D646461BA172E65055F324B"
+                    {
+                    "Name" = "8:Upload.Definitions.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.Definitions.dll"
             "TargetName" = "8:"
@@ -1185,6 +1225,11 @@
             "AssemblyAsmDisplayName" = "8:Upload.ViewModel, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_F3ED9A6503A3DB209D528B9862C30E98"
+                    {
+                    "Name" = "8:Upload.ViewModel.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Upload.ViewModel.dll"
             "TargetName" = "8:"
@@ -1272,7 +1317,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Merch Uploader"
         "ProductCode" = "8:{07FFAAF5-911C-4B07-B90A-CDC743631A22}"
-        "PackageCode" = "8:{7ACA98C6-306B-4563-B765-6410652AB4D2}"
+        "PackageCode" = "8:{A355A462-523A-451D-B9D5-4DC3E00B84FC}"
         "UpgradeCode" = "8:{32804CBB-FF79-4508-A410-C9F890B2BBB9}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -1325,6 +1370,14 @@
                                 }
                                 "Values"
                                 {
+                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_384CDBF371C54DF79992E12BD6217D05"
+                                    {
+                                    "Name" = "8:New Value #1"
+                                    "Condition" = "8:"
+                                    "Transitive" = "11:FALSE"
+                                    "ValueTypes" = "3:1"
+                                    "Value" = "8:"
+                                    }
                                 }
                             }
                         }
@@ -1821,7 +1874,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_058027787DFD4F0F9A4BA1C3DBBAB747"
             {
-            "SourcePath" = "8:..\\Upload.ViewModel\\obj\\Release\\Upload.ViewModel.dll"
+            "SourcePath" = "8:..\\Upload.ViewModel\\obj\\Debug\\Upload.ViewModel.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1849,7 +1902,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1270A345376541619E63E755E180EB8D"
             {
-            "SourcePath" = "8:..\\Upload.Definitions\\obj\\Release\\Upload.Definitions.dll"
+            "SourcePath" = "8:..\\Upload.Definitions\\obj\\Debug\\Upload.Definitions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1877,7 +1930,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_22FF99B8252D4BC6955C66374DBA2E38"
             {
-            "SourcePath" = "8:..\\Upload\\obj\\Release\\Upload.exe"
+            "SourcePath" = "8:..\\Upload\\obj\\Debug\\Upload.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1905,7 +1958,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_266FFCAB51A84BD6B76A7B7DD657A520"
             {
-            "SourcePath" = "8:..\\ChromeAPI\\obj\\Release\\ChromeAPI.dll"
+            "SourcePath" = "8:..\\ChromeAPI\\obj\\Debug\\ChromeAPI.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1933,7 +1986,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_393F78AC554E48B883311DE0B72A152C"
             {
-            "SourcePath" = "8:..\\Upload.DataAccess\\obj\\Release\\Upload.DataAccess.dll"
+            "SourcePath" = "8:..\\Upload.DataAccess\\obj\\Debug\\Upload.DataAccess.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1961,7 +2014,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_61A5D18B104A4AFB805BDB2231776410"
             {
-            "SourcePath" = "8:..\\Miscellaneous\\obj\\Release\\Miscellaneous.dll"
+            "SourcePath" = "8:..\\Miscellaneous\\obj\\Debug\\Miscellaneous.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1989,7 +2042,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E001DC07D6CF474B8A70B55B1C6B3C63"
             {
-            "SourcePath" = "8:..\\Upload.Model\\obj\\Release\\Upload.Model.dll"
+            "SourcePath" = "8:..\\Upload.Model\\obj\\Debug\\Upload.Model.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -2017,7 +2070,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EF204634C2BC464693129C19AA390630"
             {
-            "SourcePath" = "8:..\\Upload.GUI\\obj\\Release\\Upload.GUI.dll"
+            "SourcePath" = "8:..\\Upload.GUI\\obj\\Debug\\Upload.GUI.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"

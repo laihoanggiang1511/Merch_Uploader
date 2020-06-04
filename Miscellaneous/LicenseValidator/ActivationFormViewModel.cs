@@ -254,9 +254,8 @@ namespace Miscellaneous
         }
         public ActivationFormViewModel()
         {
-            MachineCode = FingerPrint.Value();
-
-
+           // MachineCode = FingerPrint.Value();
+            
         }
         #endregion
     }
