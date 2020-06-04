@@ -591,7 +591,7 @@
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
-        "Compression" = "3:2"
+        "Compression" = "3:3"
         "SignOutput" = "11:FALSE"
         "CertificateFile" = "8:"
         "PrivateKeyFile" = "8:"
@@ -610,6 +610,11 @@
                     {
                     "Name" = "8:Microsoft .NET Framework 4.5.2 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.5.2"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
                     }
                 }
             }
@@ -1317,7 +1322,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Merch Uploader"
         "ProductCode" = "8:{07FFAAF5-911C-4B07-B90A-CDC743631A22}"
-        "PackageCode" = "8:{A355A462-523A-451D-B9D5-4DC3E00B84FC}"
+        "PackageCode" = "8:{6654ACA1-C986-476D-8BD4-6D6310B51B65}"
         "UpgradeCode" = "8:{32804CBB-FF79-4508-A410-C9F890B2BBB9}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -1874,7 +1879,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_058027787DFD4F0F9A4BA1C3DBBAB747"
             {
-            "SourcePath" = "8:..\\Upload.ViewModel\\obj\\Debug\\Upload.ViewModel.dll"
+            "SourcePath" = "8:..\\Upload.ViewModel\\obj\\Release\\Upload.ViewModel.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1902,7 +1907,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_1270A345376541619E63E755E180EB8D"
             {
-            "SourcePath" = "8:..\\Upload.Definitions\\obj\\Debug\\Upload.Definitions.dll"
+            "SourcePath" = "8:..\\Upload.Definitions\\obj\\Release\\Upload.Definitions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1930,7 +1935,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_22FF99B8252D4BC6955C66374DBA2E38"
             {
-            "SourcePath" = "8:..\\Upload\\obj\\Debug\\Upload.exe"
+            "SourcePath" = "8:..\\Upload\\obj\\Release\\Upload.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1958,7 +1963,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_266FFCAB51A84BD6B76A7B7DD657A520"
             {
-            "SourcePath" = "8:..\\ChromeAPI\\obj\\Debug\\ChromeAPI.dll"
+            "SourcePath" = "8:..\\ChromeAPI\\obj\\Release\\ChromeAPI.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -1986,7 +1991,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_393F78AC554E48B883311DE0B72A152C"
             {
-            "SourcePath" = "8:..\\Upload.DataAccess\\obj\\Debug\\Upload.DataAccess.dll"
+            "SourcePath" = "8:..\\Upload.DataAccess\\obj\\Release\\Upload.DataAccess.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -2014,7 +2019,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_61A5D18B104A4AFB805BDB2231776410"
             {
-            "SourcePath" = "8:..\\Miscellaneous\\obj\\Debug\\Miscellaneous.dll"
+            "SourcePath" = "8:..\\Miscellaneous\\obj\\Release\\Miscellaneous.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -2042,7 +2047,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E001DC07D6CF474B8A70B55B1C6B3C63"
             {
-            "SourcePath" = "8:..\\Upload.Model\\obj\\Debug\\Upload.Model.dll"
+            "SourcePath" = "8:..\\Upload.Model\\obj\\Release\\Upload.Model.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
@@ -2070,7 +2075,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_EF204634C2BC464693129C19AA390630"
             {
-            "SourcePath" = "8:..\\Upload.GUI\\obj\\Debug\\Upload.GUI.dll"
+            "SourcePath" = "8:..\\Upload.GUI\\obj\\Release\\Upload.GUI.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_B373D7102FC3413BADB0764DB6BACC4A"
