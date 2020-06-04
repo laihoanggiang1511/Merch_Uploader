@@ -98,10 +98,11 @@ namespace Miscellaneous
 
         private void PurchaseCmdInvoke(object obj)
         {
-            if (obj is string purchaseURL)
-            {
-                System.Diagnostics.Process.Start(purchaseURL);
-            }
+            //if (obj is string purchaseURL)
+            //{
+            //    System.Diagnostics.Process.Start(purchaseURL);
+            //}
+            System.Diagnostics.Process.Start("https://merch-tools.dpdcart.com");
         }
 
         private void BackToActivationCmdInvoke(object obj)

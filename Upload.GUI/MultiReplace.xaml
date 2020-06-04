@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              Height="600"  Width="800" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterOwner" Title="Descriptions">
 
+    
     <Grid DataContext="{Binding MultiReplaceVM}">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -21,13 +22,19 @@
                   Margin="5" Grid.Row="0" BorderBrush="AliceBlue">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding PNGPath}" CanUserResize="True" Header="PNG Path" IsReadOnly="True" Width="150"/>
-                <DataGridTextColumn Binding="{Binding Descriptions}" CanUserResize="True" Header="Descriptions">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style>
-                            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                <DataGridTemplateColumn CanUserResize="True" Header="Descriptions" MinWidth="300">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Descriptions}" AcceptsReturn="True" TextWrapping="Wrap">
+                                <!--<TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.EnterKeyCmd}" 
+                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
+                                </TextBox.InputBindings>-->
+                            </TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTextColumn Binding="{Binding ReplaceText}" Header="Replace" Width="150"/>
                 <DataGridTextColumn Binding="{Binding ReplaceByText}" Header="With" Width="150"/>
             </DataGrid.Columns>

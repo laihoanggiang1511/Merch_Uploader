@@ -23,5 +23,10 @@ namespace Upload.GUI
         {
             InitializeComponent();
         }
+
+        private void DockPanel_MouseEnter(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }

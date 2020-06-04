@@ -37,6 +37,8 @@ namespace Upload.Actions
                     CreateWindowCmd = new RelayCommand(CreateWindowCmdInvoke),
                     UploadWindowCmd = new RelayCommand(UploadCmdInvoke),
                     LicenseWindowCmd = new RelayCommand(LicenseWindowCmdInvoke),
+                    HelpCmd = new RelayCommand(HelpCmdInvoke),
+
                 };
                 mainWindow.DataContext = mainVM;
                 string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
@@ -56,7 +58,7 @@ namespace Upload.Actions
             }
             else
             {
-                MessageBoxResult msgBoxResult = MessageBox.Show("Do you want to open license form now?", "License validation fail", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                MessageBoxResult msgBoxResult = MessageBox.Show("No valid license found\nDo you want to open license form now?", "License validation fail", MessageBoxButton.YesNo, MessageBoxImage.Error);
                 if (msgBoxResult == MessageBoxResult.Yes || msgBoxResult == MessageBoxResult.OK)
                 {
                     LicenseWindowCmdInvoke(null);
@@ -124,6 +126,12 @@ namespace Upload.Actions
             //    }
             //}
         }
+
+        private void HelpCmdInvoke(object obj)
+        {
+            System.Diagnostics.Process.Start("https://www.youtube.com/playlist?list=PLGpC6oEVINHN0cYaQj8P5gL930DQiDN2M");
+        }
+
         private void LicenseWindowCmdInvoke(object obj)
         {
             MainWindow mainWnd = obj as MainWindow;
