@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Upload.GUI"
+        xmlns:converter="clr-namespace:Upload.GUI.Converter"
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
          TextElement.FontWeight="Regular"
          TextElement.FontSize="13"
@@ -18,6 +19,7 @@
             <Setter Property="FontSize" Value="14" />
         </Style>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
@@ -81,18 +83,57 @@
                         <TextBlock Text="Shirts" Margin="5" FontWeight="DemiBold" Foreground="Blue"/>
                         <ListView ItemsSource="{Binding Shirts}" 
                               SelectedItem="{Binding SelectedShirt}"
-                              Height="200">
+                              Height="250">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding DefaultPNGPath}" MaxWidth="250"/>
+                                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="25"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding DesignTitle}"/>
+                                        <Button Grid.Column="1" Padding="0" Width="25" Height="20" Margin="1" Name="deleteButton" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed"
+                                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveShirtCmd}">
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                    <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                    <Binding RelativeSource="{RelativeSource AncestorType=ListViewItem}" Path="DataContext"/>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                            <Button.Content>
+                                                <materialDesign:PackIcon Foreground="Crimson" Kind="CloseBox" Width="20" Height="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Button.Content>
+                                        </Button>
+
+                                    </Grid>
+                                    <DataTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Trigger.Setters>
+                                                <Setter TargetName="deleteButton" Property="Visibility" Value="Visible"/>
+                                            </Trigger.Setters>
+                                        </Trigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}" ToolTip="Delete"
-                                FontSize="15" Width="20" Height="20" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="DarkRed"/>
+                            <!--<Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}" ToolTip="Delete"
+                                FontSize="15" Width="20" Height="20" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="DarkRed"/>-->
                             <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
-                                FontSize="12" Width="80" Height="23" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+                                FontSize="12" Width="0" Height="23" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+                            <Button Command="{Binding ClickFrontImageCmd}" CommandParameter="{Binding}"
+                                FontSize="10" Padding="0" Width="25" Height="23" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Browse">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="Add" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"
+                                FontSize="10" Padding="0" Width="25" Height="23" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Delete Selected Shirts">
+                                <Button.Content>
+                                    <materialDesign:PackIcon Foreground="Crimson" Kind="Close" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                </Button.Content>
+                            </Button>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>

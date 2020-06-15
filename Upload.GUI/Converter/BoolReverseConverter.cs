@@ -8,6 +8,7 @@ using System.Windows.Data;
 
 namespace Upload.GUI.Converter
 {
+
     public class BoolReverseConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

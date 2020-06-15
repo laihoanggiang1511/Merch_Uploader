@@ -18,6 +18,8 @@ namespace Upload.ViewModel
         public ICommand SaveCmd { get; set; }
         public ICommand OpenCmd { get; set; }
         public ICommand DeleteCmd { get; set; }
+        public ICommand RemoveShirtCmd { get; set; }
+
         public ICommand SaveAllCmd { get; set; }
         public ICommand ClickFrontImageCmd { get; set; }
         public ICommand ClickBackImageCmd { get; set; }
@@ -541,16 +543,20 @@ namespace Upload.ViewModel
         {
             get
             {
-                if (SelectedShirtType is PullOverHoodie ||
-                    SelectedShirtType is ZipHoodie)
+                if (SelectedShirt != null)
                 {
-                    return SelectedShirt.FrontHoodiePath;
+                    if (SelectedShirtType is PullOverHoodie ||
+                        SelectedShirtType is ZipHoodie)
+                    {
+                        return SelectedShirt.FrontHoodiePath;
+                    }
+                    else if (SelectedShirtType is PopSocketsGrip)
+                    {
+                        return SelectedShirt.PopSocketsGripPath;
+                    }
+                    else return SelectedShirt.FrontStdPath;
                 }
-                else if (SelectedShirtType is PopSocketsGrip)
-                {
-                    return SelectedShirt.PopSocketsGripPath;
-                }
-                else return SelectedShirt.FrontStdPath;
+                else return string.Empty;
             }
             set
             {
@@ -566,16 +572,20 @@ namespace Upload.ViewModel
         {
             get
             {
-                if (SelectedShirtType is PullOverHoodie ||
-                    SelectedShirtType is ZipHoodie)
+                if (SelectedShirt != null)
                 {
-                    return SelectedShirt.BackHoodiePath;
+                    if (SelectedShirtType is PullOverHoodie ||
+                        SelectedShirtType is ZipHoodie)
+                    {
+                        return SelectedShirt.BackHoodiePath;
+                    }
+                    else if (SelectedShirtType is PopSocketsGrip)
+                    {
+                        return SelectedShirt.PopSocketsGripPath;
+                    }
+                    else return SelectedShirt.BackStdPath;
                 }
-                else if (SelectedShirtType is PopSocketsGrip)
-                {
-                    return SelectedShirt.PopSocketsGripPath;
-                }
-                else return SelectedShirt.BackStdPath;
+                else return string.Empty;
             }
             set
             {

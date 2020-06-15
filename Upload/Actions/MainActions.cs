@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Upload.GUI;
 using Upload.ViewModel;
 using Upload.ViewModel.MVVMCore;
-using Cryptlex;
 using RelayCommand = Upload.ViewModel.MVVMCore.RelayCommand;
 using System.Windows;
 using System.Threading;
@@ -23,13 +22,7 @@ namespace Upload.Actions
         //KeyInfoResult keyInfo;
         public void ShowMainWindow()
         {
-            string licenseKey = LexActivator.GetLicenseKey();
-            if (!string.IsNullOrEmpty(licenseKey))
-            {
-                LexActivator.SetLicenseKey(licenseKey);
-            }
-            if (/*LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK ||
-                LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK*/true)
+            if (CryptlexLicenseManager.IsLicenseOK()==true)
             {
                 MainWindow mainWindow = new MainWindow();
                 MainViewModel mainVM = new MainViewModel

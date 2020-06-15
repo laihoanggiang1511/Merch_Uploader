@@ -18,11 +18,10 @@ namespace Upload.Actions
 {
     internal class ShirtCreatorActions
     {
-        ShirtCreatorViewModel shirtVM = null;
         public void ShowShirtCreatorWindow(Shirt editShirt = null)
         {
             ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
-            shirtVM = new ShirtCreatorViewModel();
+            ShirtCreatorViewModel shirtVM = new ShirtCreatorViewModel();
             shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
             shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
             shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
@@ -37,6 +36,7 @@ namespace Upload.Actions
             shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
             shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
             shirtVM.MultiReplaceCmd = new RelayCommand(MultiReplaceCmdInvoke);
+            shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
 
             if (editShirt != null)
             {
@@ -48,6 +48,18 @@ namespace Upload.Actions
                 shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        private void RemoveShirtCmdInvoke(object obj)
+        {
+            object[] objParams = obj as object[];
+            ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+            Shirt s = objParams[1] as Shirt;
+            if(shirtVM!=null && s != null && shirtVM.Shirts!=null && shirtVM.Shirts.Count > 1 && shirtVM.Shirts.Contains(s))
+            {
+                shirtVM.Shirts.Remove(s);
+                shirtVM.SelectedShirt = shirtVM.Shirts.Last();
+            }
         }
 
         private void SaveAllCmdInvoke(object obj)
@@ -125,20 +137,15 @@ namespace Upload.Actions
             }
         }
         private void DeleteCmdInvoke(object obj)
-        {
+        {           
             if (obj is ShirtCreatorViewModel shirtVM)
             {
                 if (shirtVM.Shirts != null)
                 {
-                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count > 0)
+                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count > 1)
                         shirtVM.Shirts.Remove(shirtVM.SelectedShirt);
                 }
-                if (shirtVM.Shirts.Count == 0)
-                {
-                    shirtVM.Shirts.Add(new Shirt());
-                }
-                shirtVM.SelectedShirt = shirtVM.Shirts[0];
-
+                shirtVM.SelectedShirt = shirtVM.Shirts.Last();
             }
         }
 
@@ -722,9 +729,15 @@ namespace Upload.Actions
         {
             try
             {
-                ToggleButton button = obj as ToggleButton;
-                if (button != null)
+                object[] objParams = obj as object[];
+                ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+                ToggleButton button = objParams[1] as ToggleButton;
+
+                if (shirtVM!=null && button != null)
                 {
+                    shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
+                    shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
+
                     string colorName = button.ToolTip.ToString();
                     if (button.IsChecked == true)
                     {
@@ -744,16 +757,17 @@ namespace Upload.Actions
             }
             catch
             {
-                shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
-                shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
             }
         }
         private void MouseEnterCmdInvoke(object obj)
         {
             try
             {
-                ToggleButton button = obj as ToggleButton;
-                if (button != null)
+                object[] objParams = obj as object[];
+                ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+                ToggleButton button = objParams[1] as ToggleButton;
+
+                if (shirtVM!=null && button != null)
                 {
                     string colorName = button.ToolTip.ToString();
                     shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + colorName.ToUpper() + ".png";
@@ -763,8 +777,6 @@ namespace Upload.Actions
             }
             catch
             {
-                shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
-                shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
             }
         }
         #region Batch Replace

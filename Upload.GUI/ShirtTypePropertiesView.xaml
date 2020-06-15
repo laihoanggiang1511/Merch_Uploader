@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Upload.GUI"
-             xmlns:converter="clr-namespace:ShirtCreator.GUI.Converter"
+             xmlns:converter="clr-namespace:Upload.GUI.Converter"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d">
     <UserControl.Resources>
@@ -73,6 +73,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
     </UserControl.Resources>
     <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">-->
     <StackPanel>
@@ -200,20 +201,39 @@
                                 <i:EventTrigger EventName="Checked">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.ChangeColorCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.ChangeColorCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                                           
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="Unchecked">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.ChangeColorCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.ChangeColorCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseEnter">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.MouseEnterCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.MouseEnterCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ToggleButton>

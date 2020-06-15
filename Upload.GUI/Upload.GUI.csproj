@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\BoolReverseConverter.cs" />
+    <Compile Include="Converter\MultiBindingConverter.cs" />
     <Compile Include="MultiReplace.xaml.cs">
       <DependentUpon>MultiReplace.xaml</DependentUpon>
     </Compile>
