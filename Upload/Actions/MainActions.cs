@@ -1,18 +1,16 @@
-﻿using Miscellaneous;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
-using RelayCommand = Upload.ViewModel.MVVMCore.RelayCommand;
+using Common.MVVMCore;
 using System.Windows;
 using System.Threading;
 using System.Drawing;
 using System.Windows.Media;
-using Miscellaneous.LicenseValidator;
+using Common.LicenseManager;
 
 namespace Upload.Actions
 {

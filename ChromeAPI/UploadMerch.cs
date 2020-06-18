@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Common;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace ChromeAPI
             // Log In 
             try
             {
+                Log.log.Info("------Start Log In----------");
                 if (driver != null)
                 {
                     if (driver.Url.Contains("www.amazon.com/ap/signin"))
@@ -34,8 +36,9 @@ namespace ChromeAPI
                 }
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.log.Fatal(ex);
                 return false;
             }
         }
@@ -45,13 +48,13 @@ namespace ChromeAPI
             {
                 if (driver != null && shirt != null)
                 {
+                    Log.log.Info($"-----------Start Upload-------------");
                     driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
 
                     while (Helper.GetElementWithWait(driver, By.Id("select-marketplace-button"), 20) == null)
                     {
                         driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
                     }
-
                     // Upload .png files
                     if (!UploadFilePNG(shirt))
                         return false;
@@ -62,6 +65,7 @@ namespace ChromeAPI
                         return false;
 
                     //Input detail
+                    Log.log.Info("---Input Detail---");
                     for (int i = 0; i < shirt.ShirtTypes.Length; i++)
                     {
                         int column = (i) / 4 + 1;
@@ -69,6 +73,7 @@ namespace ChromeAPI
                         ShirtBase s = shirt.ShirtTypes[i];
                         if (s.IsActive)
                         {
+                            Log.log.Info($"---i={i}---");
                             // Edit Detail-Standard
                             Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/div[{column}]/product-card/div/button"));
                             // Choose Fit type
@@ -101,6 +106,7 @@ namespace ChromeAPI
                         }
                     }
 
+                    Log.log.Info("---Descriptions---");
                     // Set English Descriptions
                     Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandName);
                     Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitle);
@@ -117,17 +123,21 @@ namespace ChromeAPI
                     Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.DescriptionGerman);
 
                     // Submit
+                    Log.log.Info("---Summit---");
                     if (Helper.GetElementWithWait(driver, By.Id("submit-button"), 15) == null)
                         return false;
                     Helper.ClickElement(driver, By.Id("submit-button"));
                     Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button[2]"));
                     System.Threading.Thread.Sleep(3000);
+                    Log.log.Info("-----------End Upload-----------");
                     return true;
                 }
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
+                string strLog = $"---Fail at shirt {shirt.DefaultPNGPath}---\n{ex}";
+                Log.log.Fatal(strLog);
                 return false;
             }
         }
@@ -135,6 +145,7 @@ namespace ChromeAPI
         {
             try
             {
+                Log.log.Info("---Select Product---");
                 if (driver != null)
                 {
                     for (int i = 0; i < shirt.ShirtTypes.Length; i++)
@@ -142,6 +153,7 @@ namespace ChromeAPI
                         ShirtBase sb = shirt.ShirtTypes[i];
                         for (int j = 0; j < sb.MarketPlaces.Length; j++)
                         {
+                            Log.log.Info($"i={i};j={j}");
                             if (!Helper.ClickCheckBox(driver, $"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
                                                     sb.IsActive && sb.MarketPlaces[j]))
                             {
@@ -150,6 +162,7 @@ namespace ChromeAPI
                         }
                     }
                     // next button
+                    Log.log.Info("---Next Button---");
                     if (!Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button")))
                     {
                         return false;
@@ -158,8 +171,9 @@ namespace ChromeAPI
                 }
                 else return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.log.Fatal(ex);
                 return false;
             }
         }
@@ -168,25 +182,30 @@ namespace ChromeAPI
         {
             try
             {
+                Log.log.Info("---Start UploadFilePNG---");
                 if (driver != null)
                 {
                     if (!string.IsNullOrEmpty(shirt.FrontStdPath))
                     {
+                        Log.log.Info("-STANDARD_TSHIRT-FRONT-");
                         IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
                         webElement.SendKeys(shirt.FrontStdPath);
                     }
                     if (!string.IsNullOrEmpty(shirt.FrontHoodiePath))
                     {
+                        Log.log.Info("-STANDARD_PULLOVER_HOODIE-FRONT-");
                         IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
                         webElement.SendKeys(shirt.FrontHoodiePath);
                     }
                     if (!string.IsNullOrEmpty(shirt.PopSocketsGripPath))
                     {
+                        Log.log.Info("-POP_SOCKET-FRONT-");
                         IWebElement webElement = driver.FindElement(By.Id("POP_SOCKET-FRONT"));
                         webElement.SendKeys(shirt.PopSocketsGripPath);
                     }
                     if (!string.IsNullOrEmpty(shirt.BackStdPath))
                     {
+                        Log.log.Info("-STANDARD_TSHIRT-BACK-");
                         Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
                         Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
                         IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
@@ -196,19 +215,22 @@ namespace ChromeAPI
                     }
                     if (!string.IsNullOrEmpty(shirt.BackHoodiePath))
                     {
+                        Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
                         Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
                         Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
                         IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
                         webElement.SendKeys(shirt.BackStdPath);
                         Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
                     }
+                    Log.log.Info("---End UploadFilePNG---");
                     return true;
                 }
                 else
                     return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.log.Fatal(ex);
                 return false;
             }
         }
@@ -216,6 +238,7 @@ namespace ChromeAPI
         {
             try
             {
+                Log.log.Info("---Quit Driver---");
                 if (driver != null)
                 {
                     driver.Close();
@@ -228,8 +251,9 @@ namespace ChromeAPI
                 //    proc.Kill();
                 //}
             }
-            catch
+            catch (Exception ex)
             {
+                Log.log.Fatal(ex);
             }
         }
 
@@ -237,6 +261,7 @@ namespace ChromeAPI
         {
             try
             {
+                Log.log.Info("---Open Chrome---");
                 Cursor.Current = Cursors.WaitCursor;
                 if (driver == null)
                 {
@@ -280,6 +305,7 @@ namespace ChromeAPI
                 }
                 else
                 {
+                    Log.log.Fatal(ex);
                     MessageBox.Show(ex.Message);
                 }
             }

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 
 namespace Upload.Actions
 {

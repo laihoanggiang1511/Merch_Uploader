@@ -1,4 +1,4 @@
-﻿using Upload.ViewModel.MVVMCore;
+﻿using Common.MVVMCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

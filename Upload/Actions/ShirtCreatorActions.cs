@@ -1,6 +1,6 @@
 ﻿using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 using System.Linq;
 using Upload.DataAccess;
 using Upload.Model;

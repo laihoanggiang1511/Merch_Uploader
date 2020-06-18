@@ -112,13 +112,13 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
-      <Project>{59df165a-b925-4d04-a8a2-16e9e5f52eca}</Project>
-      <Name>Miscellaneous</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
       <Project>{F18802E3-6AB3-4A0D-AFE6-880C34104FCE}</Project>
       <Name>Upload.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\GIANG\source\repos\laihoanggiang1511\Common\Common.csproj">
+      <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

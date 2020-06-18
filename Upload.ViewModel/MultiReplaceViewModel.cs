@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Upload.Model;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 
 namespace Upload.ViewModel
 {

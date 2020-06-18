@@ -60,12 +60,15 @@ namespace Upload.DataAccess.Helper
             //List<Color> lstColor = new List<Color>();
             try
             {
-                string[] temp = input.Split(',');
-                //bool[] parseResult = new bool[temp.Length];
-                for (int i = 0; i < colors.Length; i++)
+                if (colors != null)
                 {
-                    bool.TryParse(temp[i], out bool result);
-                    colors[i].IsActive = result;
+                    string[] temp = input.Split(',');
+                    //bool[] parseResult = new bool[temp.Length];
+                    for (int i = 0; i < colors.Length; i++)
+                    {
+                        bool.TryParse(temp[i], out bool result);
+                        colors[i].IsActive = result;
+                    }
                 }
                 return true;
             }

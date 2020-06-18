@@ -48,8 +48,6 @@
     <Compile Include="MultiReplaceViewModel.cs" />
     <Compile Include="ShirtCreatorViewModel.cs" />
     <Compile Include="UploadWindowViewModel.cs" />
-    <Compile Include="MVVMCore\RelayCommand.cs" />
-    <Compile Include="MVVMCore\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -71,6 +69,10 @@
     <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
       <Project>{f18802e3-6ab3-4a0d-afe6-880c34104fce}</Project>
       <Name>Upload.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\GIANG\source\repos\laihoanggiang1511\Common\Common.csproj">
+      <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

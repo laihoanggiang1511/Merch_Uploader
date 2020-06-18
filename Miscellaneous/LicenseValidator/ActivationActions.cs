@@ -7,6 +7,7 @@ using System.Windows;
 using Cryptlex;
 using Miscellaneous.LicenseValidator;
 using System.Windows.Media;
+using Common.MVVMCore;
 
 namespace Miscellaneous
 {
@@ -151,12 +152,12 @@ namespace Miscellaneous
                 LexActivator.SetLicenseKey(activeVM.SerialNumber);
                 if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK)
                 {
-                    RegistryIO.SaveKey(activeVM.SerialNumber);
+                    //RegistryIO.SaveKey(activeVM.SerialNumber);
                     UpdateLicenseInfo(activeVM);
                 }
                 else if (CryptlexLicenseManager.ActivateKey(activeVM.SerialNumber))
                 {
-                    RegistryIO.SaveKey(activeVM.SerialNumber);
+                    //RegistryIO.SaveKey(activeVM.SerialNumber);
                     UpdateLicenseInfo(activeVM);
                 }
             }

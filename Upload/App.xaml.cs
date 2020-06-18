@@ -1,8 +1,9 @@
-﻿using Miscellaneous.LicenseValidator;
+﻿using Common.LicenseManager;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +19,8 @@ namespace Upload
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            string path = @"Upload/MerchUploadLog.txt";
+            Common.Log.SetUpLog("MerchUploadLog.txt", path);
             CryptlexLicenseManager.SetLicenseData();
             Actions.MainActions actions = new Actions.MainActions();
             actions.ShowMainWindow();

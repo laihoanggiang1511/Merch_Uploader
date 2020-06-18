@@ -12,7 +12,7 @@ using Upload.DataAccess;
 using Upload.Model;
 using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 using System.Windows.Forms;
 using ChromeAPI;
 using OpenQA.Selenium;
@@ -41,12 +41,12 @@ namespace Upload.Actions
                 SaveXmlCmd = new RelayCommand(SaveXmlCmdInvoke),
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
                 UserFolderPath = Properties.Settings.Default.UserFolderPath,
-                Email = Miscellaneous.Crypt.Decrypt(Properties.Settings.Default.Email, true),
+                Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true),
             };
             if (uploadWindow != null)
             {
                 PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
-                passwordBox.Password = Miscellaneous.Crypt.Decrypt(Properties.Settings.Default.Password, true);
+                passwordBox.Password = Common.Crypt.Decrypt(Properties.Settings.Default.Password, true);
             }
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
@@ -84,13 +84,13 @@ namespace Upload.Actions
             {
                 //Save Setting
                 Properties.Settings.Default.UserFolderPath = mainVM.UserFolderPath;
-                Properties.Settings.Default.Email = Miscellaneous.Crypt.Encrypt(mainVM.Email, true);
+                Properties.Settings.Default.Email = Common.Crypt.Encrypt(mainVM.Email, true);
                 if (sender is UploadWindow uploadWindow)
                 {
                     PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
                     if (passwordBox != null)
                     {
-                        Properties.Settings.Default.Password = Miscellaneous.Crypt.Encrypt(passwordBox.Password, true);
+                        Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
                     }
                 }
                 Properties.Settings.Default.Save();

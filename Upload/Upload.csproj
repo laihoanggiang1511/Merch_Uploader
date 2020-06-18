@@ -146,10 +146,6 @@
       <Project>{6f934b52-c1ff-472e-a192-dcdc9d1427cf}</Project>
       <Name>ChromeAPI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miscellaneous\Miscellaneous.csproj">
-      <Project>{59DF165A-B925-4D04-A8A2-16E9E5F52ECA}</Project>
-      <Name>Miscellaneous</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Upload.DataAccess\Upload.DataAccess.csproj">
       <Project>{684cbfe5-abb8-4630-bb48-2523e2d9fbeb}</Project>
       <Name>Upload.DataAccess</Name>
@@ -169,6 +165,10 @@
     <ProjectReference Include="..\Upload.ViewModel\Upload.ViewModel.csproj">
       <Project>{FB7A56A9-B95B-401A-AEDD-A3F8F5AA6E5C}</Project>
       <Name>Upload.ViewModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\GIANG\source\repos\laihoanggiang1511\Common\Common.csproj">
+      <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
+      <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

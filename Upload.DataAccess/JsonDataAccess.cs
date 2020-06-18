@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,7 +26,9 @@ namespace Upload.DataAccess
 
         public bool SaveShirt(Shirt s)
         {
-            throw new NotImplementedException();
+            string json = JsonConvert.SerializeObject(s);
+            System.IO.File.WriteAllText(@"D:\path.txt", json);
+            return true;
         }
 
         public bool DeleteShirt()

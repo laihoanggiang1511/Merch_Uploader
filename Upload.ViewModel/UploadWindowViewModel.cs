@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Upload.Model;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 
 
 namespace Upload.ViewModel

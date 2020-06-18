@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 
 namespace Upload.ViewModel
 {
-    public class MainViewModel: MVVMCore.ViewModelBase
+    public class MainViewModel: ViewModelBase
     {
         public RelayCommand CreateWindowCmd { get; set; }
         public RelayCommand UploadWindowCmd { get; set; }
