@@ -13,6 +13,8 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.Office.Interop.Excel;
+
 
 namespace Upload.Actions
 {
@@ -35,9 +37,9 @@ namespace Upload.Actions
             shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
             shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
             shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
-            shirtVM.MultiReplaceCmd = new RelayCommand(MultiReplaceCmdInvoke);
+            shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
             shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
-
+            shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
             if (editShirt != null)
             {
                 shirtVM.SelectedShirt = editShirt;
@@ -55,7 +57,7 @@ namespace Upload.Actions
             object[] objParams = obj as object[];
             ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
             Shirt s = objParams[1] as Shirt;
-            if(shirtVM!=null && s != null && shirtVM.Shirts!=null && shirtVM.Shirts.Count > 1 && shirtVM.Shirts.Contains(s))
+            if (shirtVM != null && s != null && shirtVM.Shirts != null && shirtVM.Shirts.Count > 1 && shirtVM.Shirts.Contains(s))
             {
                 shirtVM.Shirts.Remove(s);
                 shirtVM.SelectedShirt = shirtVM.Shirts.Last();
@@ -137,7 +139,7 @@ namespace Upload.Actions
             }
         }
         private void DeleteCmdInvoke(object obj)
-        {           
+        {
             if (obj is ShirtCreatorViewModel shirtVM)
             {
                 if (shirtVM.Shirts != null)
@@ -581,13 +583,14 @@ namespace Upload.Actions
                     }
                     else
                     {
-                        MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
-                            "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
-                        if (result == MessageBoxResult.Yes ||
-                            result == MessageBoxResult.OK)
-                        {
-                            ImageEditCmdInvoke(path);
-                        }
+                        System.Windows.MessageBox.Show("Wrong Image Dimension!");
+                        //MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
+                        //    "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+                        //if (result == MessageBoxResult.Yes ||
+                        //    result == MessageBoxResult.OK)
+                        //{
+                        //    ImageEditCmdInvoke(path);
+                        //}
                         return false;
                     }
                 }
@@ -733,7 +736,7 @@ namespace Upload.Actions
                 ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
                 ToggleButton button = objParams[1] as ToggleButton;
 
-                if (shirtVM!=null && button != null)
+                if (shirtVM != null && button != null)
                 {
                     shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
                     shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
@@ -767,7 +770,7 @@ namespace Upload.Actions
                 ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
                 ToggleButton button = objParams[1] as ToggleButton;
 
-                if (shirtVM!=null && button != null)
+                if (shirtVM != null && button != null)
                 {
                     string colorName = button.ToolTip.ToString();
                     shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + colorName.ToUpper() + ".png";
@@ -780,11 +783,28 @@ namespace Upload.Actions
             }
         }
         #region Batch Replace
-        private void MultiReplaceCmdInvoke(object obj)
+        private void ExportToExcel(object obj)
         {
             if (obj is ShirtCreatorViewModel shirtVM)
             {
-                ShowMultiReplaceWindow(shirtVM);
+                ExcelActions xlActions = new ExcelActions();
+                if (shirtVM.Shirts != null && shirtVM.Shirts.Count > 0)
+                {
+                    xlActions.ExportToExel(shirtVM.Shirts);
+                }
+
+                //ShowMultiReplaceWindow(shirtVM);
+            }
+        }
+
+        private void ImportFromExcel(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+                ExcelActions xlActions = new ExcelActions();
+                xlActions.ImportFromExcel(shirtVM.Shirts);
+                shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
+                //ShowMultiReplaceWindow(shirtVM);
             }
         }
 

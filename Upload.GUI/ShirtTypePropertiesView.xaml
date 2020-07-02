@@ -186,7 +186,7 @@
         <!--Color picker-->
         <StackPanel Grid.Row="2">
             <TextBlock Text="Colors" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
-            <ItemsControl ItemsSource="{Binding Colors}" HorizontalContentAlignment="Stretch">
+            <ItemsControl ItemsSource="{Binding Colors}" HorizontalContentAlignment="Stretch" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>

@@ -19,7 +19,8 @@ namespace Upload.ViewModel
         public ICommand OpenCmd { get; set; }
         public ICommand DeleteCmd { get; set; }
         public ICommand RemoveShirtCmd { get; set; }
-
+        public ICommand ImportFromExcelCmd { get; set; }
+        
         public ICommand SaveAllCmd { get; set; }
         public ICommand ClickFrontImageCmd { get; set; }
         public ICommand ClickBackImageCmd { get; set; }

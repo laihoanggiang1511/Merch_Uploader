@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Common;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -17,28 +18,43 @@ namespace ChromeAPI
 {
     public class Helper
     {
- 
+
         public static bool ClickElement(ChromeDriver driver, By by)
         {
-            IWebElement webElement = GetElementWithWait(driver, by);
-            if (webElement != null)
+            try
             {
-                webElement.Click();
-                return true;
+                Log.log.Info(string.Format("--Click Element {0}--", by));
+                IWebElement webElement = GetElementWithWait(driver, by);
+                if (webElement != null)
+                {
+                    webElement.Click();
+                    return true;
+                }
             }
-            else return false;
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
+            return false;
         }
         public static bool SendKeysElement(ChromeDriver driver, By by, string input)
         {
-            IWebElement webElement = GetElementWithWait(driver, by);
-            if (webElement != null)
+            try
             {
-                webElement.Clear();
-                Thread.Sleep(1000);
-                webElement.SendKeys(input);
-                return true;
+                IWebElement webElement = GetElementWithWait(driver, by);
+                if (webElement != null)
+                {
+                    webElement.Clear();
+                    Thread.Sleep(1000);
+                    webElement.SendKeys(input);
+                    return true;
+                }
             }
-            else return false;
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
+            return false;
         }
         public static bool ClickCheckBox(ChromeDriver driver, string xPath, bool click = true)
         {
@@ -60,8 +76,9 @@ namespace ChromeAPI
                 }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Log.log.Fatal(ex);
                 return false;
             }
 

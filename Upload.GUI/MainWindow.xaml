@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Upload.GUI"
         mc:Ignorable="d"
-        Title="Merch Uploader" Height="180" Width="450" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow"
+        Title="Merch Uploader" Height="200" Width="450" ResizeMode="NoResize" WindowStyle="ThreeDBorderWindow"
          TextElement.Foreground="{DynamicResource MaterialDesignBody}"
          TextElement.FontWeight="Regular"
          TextElement.FontSize="13"
@@ -28,7 +28,7 @@
         </Style>
     </Window.Resources>
     <StackPanel>
-        <TextBlock Text="{Binding LicenseStatus}" Margin="5" HorizontalAlignment="Center"/>
+        <TextBlock Text="{Binding LicenseStatus}" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
         <Grid  HorizontalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>

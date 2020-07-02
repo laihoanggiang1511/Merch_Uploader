@@ -86,14 +86,14 @@
                               Height="250">
                             <ListView.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth}">
+                                    <Grid Height="20" Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth}">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
-                                            <ColumnDefinition Width="25"/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="{Binding DesignTitle}"/>
-                                        <Button Grid.Column="1" Padding="0" Width="25" Height="20" Margin="1" Name="deleteButton" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed"
-                                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                        <Button Grid.Column="1" Padding="0" Width="20" Height="20" Margin="10,0" Name="deleteButton" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed"
+                                                Style="{DynamicResource MaterialDesignFlatButton}" BorderThickness="0"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveShirtCmd}">
                                             <Button.CommandParameter>
                                                 <MultiBinding Converter="{StaticResource MultiBindingConverter}">
@@ -216,11 +216,30 @@
                                 <Button  Command="{Binding ReplaceCmd}" Margin="5"
                                         CommandParameter="{Binding}"
                                         Content="Replace" Width="85" Height="25"
-                                        Style="{StaticResource MaterialDesignRaisedLightButton}"/>
-                                <Button Command="{Binding MultiReplaceCmd}" CommandParameter="{Binding}"
+                                        />
+                                <Button Margin="5" Command="{Binding MultiReplaceCmd}" CommandParameter="{Binding}"
                                     Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}" 
-                                    Content="Multi-Replace" Width="120" Height="25"
-                                        Style="{StaticResource MaterialDesignRaisedLightButton}"/>
+                                    Width="40" Height="25" Padding="0" ToolTip="To Excel" Name="ToExcel"
+                                        Click="Btn_ToExcel_Click">
+                                    <Button.Content>
+                                        <Grid Width="40">
+                                            <materialDesign:PackIcon Kind="ArrowRight" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </Button.Content>
+                                </Button>
+                                <Button Margin="5" Command="{Binding ImportFromExcelCmd}" CommandParameter="{Binding}"
+                                    Visibility="Collapsed" 
+                                    Width="40" Height="25" Padding="0" Name="FromExcel" Click="Btn_FromExcel_Click"
+                                        Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="From Excel">
+                                    <Button.Content>
+                                        <Grid Width="40">
+                                            <materialDesign:PackIcon Kind="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                            <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </Button.Content>
+                                </Button>
+
                             </StackPanel>
                         </Grid>
                     </StackPanel>

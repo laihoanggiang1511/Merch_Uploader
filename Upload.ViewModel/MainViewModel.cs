@@ -36,11 +36,11 @@ namespace Upload.ViewModel
                 if (licenseStatus != value)
                 {
                     licenseStatus = value;
-                    RaisePropertyChanged("LiscenseStatus");
+                    RaisePropertyChanged("LicenseStatus");
                 }
             }
         }
-        private bool enableUpload = true;
+        private bool enableUpload = false;
         public bool EnableUpload
         {
             get { return enableUpload; }
