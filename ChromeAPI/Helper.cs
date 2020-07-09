@@ -16,9 +16,10 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace ChromeAPI
 {
+    public delegate bool LogIn(ChromeDriver driver);
     public class Helper
     {
-
+        public static LogIn LogInCallBack;
         public static bool ClickElement(ChromeDriver driver, By by)
         {
             try
@@ -28,6 +29,7 @@ namespace ChromeAPI
                 if (webElement != null)
                 {
                     webElement.Click();
+                    Log.log.Info(string.Format("--Success--"));
                     return true;
                 }
             }
@@ -35,18 +37,21 @@ namespace ChromeAPI
             {
                 Log.log.Fatal(ex);
             }
+            Log.log.Info(string.Format("--Failed--"));
             return false;
         }
         public static bool SendKeysElement(ChromeDriver driver, By by, string input)
         {
             try
             {
+                Log.log.Info(string.Format("--Send Key Element {0}--", by));
                 IWebElement webElement = GetElementWithWait(driver, by);
                 if (webElement != null)
                 {
                     webElement.Clear();
                     Thread.Sleep(1000);
                     webElement.SendKeys(input);
+                    Log.log.Info(string.Format("--Success--"));
                     return true;
                 }
             }
@@ -54,49 +59,65 @@ namespace ChromeAPI
             {
                 Log.log.Fatal(ex);
             }
+            Log.log.Info(string.Format("--Failed--"));
             return false;
         }
         public static bool ClickCheckBox(ChromeDriver driver, string xPath, bool click = true)
         {
             try
             {
+                Log.log.Info(string.Format("--Click Check Box {0}, {1}--", xPath, click.ToString()));
                 IWebElement webElement = GetElementWithWait(driver, By.XPath(xPath));
-                string childXpath = xPath + "/i";
-                IWebElement iChildWebElement = GetElementWithWait(driver, By.XPath(childXpath));
-                bool IsChecked = true;
-                string classAttribute = iChildWebElement.GetAttribute("class");
-                if (classAttribute.Equals("sci-icon sci-check-box-outline-blank") ||
-                    classAttribute.Equals("sci-icon"))// sci-check checkmark
+                if (webElement != null)
                 {
-                    IsChecked = false;
+                    string childXpath = xPath + "/i";
+                    IWebElement iChildWebElement = GetElementWithWait(driver, By.XPath(childXpath));
+                    if (iChildWebElement != null)
+                    {
+                        bool IsChecked = true;
+                        string classAttribute = iChildWebElement.GetAttribute("class");
+                        if (classAttribute.Equals("sci-icon sci-check-box-outline-blank") ||
+                            classAttribute.Equals("sci-icon"))// sci-check checkmark
+                        {
+                            IsChecked = false;
+                        }
+                        if (IsChecked != click)
+                        {
+                            webElement.Click();
+                        }
+                        Log.log.Info(string.Format("--Success--"));
+                        return true;
+                    }
                 }
-                if (IsChecked != click)
-                {
-                    webElement.Click();
-                }
-                return true;
             }
             catch (Exception ex)
             {
                 Log.log.Fatal(ex);
-                return false;
             }
-
+            Log.log.Info(string.Format("--Failed--"));
+            return false;
         }
 
         public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 10)
         {
             try
             {
+                if (LogInCallBack != null && !LogInCallBack.Invoke(driver))
+                {
+                    return null;
+                }
                 WebDriverWait webdriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitTime));
                 IWebElement webElement = webdriverWait.Until(ExpectedConditions.ElementExists(by));
-                Thread.Sleep(200);
+                Random random = new Random();
+                int r = random.Next(100, 200);
+                Thread.Sleep(r);
                 return webElement;
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                Log.log.Fatal(ex);
             }
+            return null;
         }
         public static void ShowErrorMessageBox(string message)
         {

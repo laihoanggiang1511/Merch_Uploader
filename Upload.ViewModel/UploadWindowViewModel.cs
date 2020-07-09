@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Upload.Model;
 using Common.MVVMCore;
-
+using System.IO;
 
 namespace Upload.ViewModel
 {
@@ -22,6 +22,7 @@ namespace Upload.ViewModel
         public ICommand ChooseFolderCmd { get; set; }
         public ICommand SaveXmlCmd { get; set; }
         public ICommand EditShirtCmd { get; set; }
+        public ICommand ShowConfigurationCmd { get; set; }
         public string Password { get; set; }
         public ObservableCollection<Shirt> Shirts { get; set; }
         private Shirt selectedShirt;
@@ -39,6 +40,7 @@ namespace Upload.ViewModel
 
                     if (selectedShirt != null)
                     {
+                        AllowDelete = true;
                         EnableDescription = true;
                         if (!string.IsNullOrEmpty(selectedShirt.FrontStdPath))
                             ImagePath = selectedShirt.FrontStdPath;
@@ -70,7 +72,10 @@ namespace Upload.ViewModel
                         }
                     }
                     else
+                    {
                         EnableDescription = false;
+                        AllowDelete = false;
+                    }
 
                     RaisePropertyChanged("SelectedShirt");
                 }
@@ -92,7 +97,38 @@ namespace Upload.ViewModel
                 }
             }
         }
-
+        private bool showConfiguration = false;
+        public bool ShowConfiguration
+        {
+            get
+            {
+                return showConfiguration;
+            }
+            set
+            {
+                if (showConfiguration != value)
+                {
+                    showConfiguration = value;
+                    RaisePropertyChanged("ShowConfiguration");
+                }
+            }
+        }
+        private bool allowDelete = false;
+        public bool AllowDelete
+        {
+            get
+            {
+                return allowDelete;
+            }
+            set
+            {
+                if (allowDelete != value)
+                {
+                    allowDelete = value;
+                    RaisePropertyChanged("AllowDelete");
+                }
+            }
+        }
         private string descriptions = string.Empty;
         public string Descriptions
         {
@@ -137,10 +173,42 @@ namespace Upload.ViewModel
                 if (userFolderPath != value)
                 {
                     userFolderPath = value;
+                    if (!string.IsNullOrEmpty(userFolderPath) && userFolderPath.Contains("\\"))
+                    {
+                        SelectedPath = userFolderPath.Split('\\').Last();
+                    }
+                    else
+                    {
+                        SelectedPath = string.Empty;
+                    }
                     RaisePropertyChanged("UserFolderPath");
                 }
             }
         }
+
+        private string selectedPath;
+        public string SelectedPath
+        {
+            get { return selectedPath; }
+            set
+            {
+                if (selectedPath != value)
+                {
+                    selectedPath = value;
+                    userFolderPath = Path.Combine(GetDataDirectory(), selectedPath);
+                    RaisePropertyChanged("SelectedPath");
+                }
+            }
+        }
+        public string GetDataDirectory()
+        {
+            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            dataFolder += "\\Upload\\UserFolders";
+            return dataFolder;
+        }
+
+        public ObservableCollection<string> UserFolders { get; set; }
+
         private bool isUploading = false;
         public bool IsUploading
         {

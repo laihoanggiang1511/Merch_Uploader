@@ -20,7 +20,7 @@ namespace Upload.ViewModel
         public ICommand DeleteCmd { get; set; }
         public ICommand RemoveShirtCmd { get; set; }
         public ICommand ImportFromExcelCmd { get; set; }
-        
+
         public ICommand SaveAllCmd { get; set; }
         public ICommand ClickFrontImageCmd { get; set; }
         public ICommand ClickBackImageCmd { get; set; }
@@ -61,7 +61,7 @@ namespace Upload.ViewModel
                     createMode = value;
                     if (createMode == false)
                     {
-                        
+
                     }
                     RaisePropertyChanged("CreateMode");
                 }
@@ -83,6 +83,22 @@ namespace Upload.ViewModel
                 }
             }
         }
+        private bool allowDelete = false;
+        public bool AllowDelete
+        {
+            get
+            {
+                return allowDelete;
+            }
+            set
+            {
+                if (allowDelete != value)
+                {
+                    allowDelete = value;
+                    RaisePropertyChanged("AllowDelete");
+                }
+            }
+        }
 
         private Shirt selectedShirt = null;
         public Shirt SelectedShirt
@@ -101,7 +117,11 @@ namespace Upload.ViewModel
                         SelectedShirtType = SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                         SelectedDescriptionIndex = 0;
                         UpdateDescriptionsFromShirt(SelectedShirt);
-
+                        AllowDelete = true;
+                    }
+                    else
+                    {
+                        AllowDelete = false;
                     }
                     RaisePropertyChanged("SelectedShirt");
                     RaisePropertyChanged("FrontImagePath");
@@ -273,7 +293,6 @@ namespace Upload.ViewModel
                 }
             }
         }
-
         #region Descriptions
         private int selectedDescriptionIndex = 0;
         public int SelectedDescriptionIndex
@@ -455,7 +474,7 @@ namespace Upload.ViewModel
                     shirt.DescriptionGerman + "\n";
             }
         }
-        public void UpdateDescriptionsToShirt(Shirt shirt,string input)
+        public void UpdateDescriptionsToShirt(Shirt shirt, string input)
         {
             string strDescription = input;
             strDescription = strDescription.Replace("\r", "");

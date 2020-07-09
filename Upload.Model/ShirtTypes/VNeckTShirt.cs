@@ -28,8 +28,8 @@ namespace Upload.Model
                 new Color("Sapphire",false),
             };
             this.FitTypes = null;//ko co
-            this.MarketPlaces = new bool[] { true };
-            this.Prices = new double[] { 19.99 };
+            this.MarketPlaces = new bool[] { true ,false,false};
+            this.Prices = new double[] { 19.99,15.99,16.99 };
         }
     }
 }

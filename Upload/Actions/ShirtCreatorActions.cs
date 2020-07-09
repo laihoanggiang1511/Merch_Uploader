@@ -108,7 +108,7 @@ namespace Upload.Actions
             }
 
         }
-        private void ShowPopup(ShirtCreatorViewModel viewModel, string message)
+        public void ShowPopup(ShirtCreatorViewModel viewModel, string message)
         {
 
             if (viewModel != null)
@@ -524,7 +524,7 @@ namespace Upload.Actions
                         {
                             XMLDataAccess dataAccess = new XMLDataAccess();
                             dataAccess.SaveShirt(shirtCreatorVM.SelectedShirt);
-                            System.Windows.MessageBox.Show(string.Format("Shirt saved in {0}", dataAccess.XmlFilePath), "Save Shirt", MessageBoxButton.OK, MessageBoxImage.Information);
+                            ShowPopup(shirtCreatorVM, string.Format("Shirt saved in {0}", dataAccess.XmlFilePath));
                         }
                         else
                         {
@@ -802,8 +802,14 @@ namespace Upload.Actions
             if (obj is ShirtCreatorViewModel shirtVM)
             {
                 ExcelActions xlActions = new ExcelActions();
-                xlActions.ImportFromExcel(shirtVM.Shirts);
-                shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
+                if (xlActions.ImportFromExcel(shirtVM.Shirts)) {
+                    shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
+                    ShowPopup(shirtVM, "Descriptions imported from excel");
+                }
+                else
+                {
+                    ShowPopup(shirtVM, "Import from excel failed");
+                }
                 //ShowMultiReplaceWindow(shirtVM);
             }
         }

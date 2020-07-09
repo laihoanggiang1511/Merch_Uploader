@@ -30,7 +30,7 @@ namespace Upload.Actions
 
                 };
                 mainWindow.DataContext = mainVM;
-                if (/*CryptlexLicenseManager.IsLicenseOK() == */true)
+                if (/*CryptlexLicenseManager.IsLicenseOK() ==*/ true)
                 {
                     mainVM.EnableCreate = true;
                     mainVM.EnableUpload = true;
@@ -41,7 +41,7 @@ namespace Upload.Actions
                         if (enableCreate)
                             mainVM.EnableCreate = true;
                         else
-                            mainVM.EnableCreate = false;
+                            mainVM.EnableCreate = true;
                         //mainVM.EnableCreate = true;
                     }
                     else

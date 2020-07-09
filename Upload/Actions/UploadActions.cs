@@ -19,6 +19,9 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Upload.Definitions;
 using System.Diagnostics;
+using OpenQA.Selenium.Internal;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Controls.Primitives;
 
 namespace Upload.Actions
 {
@@ -40,9 +43,12 @@ namespace Upload.Actions
                 ChooseFolderCmd = new RelayCommand(ChooseFolderCmdInvoke),
                 SaveXmlCmd = new RelayCommand(SaveXmlCmdInvoke),
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
+                ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
                 UserFolderPath = Properties.Settings.Default.UserFolderPath,
                 Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true),
             };
+            mainVM.UserFolders = GetUserFolders();
+            mainVM.UserFolderPath = mainVM.UserFolders.FirstOrDefault();
             if (uploadWindow != null)
             {
                 PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
@@ -50,6 +56,44 @@ namespace Upload.Actions
             }
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
+        }
+
+        private void ShowConfigurationCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                uploadVM.ShowConfiguration = !uploadVM.ShowConfiguration;
+            }
+        }
+
+        public string GetDataDirectory()
+        {
+            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            dataFolder += "\\Upload\\UserFolders";
+            return dataFolder;
+        }
+
+        public ObservableCollection<string> GetUserFolders()
+        {
+            ObservableCollection<string> result = new ObservableCollection<string>();
+            string dataFolder = GetDataDirectory();
+            if (!Directory.Exists(dataFolder))
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+            string[] userFolders = Directory.GetDirectories(dataFolder);
+            if (userFolders != null && userFolders.Length > 0)
+            {
+                foreach (string userFolder in userFolders)
+                {
+                    if (!string.IsNullOrEmpty(userFolder) && userFolder.Contains("\\"))
+                    {
+                        result.Add(userFolder.Split('\\').Last());
+                    }
+
+                }
+            }
+            return result;
         }
 
         private void EditShirtCmdInvoke(object obj)
@@ -118,15 +162,46 @@ namespace Upload.Actions
 
         private void ChooseFolderCmdInvoke(object obj)
         {
-            FolderBrowserDialog openFile = new FolderBrowserDialog();
-            if (openFile.ShowDialog() == DialogResult.OK)
+            if (obj is UploadWindowViewModel uploadVM)
             {
-                (obj as UploadWindowViewModel).UserFolderPath = openFile.SelectedPath;
+                if (!string.IsNullOrEmpty(uploadVM.UserFolderPath))
+                {
+                    char[] invalidChars = Path.GetInvalidPathChars();
+                    if(!invalidChars.ToList().Any(x=>uploadVM.UserFolderPath.Contains(x)==true))
+                    {
+                        string dataFolder = GetDataDirectory();
+                        string folderPath = Path.Combine(dataFolder, uploadVM.UserFolderPath);
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                            uploadVM.UserFolders = GetUserFolders();
+                            uploadVM.RaisePropertyChanged("UserFolders");
+                            uploadVM.UserFolderPath = folderPath;
+                        }
+                        else
+                        {                                                                 
+                            Helper.ShowErrorMessageBox("Name already exist, please choose a new name");
+                        }
+                    }
+                    else
+                    {
+                        Helper.ShowErrorMessageBox("Name contains invalid character, please choose a new name");
+                    }
+                }
+                //uploadVM.UserFolderPath
+                //if (!string.IsNullOrEmpty(uploadVM.UserFolderPath) && uploadVM.UserFolderPath .
             }
         }
         private void OpenChromeCmdInvoke(object obj)
         {
-            UploadMerch.OpenChrome(mainVM.UserFolderPath);
+            if (Directory.Exists(mainVM.UserFolderPath))
+            {
+                UploadMerch.OpenChrome(mainVM.UserFolderPath);
+            }
+            else
+            {
+                Helper.ShowErrorMessageBox("User folder does not exist");
+            }
         }
         private void UploadCmdInvoke(object obj)
         {
@@ -175,36 +250,42 @@ namespace Upload.Actions
                         return;
                     }
                     UploadMerch upload = new UploadMerch();
-                    UploadMerch.OpenChrome(mainVM.UserFolderPath);
-
-                    if (UploadMerch.driver != null)
+                    if (Directory.Exists(mainVM.UserFolderPath))
                     {
-                        try
+                        UploadMerch.OpenChrome(mainVM.UserFolderPath);
+                        if (UploadMerch.driver != null)
                         {
-                            UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                            upload.Log_In(mainVM.Password);
-                            for (int i = 0; i < mainVM.Shirts.Count; i++)
+                            try
                             {
-                                mainVM.SelectedShirt = mainVM.Shirts[i];
-                                if (!upload.Upload(mainVM.Shirts[i]))
-                                    failShirts.Add(mainVM.Shirts[i]);
+                                UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                                upload.Log_In(mainVM.Password);
+                                for (int i = 0; i < mainVM.Shirts.Count; i++)
+                                {
+                                    mainVM.SelectedShirt = mainVM.Shirts[i];
+                                    if (!upload.Upload(mainVM.Shirts[i]))
+                                        failShirts.Add(mainVM.Shirts[i]);
+                                }
+                                if (failShirts == null || failShirts.Count == 0)
+                                {
+                                    System.Windows.MessageBox.Show("Job Done!");
+                                }
+                                else
+                                {
+                                    string message = "Fail to upload following shirt(s):\n";
+                                    foreach (Shirt shirt in failShirts)
+                                        message += shirt.DesignTitle + "\n";
+                                    System.Windows.MessageBox.Show(message);
+                                }
                             }
-                            if (failShirts == null || failShirts.Count == 0)
+                            catch (Exception ex)
                             {
-                                System.Windows.MessageBox.Show("Job Done!");
-                            }
-                            else
-                            {
-                                string message = "Fail to upload following shirt(s):\n";
-                                foreach (Shirt shirt in failShirts)
-                                    message += shirt.DesignTitle + "\n";
-                                System.Windows.MessageBox.Show(message);
+                                Utils.ShowErrorMessageBox(ex.Message);
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            Utils.ShowErrorMessageBox(ex.Message);
-                        }
+                    }
+                    else
+                    {
+                        Helper.ShowErrorMessageBox("User folder does not exist");
                     }
                 }
             }

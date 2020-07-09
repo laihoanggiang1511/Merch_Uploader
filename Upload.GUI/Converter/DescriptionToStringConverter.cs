@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using Upload.Model;
 
-namespace ShirtCreator.GUI.Converter
+namespace Upload.GUI.Converter
 {
     class DescriptionToStringConverter : IValueConverter
     {

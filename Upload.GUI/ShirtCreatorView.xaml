@@ -35,6 +35,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <!--<MenuItem Header="File">
@@ -128,7 +129,7 @@
                                     <materialDesign:PackIcon Kind="Add" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 </Button.Content>
                             </Button>
-                            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"
+                            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}" Visibility="{Binding AllowDelete,Converter={StaticResource BooleanToVisibility}}"
                                 FontSize="10" Padding="0" Width="25" Height="23" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Delete Selected Shirts">
                                 <Button.Content>
                                     <materialDesign:PackIcon Foreground="Crimson" Kind="Close" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -231,7 +232,7 @@
                                 <Button Margin="5" Command="{Binding ImportFromExcelCmd}" CommandParameter="{Binding}"
                                     Visibility="Collapsed" 
                                     Width="40" Height="25" Padding="0" Name="FromExcel" Click="Btn_FromExcel_Click"
-                                        Style="{StaticResource MaterialDesignRaisedLightButton}" ToolTip="From Excel">
+                                    ToolTip="Import from Excel">
                                     <Button.Content>
                                         <Grid Width="40">
                                             <materialDesign:PackIcon Kind="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
@@ -243,24 +244,28 @@
                             </StackPanel>
                         </Grid>
                     </StackPanel>
-                    <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
-
-                        <Button Content ="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
-                            Width="100" Height="30" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}">
-
-                        </Button>
-                        <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
-                                Width="150" Margin="5,0,5,0">
-                        </Button>
-                        <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
-                                 Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
-                        </Button>
-                    </StackPanel>
                 </Grid>
-
             </Grid>
 
         </ScrollViewer>
-        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="30"/>
+        <Rectangle materialDesign:ColorZoneAssist.Foreground="LightGray" Grid.Row="2" Width="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualHeight}"/>
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
+
+            <Button Content ="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
+                            Width="100" Height="30" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}">
+
+            </Button>
+            <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
+                                Width="150" Margin="5,0,5,0">
+            </Button>
+            <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
+                                 Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
+            </Button>
+            <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}" Visibility="{Binding MultiMode, Converter={StaticResource BooleanToVisibility}}"
+                                 Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
+            </Button>
+
+        </StackPanel>
+        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5"/>
     </Grid>
 </Window>

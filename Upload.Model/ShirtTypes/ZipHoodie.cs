@@ -25,8 +25,8 @@ namespace Upload.Model
                 new Color("Royal Blue",false),
             };
             this.FitTypes = null;//ko co
-            this.MarketPlaces = new bool[] { true };
-            this.Prices = new double[] { 33.99 };
+            this.MarketPlaces = new bool[] { true ,false,false};
+            this.Prices = new double[] { 33.99,28.99,32.99};
         }
     }
 }

@@ -12,11 +12,14 @@ namespace ChromeAPI
     public class UploadMerch
     {
         public static ChromeDriver driver;
+        private static string pass;
+
         public bool Log_In(string password, string email = null)
         {
             // Log In 
             try
             {
+                pass = password;
                 Log.log.Info("------Start Log In----------");
                 if (driver != null)
                 {
@@ -30,17 +33,38 @@ namespace ChromeAPI
                         Helper.SendKeysElement(driver, By.Id("ap_password"), password);
                         Helper.ClickElement(driver, By.Id("signInSubmit"));
                         System.Threading.Thread.Sleep(3000);
-                        return true;
                     }
-                    else return true;
+                    return true;
                 }
-                else return false;
             }
             catch (Exception ex)
             {
                 Log.log.Fatal(ex);
-                return false;
             }
+            return false;
+        }
+        public bool Re_Log_In_Invoke(ChromeDriver mDriver)
+        {
+            // Log In 
+            try
+            {
+                Log.log.Info("------Start Re-LogIn----------");
+                if (mDriver != null)
+                {
+                    if (mDriver.Url.Contains("www.amazon.com/ap/signin"))
+                    {
+                        Helper.SendKeysElement(mDriver, By.Id("ap_password"), pass);
+                        Helper.ClickElement(mDriver, By.Id("signInSubmit"));
+                        System.Threading.Thread.Sleep(3000);
+                    }
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
+            return false;
         }
         public bool Upload(Shirt shirt)
         {
@@ -48,7 +72,9 @@ namespace ChromeAPI
             {
                 if (driver != null && shirt != null)
                 {
+                    Helper.LogInCallBack = new LogIn(Re_Log_In_Invoke);
                     Log.log.Info($"-----------Start Upload-------------");
+
                     driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
 
                     while (Helper.GetElementWithWait(driver, By.Id("select-marketplace-button"), 20) == null)
@@ -75,14 +101,13 @@ namespace ChromeAPI
                         {
                             Log.log.Info($"---i={i}---");
                             // Edit Detail-Standard
-                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/div[{column}]/product-card/div/button"));
+                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
                             // Choose Fit type
                             if (s.FitTypes != null && s.FitTypes.Length > 1)
                             {
                                 for (int j = 0; j < s.FitTypes.Length; j++)
                                 {
-                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor" +
-                                        $"/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
+                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span/i",
                                         s.FitTypes[j]);
                                 }
                             }
@@ -90,7 +115,7 @@ namespace ChromeAPI
                             for (int j = 0; j < s.Colors.Length; j++)
                             {
                                 Color color = s.Colors[j];
-                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
                                                                         $"/div[{j + 1}]/colorcheckbox/span", color.IsActive);
                             }
                             // Set Price
@@ -99,10 +124,12 @@ namespace ChromeAPI
                                 if (s.MarketPlaces[j])
                                 {
                                     //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
                                                             s.Prices[j].ToString());
                                 }
                             }
+                            //Click again to close pallete
+                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
                         }
                     }
 
@@ -115,12 +142,19 @@ namespace ChromeAPI
                     Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.Description);
 
                     //Set German Description
-                    Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandNameGerman);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitleGerman);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1German);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2German);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.DescriptionGerman);
+                    Helper.ClickElement(driver, By.Id("acc-control-all"));
+                    string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
+                    //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
+                    if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
+                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
+                    if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
+                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
+                    if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
+                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
+                    if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
+                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
+                    if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
+                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
 
                     // Submit
                     Log.log.Info("---Summit---");

@@ -53,7 +53,7 @@ namespace Upload.Actions
                 Utils.ShowErrorMessageBox(e.Message);
             }
         }
-        public void ImportFromExcel(ObservableCollection<Shirt> listShirts)
+        public bool ImportFromExcel(ObservableCollection<Shirt> listShirts)
         {
             try
             {
@@ -97,12 +97,14 @@ namespace Upload.Actions
                     }
                     xlWorkBook = null;
                     xlApp = null;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 Utils.ShowErrorMessageBox(ex.Message);
             }
+            return false;
         }
         public void ShirtToExcel(Shirt shirt, int row)
         {
