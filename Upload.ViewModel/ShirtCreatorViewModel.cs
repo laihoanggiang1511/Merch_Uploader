@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
+using Upload.Definitions;
 using Upload.Model;
 
 namespace Upload.ViewModel
@@ -83,6 +87,68 @@ namespace Upload.ViewModel
                 }
             }
         }
+        private bool lightColor = false;
+        public bool LightColor
+        {
+            get
+            {
+                return lightColor;
+            }
+            set
+            {
+                if (lightColor != value)
+                {
+                    lightColor = value;
+                    int[] activeColors;
+                    if (lightColor == true)
+                    {
+                        activeColors = new int[] { 0, 2, 3, 5, 7, 11, 12, 15, 17, 19 };
+
+                    }
+                    else
+                    {
+                        activeColors = new int[] { 1, 4, 8, 9, 10, 14, 16, 18, 19, 20 };
+                    }
+                    for (int i = 0; i < SelectedShirtType.Colors.Length; i++)
+                    {
+                        if (activeColors.ToList().Any(x => x == i))
+                        {
+                            Colors[i].IsActive = true;
+                        }
+                        else
+                        {
+                            Colors[i].IsActive = false;
+                        }
+                    }
+                    RaisePropertyChanged("LightColor");
+
+                }
+            }
+        }
+        private bool selectAllColor = false;
+        public bool SelectAllColor
+        {
+            get
+            {
+                return selectAllColor;
+            }
+            set
+            {
+                if (selectAllColor != value)
+                {
+                    selectAllColor = value;
+                    if (selectAllColor ==true && SelectedShirtType != null && SelectedShirtType.Colors != null)
+                    {
+                        if (SelectedShirtType.GetType() != typeof(StandardTShirt) &&
+                           SelectedShirtType.GetType() != typeof(PremiumTShirt))
+                        {
+                            SelectedShirtType.Colors.ToList().ForEach(x => x.IsActive = true);
+                        }
+                    }
+                    RaisePropertyChanged("SelectAllColor");
+                }
+            }
+        }
         private bool allowDelete = false;
         public bool AllowDelete
         {
@@ -100,6 +166,23 @@ namespace Upload.ViewModel
             }
         }
 
+        ObservableCollection<Definitions.Color> colors = new ObservableCollection<Definitions.Color>();
+        public ObservableCollection<Definitions.Color> Colors
+        {
+            get => colors;
+            set
+            {
+                if (colors != value)
+                {
+                    colors = value;
+                    if (SelectedShirtType != null && colors != null)
+                    {
+                        SelectedShirtType.Colors = colors.ToArray();
+                    }
+                    RaisePropertyChanged("Colors");
+                }
+            }
+        }
         private Shirt selectedShirt = null;
         public Shirt SelectedShirt
         {
@@ -155,7 +238,9 @@ namespace Upload.ViewModel
                         RaisePropertyChanged("CountColor");
                         if (SelectedShirtType.Colors != null)
                         {
-                            var firstActiveColor = SelectedShirtType.Colors[0];
+                            this.Colors.Clear();
+                            SelectedShirtType.Colors.ToList().ForEach(x => this.Colors.Add(x));
+                            var firstActiveColor = this.Colors.FirstOrDefault();
                             FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/" + firstActiveColor.ColorName + ".png";
                             BackMockup = RootFolderPath + SelectedShirtType.TypeName + "Back" + "/" + firstActiveColor.ColorName + ".png";
                         }
@@ -248,9 +333,9 @@ namespace Upload.ViewModel
                 {
                     if (SelectedShirtType.Colors != null)
                         return SelectedShirtType.Colors.Where(x => x.IsActive == true).ToArray().Length;
-                    else return countColor;
+                    else return 0;
                 }
-                else return countColor;
+                else return 0;
             }
             set
             {
@@ -620,7 +705,7 @@ namespace Upload.ViewModel
 
         private void NullToFalseConverter(Array source, bool[] target)
         {
-            int startIndex = 0;
+            int startIndex = -1;
             if (source != null)
             {
                 startIndex = source.Length;

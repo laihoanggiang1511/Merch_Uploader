@@ -3,6 +3,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Upload.Definitions;
 using Upload.Model;
@@ -12,14 +14,22 @@ namespace ChromeAPI
     public class UploadMerch
     {
         public static ChromeDriver driver;
-        private static string pass;
+        public static bool stopUpload;
+        private string email = string.Empty;
+        private string password = string.Empty;
+        public UploadMerch(string password, string email)
+        {
+            if (!string.IsNullOrEmpty(password))
+                this.password = password;
+            if (!string.IsNullOrEmpty(email))
+                this.email = email;
+        }
 
-        public bool Log_In(string password, string email = null)
+        public bool Log_In()
         {
             // Log In 
             try
             {
-                pass = password;
                 Log.log.Info("------Start Log In----------");
                 if (driver != null)
                 {
@@ -32,31 +42,14 @@ namespace ChromeAPI
                         }
                         Helper.SendKeysElement(driver, By.Id("ap_password"), password);
                         Helper.ClickElement(driver, By.Id("signInSubmit"));
-                        System.Threading.Thread.Sleep(3000);
+                        System.Threading.Thread.Sleep(2000);
+                        if (driver.Url.Contains("www.amazon.com/ap/accountfixup"))
+                        {
+                            Helper.ClickElement(driver, By.Id("ap-account-fixup-phone-skip-link"));
+                        }
+                        System.Threading.Thread.Sleep(2000);
                     }
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.log.Fatal(ex);
-            }
-            return false;
-        }
-        public bool Re_Log_In_Invoke(ChromeDriver mDriver)
-        {
-            // Log In 
-            try
-            {
-                Log.log.Info("------Start Re-LogIn----------");
-                if (mDriver != null)
-                {
-                    if (mDriver.Url.Contains("www.amazon.com/ap/signin"))
-                    {
-                        Helper.SendKeysElement(mDriver, By.Id("ap_password"), pass);
-                        Helper.ClickElement(mDriver, By.Id("signInSubmit"));
-                        System.Threading.Thread.Sleep(3000);
-                    }
+                    Log.log.Info("------LogIn Sucess----------");
                     return true;
                 }
             }
@@ -72,7 +65,7 @@ namespace ChromeAPI
             {
                 if (driver != null && shirt != null)
                 {
-                    Helper.LogInCallBack = new LogIn(Re_Log_In_Invoke);
+                    Helper.LogInCallBack = new LogIn(Log_In);
                     Log.log.Info($"-----------Start Upload-------------");
 
                     driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
@@ -94,8 +87,8 @@ namespace ChromeAPI
                     Log.log.Info("---Input Detail---");
                     for (int i = 0; i < shirt.ShirtTypes.Length; i++)
                     {
-                        int column = (i) / 4 + 1;
-                        int row = (i) % 4 + 1;
+                        int row = (i) / 4 + 1;
+                        int column = (i) % 4 + 1;
                         ShirtBase s = shirt.ShirtTypes[i];
                         if (s.IsActive)
                         {
@@ -107,7 +100,7 @@ namespace ChromeAPI
                             {
                                 for (int j = 0; j < s.FitTypes.Length; j++)
                                 {
-                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span/i",
+                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
                                         s.FitTypes[j]);
                                 }
                             }
@@ -142,19 +135,22 @@ namespace ChromeAPI
                     Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.Description);
 
                     //Set German Description
-                    Helper.ClickElement(driver, By.Id("acc-control-all"));
-                    string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
-                    //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
-                    if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
-                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
-                    if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
-                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
-                    if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
-                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
-                    if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
-                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
-                    if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
-                        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
+                    if (shirt.ShirtTypes.FirstOrDefault(x => (x.MarketPlaces.Length > 2 && x.MarketPlaces[2] == true)) != null)
+                    {
+                        Helper.ClickElement(driver, By.Id("acc-control-all"));
+                        string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
+                        //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
+                        if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
+                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
+                        if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
+                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
+                        if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
+                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
+                        if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
+                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
+                        if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
+                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
+                    }
 
                     // Submit
                     Log.log.Info("---Summit---");
@@ -274,24 +270,24 @@ namespace ChromeAPI
             {
                 Log.log.Info("---Quit Driver---");
                 if (driver != null)
-                {
                     driver.Close();
-                    driver.Quit();
-                    driver = null;
-                }
-                //Process[] procs = Process.GetProcessesByName("chromedriver.exe");
-                //foreach (Process proc in procs)
-                //{
-                //    proc.Kill();
-                //}
+                driver = null;
             }
             catch (Exception ex)
             {
                 Log.log.Fatal(ex);
             }
+            finally
+            {
+                if (driver != null)
+                {
+                    driver.Quit();
+                }
+            }
+
         }
 
-        public static void OpenChrome(string userFolderPath = null, bool next = true)
+        public void OpenChrome(string userFolderPath = null)
         {
             try
             {
@@ -299,51 +295,40 @@ namespace ChromeAPI
                 Cursor.Current = Cursors.WaitCursor;
                 if (driver == null)
                 {
-                    if (userFolderPath != null && userFolderPath != string.Empty)
-                    {
-                        List<string> lst = new List<string>()
-                        {
-                            "enable-automation",
-                        };
-
-                        ChromeOptions chrOption = new ChromeOptions();
-                        chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
-                        driver = new ChromeDriver(chromeDriverService, chrOption);
-                    }
-                    else
-                    {
-                        ChromeOptions chrOption = new ChromeOptions();
-                        //chrOption.AddAdditionalCapability("useAutomationExtension", false);
-                        //chrOption.AddAdditionalCapability("excludeSwitches", "enable-automation");
-                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
-                        driver = new ChromeDriver(chromeDriverService, chrOption);
-                    }
+                    driver = StartChromeWithOptions(userFolderPath);
                 }
                 else
                 {
-                    driver.Navigate().GoToUrl("https://google.com/");
+                    QuitDriver();
+                    driver = StartChromeWithOptions(userFolderPath);
                 }
             }
             catch (Exception ex)
             {
-                if (driver != null)
-                {
-                    QuitDriver();
-                    if (next == true)
-                    {
-                        OpenChrome(userFolderPath, false);
-                    }
-                }
-                else
-                {
-                    Log.log.Fatal(ex);
-                    MessageBox.Show(ex.Message);
-                }
+                Log.log.Fatal(ex);
+                MessageBox.Show(ex.Message);
             }
         }
 
+        public ChromeDriver StartChromeWithOptions(string userFolderPath)
+        {
+            ChromeDriver cDriver = null;
+            if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+            {
+                ChromeOptions chrOption = new ChromeOptions();
+                chrOption.AddArguments("user-data-dir=" + userFolderPath);
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                cDriver = new ChromeDriver(chromeDriverService, chrOption);
+            }
+            else
+            {
+                ChromeOptions chrOption = new ChromeOptions();
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                cDriver = new ChromeDriver(chromeDriverService, chrOption);
+            }
+            return cDriver;
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace Upload.Actions
 
                 };
                 mainWindow.DataContext = mainVM;
-                if (/*CryptlexLicenseManager.IsLicenseOK() ==*/ true)
+                if (CryptlexLicenseManager.IsLicenseOK() == true)
                 {
                     mainVM.EnableCreate = true;
                     mainVM.EnableUpload = true;
@@ -41,7 +41,7 @@ namespace Upload.Actions
                         if (enableCreate)
                             mainVM.EnableCreate = true;
                         else
-                            mainVM.EnableCreate = true;
+                            mainVM.EnableCreate = false;
                         //mainVM.EnableCreate = true;
                     }
                     else
@@ -50,7 +50,10 @@ namespace Upload.Actions
                     }
                     mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", CryptlexLicenseManager.GetDayLeft());
                 }
-                mainVM.LicenseStatus = "License is not valid or expired!\n Please open License Form to activate the product";
+                else
+                {
+                    mainVM.LicenseStatus = "License is not valid or expired!\n Please go to \"License\" to activate the product";
+                }
                 mainWindow.Show();
             }
             catch (Exception ex)

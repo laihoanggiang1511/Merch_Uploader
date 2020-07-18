@@ -22,18 +22,18 @@ using System.Diagnostics;
 using OpenQA.Selenium.Internal;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Controls.Primitives;
+using Microsoft.Office.Interop.Excel;
 
 namespace Upload.Actions
 {
     public class UploadActions
     {
-        UploadWindowViewModel mainVM = null;
 
         public void ShowWindow()
         {
             UploadWindow uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
-            mainVM = new UploadWindowViewModel
+            UploadWindowViewModel mainVM = new UploadWindowViewModel
             {
                 BrowseCmd = new RelayCommand(BrowseCmdInvoke),
                 OpenChromeCmd = new RelayCommand(OpenChromeCmdInvoke),
@@ -44,18 +44,30 @@ namespace Upload.Actions
                 SaveXmlCmd = new RelayCommand(SaveXmlCmdInvoke),
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
                 ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
-                UserFolderPath = Properties.Settings.Default.UserFolderPath,
+                RemoveFolderCmd = new RelayCommand(RemoveFolderCmdInvoke),
                 Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true),
             };
             mainVM.UserFolders = GetUserFolders();
-            mainVM.UserFolderPath = mainVM.UserFolders.FirstOrDefault();
-            if (uploadWindow != null)
-            {
-                PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
-                passwordBox.Password = Common.Crypt.Decrypt(Properties.Settings.Default.Password, true);
-            }
+            mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => Properties.Settings.Default.UserFolderPath.EndsWith(x));
+            mainVM.Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true);
+
+            SetPassWord(uploadWindow, Common.Crypt.Decrypt(Properties.Settings.Default.Password, true));
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
+        }
+
+        private void RemoveFolderCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                if (Directory.Exists(uploadVM.UserFolderPath))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(uploadVM.UserFolderPath);
+                    directoryInfo.Delete(true);
+                }
+                uploadVM.UserFolders = GetUserFolders();
+                uploadVM.SelectedPath = uploadVM.UserFolders.FirstOrDefault();
+            }
         }
 
         private void ShowConfigurationCmdInvoke(object obj)
@@ -126,19 +138,21 @@ namespace Upload.Actions
         {
             try
             {
-                //Save Setting
-                Properties.Settings.Default.UserFolderPath = mainVM.UserFolderPath;
-                Properties.Settings.Default.Email = Common.Crypt.Encrypt(mainVM.Email, true);
-                if (sender is UploadWindow uploadWindow)
+                UploadWindow wind = sender as UploadWindow;
+                if (wind != null)
                 {
-                    PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
+                    UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
+                    //Save Setting
+                    Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
+                    Properties.Settings.Default.Email = Common.Crypt.Encrypt(uploadVM.Email, true);
+                    PasswordBox passwordBox = wind.FindName("password") as PasswordBox;
                     if (passwordBox != null)
                     {
                         Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
                     }
+                    Properties.Settings.Default.Save();
+                    UploadMerch.QuitDriver();
                 }
-                Properties.Settings.Default.Save();
-                UploadMerch.QuitDriver();
             }
             catch
             {
@@ -167,7 +181,7 @@ namespace Upload.Actions
                 if (!string.IsNullOrEmpty(uploadVM.UserFolderPath))
                 {
                     char[] invalidChars = Path.GetInvalidPathChars();
-                    if(!invalidChars.ToList().Any(x=>uploadVM.UserFolderPath.Contains(x)==true))
+                    if (!invalidChars.ToList().Any(x => uploadVM.UserFolderPath.Contains(x) == true))
                     {
                         string dataFolder = GetDataDirectory();
                         string folderPath = Path.Combine(dataFolder, uploadVM.UserFolderPath);
@@ -179,7 +193,7 @@ namespace Upload.Actions
                             uploadVM.UserFolderPath = folderPath;
                         }
                         else
-                        {                                                                 
+                        {
                             Helper.ShowErrorMessageBox("Name already exist, please choose a new name");
                         }
                     }
@@ -188,34 +202,73 @@ namespace Upload.Actions
                         Helper.ShowErrorMessageBox("Name contains invalid character, please choose a new name");
                     }
                 }
+                else
+                {
+                    Helper.ShowErrorMessageBox("Folder name is empty");
+                }
                 //uploadVM.UserFolderPath
                 //if (!string.IsNullOrEmpty(uploadVM.UserFolderPath) && uploadVM.UserFolderPath .
             }
         }
         private void OpenChromeCmdInvoke(object obj)
         {
-            if (Directory.Exists(mainVM.UserFolderPath))
+
+            if (obj is UploadWindow uploadWind)
             {
-                UploadMerch.OpenChrome(mainVM.UserFolderPath);
+                UploadWindowViewModel uploadVM = uploadWind.DataContext as UploadWindowViewModel;
+                uploadVM.password = GetPassword(uploadWind);
+                if (uploadVM.IsUploading == true)
+                {
+                    Helper.ShowInfoMessageBox("Another proccess is running");
+                    return;
+                }
+                if (!Directory.Exists(uploadVM.UserFolderPath))
+                {
+                    Helper.ShowErrorMessageBox("User folder does not exist");
+                    return;
+                }
+
+                ParameterizedThreadStart paramsThreadStart = new ParameterizedThreadStart(ManualLogInCallBack);
+                Thread thrd = new Thread(paramsThreadStart);
+                thrd.Start(uploadVM);
             }
-            else
+        }
+        public void ManualLogInCallBack(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
             {
-                Helper.ShowErrorMessageBox("User folder does not exist");
+                try
+                {
+                    UploadMerch upload = new UploadMerch(uploadVM.password, uploadVM.Email);
+                    upload.OpenChrome(uploadVM.UserFolderPath);
+                    UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                    upload.Log_In();
+                }
+                catch
+                { 
+                }
             }
+
         }
         private void UploadCmdInvoke(object obj)
         {
             UploadWindow mainWindow = obj as UploadWindow;
             if (mainWindow != null)
             {
-                System.Windows.Controls.PasswordBox passwordBox = mainWindow.FindName("password") as System.Windows.Controls.PasswordBox;
                 UploadWindowViewModel mainVM = mainWindow.DataContext as UploadWindowViewModel;
+                mainVM.password = GetPassword(mainWindow);
+
                 if (mainVM != null)
                 {
-                    mainVM.Password = passwordBox.Password;
+                    if (mainVM.IsUploading == true)
+                    {
+                        Helper.ShowInfoMessageBox("Another proccess is running!");
+                        return;
+                    }
                     Thread thread = new Thread(UploadShirt);
                     thread.Start(mainVM);
                     mainVM.IsUploading = true;
+
                 }
             }
         }
@@ -228,43 +281,48 @@ namespace Upload.Actions
             {
                 if (mainVM.Shirts != null && mainVM.Shirts.Count > 0)
                 {
-                    Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
-                    bool bContinue = true;
-                    foreach (Shirt s in mainVM.Shirts)
+                    try
                     {
-                        ShirtStatus errorCode = 0;
-                        if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
+
+                        Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
+                        bool bContinue = true;
+                        foreach (Shirt s in mainVM.Shirts)
                         {
-                            invalidShirts.Add(s, errorCode);
-                            bContinue = false;
+                            ShirtStatus errorCode = 0;
+                            if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
+                            {
+                                invalidShirts.Add(s, errorCode);
+                                bContinue = false;
+                            }
                         }
-                    }
-                    if (bContinue == false)
-                    {
-                        string message = "Following shirt(s) are invalid, please check them again before upload:\n";
-                        foreach (var pair in invalidShirts)
+                        if (bContinue == false)
                         {
-                            message += pair.Key.DesignTitle + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
+                            string message = "Following shirt(s) are invalid, please check them again before upload:\n";
+                            foreach (var pair in invalidShirts)
+                            {
+                                message += pair.Key.DesignTitle + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
+                            }
+                            Utils.ShowErrorMessageBox(message);
+                            return;
                         }
-                        Utils.ShowErrorMessageBox(message);
-                        return;
-                    }
-                    UploadMerch upload = new UploadMerch();
-                    if (Directory.Exists(mainVM.UserFolderPath))
-                    {
-                        UploadMerch.OpenChrome(mainVM.UserFolderPath);
-                        if (UploadMerch.driver != null)
+
+                        UploadMerch upload = new UploadMerch(mainVM.password, mainVM.Email);
+
+                        if (Directory.Exists(mainVM.UserFolderPath))
                         {
-                            try
+                            upload.OpenChrome(mainVM.UserFolderPath);
+                            if (UploadMerch.driver != null)
                             {
                                 UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                                upload.Log_In(mainVM.Password);
+                                upload.Log_In();
+
                                 for (int i = 0; i < mainVM.Shirts.Count; i++)
                                 {
                                     mainVM.SelectedShirt = mainVM.Shirts[i];
                                     if (!upload.Upload(mainVM.Shirts[i]))
                                         failShirts.Add(mainVM.Shirts[i]);
                                 }
+                                UploadMerch.QuitDriver();
                                 if (failShirts == null || failShirts.Count == 0)
                                 {
                                     System.Windows.MessageBox.Show("Job Done!");
@@ -277,19 +335,20 @@ namespace Upload.Actions
                                     System.Windows.MessageBox.Show(message);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Utils.ShowErrorMessageBox(ex.Message);
-                            }
+                        }
+                        else
+                        {
+                            Helper.ShowErrorMessageBox("User folder does not exist");
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Helper.ShowErrorMessageBox("User folder does not exist");
+                        Utils.ShowErrorMessageBox(ex.Message);
                     }
+
                 }
+                mainVM.IsUploading = false;
             }
-            mainVM.IsUploading = false;
         }
 
         private void DeleteCmdInvoke(object obj)
@@ -308,6 +367,36 @@ namespace Upload.Actions
                 lstShirts.ForEach(x => mainVM.Shirts.Add(x));
             }
         }
+        private string GetPassword(UploadWindow uploadWind)
+        {
+            try
+            {
+                uploadWind.FindName("password");
+                PasswordBox passwordBox = uploadWind.FindName("password") as PasswordBox;
+                return passwordBox.Password;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+
+        }
+        private bool SetPassWord(UploadWindow uploadWind, string password)
+        {
+            try
+            {
+                uploadWind.FindName("password");
+                PasswordBox passwordBox = uploadWind.FindName("password") as PasswordBox;
+                passwordBox.Password = password;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
     }
 }
 

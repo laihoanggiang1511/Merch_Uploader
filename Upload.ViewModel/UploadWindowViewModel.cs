@@ -23,7 +23,9 @@ namespace Upload.ViewModel
         public ICommand SaveXmlCmd { get; set; }
         public ICommand EditShirtCmd { get; set; }
         public ICommand ShowConfigurationCmd { get; set; }
-        public string Password { get; set; }
+        public ICommand RemoveFolderCmd { get; set; }
+
+        public string password;
         public ObservableCollection<Shirt> Shirts { get; set; }
         private Shirt selectedShirt;
         public Shirt SelectedShirt
@@ -63,7 +65,7 @@ namespace Upload.ViewModel
                             Descriptions += "Description: " + SelectedShirt.Description;
                         }
                         else if (!string.IsNullOrEmpty(SelectedShirt.BrandNameGerman))
-                        {  
+                        {
                             Descriptions += "Brand: " + SelectedShirt.BrandNameGerman + "\n" + "\n";
                             Descriptions += "Design Title: " + SelectedShirt.DesignTitleGerman + "\n" + "\n";
                             Descriptions += "Feature Bullet 1: " + SelectedShirt.FeatureBullet1 + "\n" + "\n";
@@ -162,7 +164,7 @@ namespace Upload.ViewModel
                 }
             }
         }
-        
+
 
         private string userFolderPath;
         public string UserFolderPath
@@ -195,7 +197,14 @@ namespace Upload.ViewModel
                 if (selectedPath != value)
                 {
                     selectedPath = value;
-                    userFolderPath = Path.Combine(GetDataDirectory(), selectedPath);
+                    if (!string.IsNullOrEmpty(selectedPath))
+                    {
+                        userFolderPath = Path.Combine(GetDataDirectory(), selectedPath);
+                    }
+                    else
+                    {
+                        userFolderPath = string.Empty;
+                    }
                     RaisePropertyChanged("SelectedPath");
                 }
             }
@@ -207,7 +216,19 @@ namespace Upload.ViewModel
             return dataFolder;
         }
 
-        public ObservableCollection<string> UserFolders { get; set; }
+        private ObservableCollection<string> userFolders = new ObservableCollection<string>();
+        public ObservableCollection<string> UserFolders
+        {
+            get => userFolders;
+            set
+            {
+                if (userFolders != value)
+                {
+                    userFolders = value;
+                    RaisePropertyChanged("UserFolders");
+                }
+            }
+        }
 
         private bool isUploading = false;
         public bool IsUploading

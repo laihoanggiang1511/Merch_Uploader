@@ -13,7 +13,7 @@
          TextOptions.TextRenderingMode="Auto"
          Background="{DynamicResource MaterialDesignPaper}"
          FontFamily="{DynamicResource MaterialDesignFont}"
-         mc:Ignorable="d" Title="Shirt Creator" WindowState="Maximized" MinWidth="600" d:DesignWidth="1000">
+         mc:Ignorable="d" Title="Merch Uploader" WindowState="Maximized" MinWidth="600" d:DesignWidth="1000">
     <Window.Resources>
         <Style TargetType="{x:Type Window}">
             <Setter Property="FontSize" Value="14" />
@@ -57,7 +57,7 @@
             </MenuItem>
             <MenuItem Header="Image Editor" Command="{Binding ImageEditCmd}" CommandParameter="{Binding}"/>-->
         </Menu>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5">
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5" IsEnabled="{Binding CreateMode}">
             <TextBlock Text="Multi Mode" VerticalAlignment="Center"/>
             <ToggleButton Grid.Row="0"  Height="20" Width="50" Margin="10,0,20,0"
                       Style="{DynamicResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding MultiMode}"/>
@@ -256,7 +256,7 @@
 
             </Button>
             <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"
-                                Width="150" Margin="5,0,5,0">
+                                Width="120" Margin="5,0" Padding="0">
             </Button>
             <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
                                  Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
@@ -266,6 +266,6 @@
             </Button>
 
         </StackPanel>
-        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5"/>
+        <materialDesign:Snackbar Message="{Binding PopupText}" IsActive="{Binding IsOpenPopup}" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="5" Padding="1"/>
     </Grid>
 </Window>

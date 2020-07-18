@@ -29,7 +29,7 @@
             <GroupBox.HeaderTemplate>
                 <DataTemplate>
                     <Grid Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}">
-                        <TextBlock Text="{Binding RelativeSource={RelativeSource AncestorType=GroupBox}, Path=Header}" VerticalAlignment="Center"/>
+                        <TextBlock Margin="2" Text="{Binding RelativeSource={RelativeSource AncestorType=GroupBox}, Path=Header}" VerticalAlignment="Center"/>
                         <Button x:Name="enable_configuration" Visibility="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ShowConfiguration,Converter={StaticResource BoolToVisibility}}" 
                                 Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext.ShowConfigurationCmd}"  
                                 CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" 
@@ -62,7 +62,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Folder Name:" Margin="5" Grid.Row ="0" Grid.Column="0" VerticalAlignment="Center"/>
+                <TextBlock Text="Folder Name:" Margin="5" Grid.Row ="0" Grid.Column="0" VerticalAlignment="Center" 
+                           ToolTip ="Choose a folder to save your cookies for automatically logging in next time"/>
                 <Grid Grid.Row ="0" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -72,22 +73,22 @@
                     <StackPanel Orientation="Horizontal" Grid.Column ="1">
                         <Button Grid.Column="1" Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Margin="5,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" 
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            ToolTip ="Choose a folder to save your browing data (cookies) for automatically logging in next time">
+                            >
                             <Button.Content>
                                 <materialDesign:PackIcon Kind="Add" Width="25" Height="25" Foreground="{DynamicResource Button.Static.Background}"/>
                             </Button.Content>
                         </Button>
-                        <Button Grid.Column="1" Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Margin="0,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="10" 
+                        <Button Grid.Column="1" Command="{Binding RemoveFolderCmd}" CommandParameter="{Binding}" Margin="0,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="10" 
                             Style="{DynamicResource MaterialDesignFlatButton}"
-                            ToolTip ="Choose a folder to save your browing data (cookies) for automatically logging in next time">
+                            ToolTip ="Remove folder">
                             <Button.Content>
                                 <materialDesign:PackIcon Kind="Close" Width="25" Height="25" Foreground="Crimson"/>
                             </Button.Content>
                         </Button>
                     </StackPanel>
                 </Grid>
-                <!--<TextBlock Grid.Row ="1" Grid.Column="0" Text="Email:" Margin="5"/>
-                <TextBox Text="{Binding Email}" Grid.Row ="1" Grid.Column="1" Margin="5" HorizontalAlignment="Stretch"/>-->
+                <TextBlock Grid.Row ="1" Grid.Column="0" Text="Email:" Margin="5"/>
+                <TextBox Margin="5,5,105,5" Text="{Binding Email}" Grid.Row ="1" Grid.Column="1" HorizontalAlignment="Stretch"/>
                 <TextBlock Grid.Row ="2" Grid.Column="0" Text="Merch Password:" Margin="5" VerticalAlignment="Center" ToolTip="Use for automatically logging"/>
                 <Grid Grid.Row ="2" Grid.Column="1">
                     <Grid.ColumnDefinitions>
@@ -96,7 +97,8 @@
                     </Grid.ColumnDefinitions>
                     <PasswordBox Grid.Column="0" x:Name="password" Margin="5" HorizontalAlignment="Stretch"
                              ToolTip="Your password will be encrypted and safe"/>
-                    <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Log In" FontSize="10" Height="25" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Manual Log In" Padding="0" FontSize="10" Height="25" VerticalAlignment="Center"
+                            ToolTip="You only have to log in the first time"/>
                 </Grid>
             </Grid>
         </GroupBox>
@@ -121,7 +123,7 @@
                         <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
             <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>-->
                     </StackPanel>
-                    <ListView Grid.Column="0" Name="lstShirt" VerticalAlignment="Stretch" ItemsSource="{Binding Shirts}" SelectedItem="{Binding SelectedShirt}" Margin="5" >
+                    <ListView BorderThickness="1" Grid.Column="0" Name="lstShirt" VerticalAlignment="Stretch" ItemsSource="{Binding Shirts}" SelectedItem="{Binding SelectedShirt}" Margin="5" >
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid Margin="0" VerticalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth}">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common.MVVMCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,36 @@ using System.Threading.Tasks;
 
 namespace Upload.Definitions
 {
-    public class Color
+    public class Color : ViewModelBase   //There shouldn't have ViewModelBase here but I made a mistake and too lazy too fix it
     {
-        public string ColorName { get; set; }
-        public bool IsActive { get; set; }
+        private string colorName = string.Empty;
+        public string ColorName
+        {
+            get => colorName;
+            set
+            {
+                if (colorName != value)
+                {
+                    colorName = value;
+                    RaisePropertyChanged("ColorName");
+                }
+            }
+           
+        }
+        private bool isActive = false;
+        public bool IsActive
+        {
+            get => isActive;
+            set
+            {
+                if (isActive != value)
+                {
+                    isActive = value;
+                    RaisePropertyChanged("IsActive");
+                }
+            }
+        }
+
         public Color()
         {
             IsActive = false;
@@ -20,7 +47,7 @@ namespace Upload.Definitions
             this.IsActive = IsActive;
             this.ColorName = string.Empty;
         }
-        public Color(string Name,bool IsActive)
+        public Color(string Name, bool IsActive)
         {
             this.IsActive = IsActive;
             this.ColorName = Name;

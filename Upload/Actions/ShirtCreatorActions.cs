@@ -48,6 +48,10 @@ namespace Upload.Actions
 
             if (shirtVM.SelectedShirt.ShirtTypes != null)
                 shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
+            if (editShirt == null)
+            {
+                shirtVM.LightColor = true;
+            }
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
         }
@@ -284,16 +288,20 @@ namespace Upload.Actions
                 if (mainVM.CreateMode == true)
                 {
                     List<Shirt> lstShirts = Utils.BrowseForShirts();
-                    if (lstShirts.Count == 1)
+                    if (lstShirts != null && lstShirts.Count > 0)
                     {
-                        mainVM.SelectedShirt = lstShirts[0];
-                    }
-                    else
-                    {
-                        lstShirts.ForEach(x => mainVM.Shirts.Add(x));
-                        if (mainVM.SelectedShirt == null && mainVM.Shirts != null && mainVM.Shirts.Count > 0)
+                        if (lstShirts.Count == 1)
                         {
-                            mainVM.SelectedShirt = mainVM.Shirts.FirstOrDefault();
+                            mainVM.SelectedShirt = lstShirts[0];
+                        }
+                        else
+                        {
+                            mainVM.MultiMode = true;
+                            lstShirts.ForEach(x => mainVM.Shirts.Add(x));
+                            if (mainVM.SelectedShirt == null && mainVM.Shirts != null && mainVM.Shirts.Count > 0)
+                            {
+                                mainVM.SelectedShirt = mainVM.Shirts.FirstOrDefault();
+                            }
                         }
                     }
                 }
@@ -752,8 +760,11 @@ namespace Upload.Actions
                     else if (button.IsChecked == false)
                     {
                         Upload.Definitions.Color activeColor = shirtVM.SelectedShirtType.Colors.FirstOrDefault(x => x.IsActive == true);
-                        shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + activeColor.ColorName + ".png";
-                        shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "Back" + "/" + activeColor.ColorName + ".png";
+                        if (activeColor != null)
+                        {
+                            shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + activeColor.ColorName + ".png";
+                            shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "Back" + "/" + activeColor.ColorName + ".png";
+                        }
                     }
                 }
                 shirtVM.CountColor = shirtVM.SelectedShirtType.Colors.Where(x => x.IsActive == true).ToArray().Length;

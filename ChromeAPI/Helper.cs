@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,10 +17,12 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace ChromeAPI
 {
-    public delegate bool LogIn(ChromeDriver driver);
+    public delegate bool LogIn();
     public class Helper
     {
         public static LogIn LogInCallBack;
+        
+
         public static bool ClickElement(ChromeDriver driver, By by)
         {
             try
@@ -102,7 +105,7 @@ namespace ChromeAPI
         {
             try
             {
-                if (LogInCallBack != null && !LogInCallBack.Invoke(driver))
+                if (LogInCallBack != null && !LogInCallBack.Invoke())
                 {
                     return null;
                 }
