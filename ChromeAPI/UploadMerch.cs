@@ -1,4 +1,4 @@
-﻿using Common;
+﻿  using Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
@@ -30,11 +30,11 @@ namespace ChromeAPI
             // Log In 
             try
             {
-                Log.log.Info("------Start Log In----------");
                 if (driver != null)
                 {
                     if (driver.Url.Contains("www.amazon.com/ap/signin"))
                     {
+                        Log.log.Info("------Start Log In----------");
                         if (!string.IsNullOrEmpty(email) &&
                             Helper.GetElementWithWait(driver, By.Id("ap_email"), 10) != null)
                         {
@@ -48,8 +48,8 @@ namespace ChromeAPI
                             Helper.ClickElement(driver, By.Id("ap-account-fixup-phone-skip-link"));
                         }
                         System.Threading.Thread.Sleep(2000);
+                        Log.log.Info("------LogIn Sucess----------");
                     }
-                    Log.log.Info("------LogIn Sucess----------");
                     return true;
                 }
             }
@@ -93,22 +93,23 @@ namespace ChromeAPI
                         if (s.IsActive)
                         {
                             Log.log.Info($"---i={i}---");
-                            // Edit Detail-Standard
-                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+                            // Edit Detail-Standard                
+                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
                             // Choose Fit type
                             if (s.FitTypes != null && s.FitTypes.Length > 1)
                             {
                                 for (int j = 0; j < s.FitTypes.Length; j++)
                                 {
-                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
+                                                                  
+                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
                                         s.FitTypes[j]);
                                 }
                             }
                             // Select Color
                             for (int j = 0; j < s.Colors.Length; j++)
                             {
-                                Color color = s.Colors[j];
-                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
+                                Color color = s.Colors[j];    
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
                                                                         $"/div[{j + 1}]/colorcheckbox/span", color.IsActive);
                             }
                             // Set Price
@@ -117,12 +118,12 @@ namespace ChromeAPI
                                 if (s.MarketPlaces[j])
                                 {
                                     //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
                                                             s.Prices[j].ToString());
                                 }
                             }
                             //Click again to close pallete
-                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
                         }
                     }
 

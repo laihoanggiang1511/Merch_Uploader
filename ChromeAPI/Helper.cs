@@ -101,7 +101,7 @@ namespace ChromeAPI
             return false;
         }
 
-        public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 10)
+        public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 15)
         {
             try
             {

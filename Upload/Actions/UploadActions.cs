@@ -243,6 +243,11 @@ namespace Upload.Actions
                     upload.OpenChrome(uploadVM.UserFolderPath);
                     UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
                     upload.Log_In();
+                    if(UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
+                    {
+                        Helper.ShowInfoMessageBox("Log in Sucess!");
+                        uploadVM.IsUploading = false;
+                    }
                 }
                 catch
                 { 

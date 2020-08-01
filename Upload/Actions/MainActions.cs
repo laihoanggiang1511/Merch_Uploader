@@ -54,6 +54,10 @@ namespace Upload.Actions
                 {
                     mainVM.LicenseStatus = "License is not valid or expired!\n Please go to \"License\" to activate the product";
                 }
+#if DEBUG
+                mainVM.EnableCreate = true;
+                mainVM.EnableUpload = true;
+#endif
                 mainWindow.Show();
             }
             catch (Exception ex)
@@ -64,7 +68,7 @@ namespace Upload.Actions
 
         private void HelpCmdInvoke(object obj)
         {
-            System.Diagnostics.Process.Start("https://www.youtube.com/playlist?list=PLGpC6oEVINHN0cYaQj8P5gL930DQiDN2M");
+            System.Diagnostics.Process.Start("https://www.youtube.com/playlist?list=PLiGK-5tw14EYTIb2o5-WUgaIHnhsBSuM1");
         }
 
         private void LicenseWindowCmdInvoke(object obj)
