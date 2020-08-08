@@ -25,7 +25,10 @@ namespace Upload.Actions
                 xlApp = new Application();
                 xlApp.Visible = true;
                 string tempFile = Path.GetTempFileName();
-                File.Copy(@"C:\Upload.xlsm", tempFile, true);
+                var assemLocation = System.Reflection.Assembly.GetAssembly(typeof(ExcelActions)).Location;
+                var directory = Path.GetDirectoryName(assemLocation);
+                var filePathFull = Path.Combine(directory, "Upload.xlsm");
+                File.Copy(filePathFull, tempFile, true);
                 Assembly thisAssembly = Assembly.GetExecutingAssembly();
                 string fileName = Path.GetDirectoryName(thisAssembly.Location);
                 fileName = Path.Combine(fileName, "Upload.xlsm");

@@ -62,7 +62,7 @@
             <ToggleButton Grid.Row="0"  Height="20" Width="50" Margin="10,0,20,0"
                       Style="{DynamicResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding MultiMode}"/>
         </StackPanel>
-        <ScrollViewer Grid.Row="1" PanningMode="VerticalFirst" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <!--<ScrollViewer Grid.Row="1" PanningMode="VerticalFirst" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">-->
             <Grid Margin="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" MaxWidth="200"/>
@@ -82,7 +82,7 @@
                     </ListView>
                     <StackPanel Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}">
                         <TextBlock Text="Shirts" Margin="5" FontWeight="DemiBold" Foreground="Blue"/>
-                        <ListView ItemsSource="{Binding Shirts}" 
+                        <ListView ItemsSource="{Binding Shirts}" Name="listShirts"
                               SelectedItem="{Binding SelectedShirt}"
                               Height="250">
                             <ListView.ItemTemplate>
@@ -92,7 +92,7 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding DesignTitle}"/>
+                                        <TextBlock Text="{Binding DesignTitle}" TextWrapping="Wrap"/>
                                         <Button Grid.Column="1" Padding="0" Width="20" Height="20" Margin="10,0" Name="deleteButton" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed"
                                                 Style="{DynamicResource MaterialDesignFlatButton}" BorderThickness="0"
                                                 Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveShirtCmd}">
@@ -122,20 +122,57 @@
                             <!--<Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}" ToolTip="Delete"
                                 FontSize="15" Width="20" Height="20" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="DarkRed"/>-->
                             <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
-                                FontSize="12" Width="0" Height="23" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+                                FontSize="12" Width="0" Height="25" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
                             <Button Command="{Binding ClickFrontImageCmd}" CommandParameter="{Binding}"
-                                FontSize="10" Padding="0" Width="25" Height="23" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Browse">
+                                FontSize="10" Padding="0" Width="25" Height="25" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Browse">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Kind="Add" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <materialDesign:PackIcon Kind="Add" Width="25" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 </Button.Content>
                             </Button>
                             <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}" Visibility="{Binding AllowDelete,Converter={StaticResource BooleanToVisibility}}"
-                                FontSize="10" Padding="0" Width="25" Height="23" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Delete Selected Shirts">
+                                FontSize="10" Padding="0" Width="25" Height="25" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Delete Selected Shirts">
                                 <Button.Content>
-                                    <materialDesign:PackIcon Foreground="Crimson" Kind="Close" Width="18" Height="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <materialDesign:PackIcon Foreground="Crimson" Kind="Close" Width="25" Height="25" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding CopyShirtCmd}"
+                                    Padding="0" Width="25" Height="25" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Copy Shirt">
+                                <Button.CommandParameter>
+                                    <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                        <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                        <Binding RelativeSource="{RelativeSource AncestorType=Window}"/>
+                                    </MultiBinding>
+                                </Button.CommandParameter>
+                                <Button.Content>
+                                    <materialDesign:PackIcon Kind="ContentCopy" Width="20" Height="20" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding MultiReplaceCmd}" CommandParameter="{Binding}"
+                                    Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}" 
+                                    Padding="0" Width="25" Height="25" ToolTip="Export To Excel" Name="ToExcel"
+                                        Click="Btn_ToExcel_Click" Style="{DynamicResource MaterialDesignFlatButton}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal" Width="40">
+                                        <!--<materialDesign:PackIcon Kind="ArrowRight" Width="15" Height="15" VerticalAlignment="Center" HorizontalAlignment="Left"/>-->
+                                        <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <Button Margin="5" Command="{Binding ImportFromExcelCmd}" CommandParameter="{Binding}"
+                                    Visibility="Collapsed" 
+                                    Width="40" Height="25" Padding="0" Name="FromExcel" Click="Btn_FromExcel_Click"
+                                    ToolTip="Import from Excel" Style="{DynamicResource MaterialDesignFlatButton}"
+                                    Foreground="Red">
+                                <Button.Content>
+                                    <Grid Width="35">
+                                        <materialDesign:PackIcon Kind="ArrowLeft" Width="15" Height="15" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                                        <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                    </Grid>
                                 </Button.Content>
                             </Button>
                         </StackPanel>
+                        <TextBlock Text="Current Shirt:" Margin="5"/>
+                        <TextBlock Text="{Binding SelectedShirt.DesignTitle}"/>
                     </StackPanel>
                 </StackPanel>
 
@@ -218,28 +255,7 @@
                                         CommandParameter="{Binding}"
                                         Content="Replace" Width="85" Height="25"
                                         />
-                                <Button Margin="5" Command="{Binding MultiReplaceCmd}" CommandParameter="{Binding}"
-                                    Visibility="{Binding MultiMode,Converter={StaticResource BooleanToVisibility}}" 
-                                    Width="40" Height="25" Padding="0" ToolTip="To Excel" Name="ToExcel"
-                                        Click="Btn_ToExcel_Click">
-                                    <Button.Content>
-                                        <Grid Width="40">
-                                            <materialDesign:PackIcon Kind="ArrowRight" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                            <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                        </Grid>
-                                    </Button.Content>
-                                </Button>
-                                <Button Margin="5" Command="{Binding ImportFromExcelCmd}" CommandParameter="{Binding}"
-                                    Visibility="Collapsed" 
-                                    Width="40" Height="25" Padding="0" Name="FromExcel" Click="Btn_FromExcel_Click"
-                                    ToolTip="Import from Excel">
-                                    <Button.Content>
-                                        <Grid Width="40">
-                                            <materialDesign:PackIcon Kind="ArrowLeft" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                                            <materialDesign:PackIcon Kind="MicrosoftExcel" Width="25" Height="25" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                        </Grid>
-                                    </Button.Content>
-                                </Button>
+                                
 
                             </StackPanel>
                         </Grid>
@@ -247,12 +263,12 @@
                 </Grid>
             </Grid>
 
-        </ScrollViewer>
+        <!--</ScrollViewer>-->
         <Rectangle materialDesign:ColorZoneAssist.Foreground="LightGray" Grid.Row="2" Width="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualWidth}" Height="{Binding RelativeSource={RelativeSource AncestorType=Grid},Path=ActualHeight}"/>
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Row="2" Margin="0,10,30,10">
 
-            <Button Content ="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
-                            Width="100" Height="30" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}">
+            <Button Content ="Choose Template" Command="{Binding OpenCmd}" CommandParameter="{Binding}" 
+                            Width="120" Height="30" Margin="5,0,5,0" IsEnabled="{Binding CreateMode}" Padding="0">
 
             </Button>
             <Button Content="Save As Template" Command="{Binding SaveAsCmd}" CommandParameter="{Binding}" IsEnabled="{Binding CreateMode}"

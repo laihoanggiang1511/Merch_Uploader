@@ -36,7 +36,7 @@ namespace Upload.ViewModel
         public ICommand SaveAsCmd { get; set; }
         public ICommand MultiReplaceCmd { get; set; }
         public ICommand EnterKeyCmd { get; set; }
-
+        public ICommand CopyShirtCmd { get; set; }
 
         public ICommand ImageEditCmd { get; set; }
 
@@ -65,13 +65,12 @@ namespace Upload.ViewModel
                     createMode = value;
                     if (createMode == false)
                     {
-
                     }
                     RaisePropertyChanged("CreateMode");
                 }
             }
         }
-        private bool multiMode = false;
+        private bool multiMode = true;
         public bool MultiMode
         {
             get
@@ -137,7 +136,7 @@ namespace Upload.ViewModel
                 if (selectAllColor != value)
                 {
                     selectAllColor = value;
-                    if (selectAllColor ==true && SelectedShirtType != null && SelectedShirtType.Colors != null)
+                    if (selectAllColor == true && SelectedShirtType != null && SelectedShirtType.Colors != null)
                     {
                         if (SelectedShirtType.GetType() != typeof(StandardTShirt) &&
                            SelectedShirtType.GetType() != typeof(PremiumTShirt))

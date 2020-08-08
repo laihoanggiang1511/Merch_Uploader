@@ -81,6 +81,20 @@ namespace Upload.Model
                 };
                 return shirtTypes;
             }
+            set
+            {
+
+                this.StandardTShirt = value[0] as StandardTShirt;
+                this.PremiumTShirt = value[1] as PremiumTShirt;
+                this.VNeckTShirt = value[2] as VNeckTShirt;
+                this.TankTop = value[3] as TankTop;
+                this.LongSleeveTShirt = value[4] as LongSleeveTShirt;
+                this.Raglan = value[5] as Raglan;
+                this.SweetShirt = value[6] as SweetShirt;
+                this.PullOverHoodie = value[7] as PullOverHoodie;
+                this.ZipHoodie = value[8] as ZipHoodie;
+                this.PopSocketsGrip = value[9] as PopSocketsGrip;
+            }
         }
 
         public Shirt()

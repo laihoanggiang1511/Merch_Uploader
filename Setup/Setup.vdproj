@@ -382,7 +382,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Setup.msi"
+        "OutputFilename" = "8:Release\\setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -398,18 +398,13 @@
             "PromptEnabled" = "11:TRUE"
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
-            "ComponentsUrl" = "8:"
+            "ComponentsUrl" = "8:E:\\Projects\\Merch_Uploader\\Setup\\Release"
                 "Items"
                 {
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.5.2"
                     {
                     "Name" = "8:Microsoft .NET Framework 4.5.2 (x86 and x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.5.2"
-                    }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x64"
-                    {
-                    "Name" = "8:Visual C++ \"14\" Runtime Libraries (x64)"
-                    "ProductCode" = "8:Microsoft.Visual.C++.14.0.x64"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Visual.C++.14.0.x86"
                     {
@@ -1148,6 +1143,13 @@
         }
         "LaunchCondition"
         {
+            "{836E08B8-0285-4809-BA42-01DB6754A45D}:_C247ED7535CA4D78B5395FE642D018A2"
+            {
+            "Name" = "8:C++Redistributable"
+            "Condition" = "8:C++Redistributable"
+            "Message" = "8:<Error Message>"
+            "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=http://go.microsoft.com/fwlink/?LinkId=48145"
+            }
         }
         "Locator"
         {
@@ -1162,7 +1164,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Merch Uploader"
         "ProductCode" = "8:{07FFAAF5-911C-4B07-B90A-CDC743631A22}"
-        "PackageCode" = "8:{5BB2FFF0-C665-4580-BF68-FC394744A901}"
+        "PackageCode" = "8:{BA8E0E19-925B-43C5-B2EA-3B124D2AB8FF}"
         "UpgradeCode" = "8:{32804CBB-FF79-4508-A410-C9F890B2BBB9}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"

@@ -40,6 +40,7 @@ namespace Upload.Actions
             shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
             shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
             shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
+            shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
             if (editShirt != null)
             {
                 shirtVM.SelectedShirt = editShirt;
@@ -54,6 +55,26 @@ namespace Upload.Actions
             }
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        private void CopyShirtCmdInvoke(object obj)
+        {
+            object[] objParams = obj as object[];
+            ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+            System.Windows.Window window = objParams[1] as System.Windows.Window;
+            ListView listView = window.FindName("listShirts") as ListView;
+            Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
+            ShirtBase[] shirtTypes = currentShirt.ShirtTypes;
+            for (int i = 1; i < listView.SelectedIndices.Count; i++)
+            {
+                int selectedIndex = listView.SelectedIndices[i];
+                Shirt target = shirtVM.Shirts[selectedIndex];
+                target.ShirtTypes = shirtTypes;
+                //object shirt = (object)list.SelectedItems[i];
+                //ListViewItem i = new ListViewItem();
+                //i.
+                //Shirt selectedShirt = objItem.
+            }
         }
 
         private void RemoveShirtCmdInvoke(object obj)
@@ -813,7 +834,8 @@ namespace Upload.Actions
             if (obj is ShirtCreatorViewModel shirtVM)
             {
                 ExcelActions xlActions = new ExcelActions();
-                if (xlActions.ImportFromExcel(shirtVM.Shirts)) {
+                if (xlActions.ImportFromExcel(shirtVM.Shirts))
+                {
                     shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
                     ShowPopup(shirtVM, "Descriptions imported from excel");
                 }
