@@ -62,18 +62,23 @@ namespace Upload.Actions
             object[] objParams = obj as object[];
             ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
             System.Windows.Window window = objParams[1] as System.Windows.Window;
-            ListView listView = window.FindName("listShirts") as ListView;
-            Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
-            ShirtBase[] shirtTypes = currentShirt.ShirtTypes;
-            for (int i = 1; i < listView.SelectedIndices.Count; i++)
+            try
             {
-                int selectedIndex = listView.SelectedIndices[i];
-                Shirt target = shirtVM.Shirts[selectedIndex];
-                target.ShirtTypes = shirtTypes;
-                //object shirt = (object)list.SelectedItems[i];
-                //ListViewItem i = new ListViewItem();
-                //i.
-                //Shirt selectedShirt = objItem.
+                if (shirtVM != null && window != null)
+                {
+                    System.Windows.Controls.ListView listView = window.FindName("listShirts") as System.Windows.Controls.ListView;
+                    Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
+                    ShirtBase[] shirtTypes = currentShirt.ShirtTypes;
+                    for (int i = 1; i < listView.SelectedItems.Count; i++)
+                    {
+                        (listView.SelectedItems[i] as Shirt).ShirtTypes = shirtTypes;
+                    }
+                    ShowPopup(shirtVM, "Shirt Style Copied!");
+                }
+            }
+            catch
+            {
+                ShowPopup(shirtVM, "Copy Failed!");
             }
         }
 

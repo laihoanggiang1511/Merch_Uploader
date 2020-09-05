@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Upload.Definitions
 {
-    public class Color : ViewModelBase   //There shouldn't have ViewModelBase here but I made a mistake and too lazy too fix it
+    public class Color : ViewModelBase   //There shouldn't have ViewModelBase here
     {
         private string colorName = string.Empty;
         public string ColorName
