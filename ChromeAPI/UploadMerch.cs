@@ -179,6 +179,10 @@ namespace ChromeAPI
                 Log.log.Info("---Select Product---");
                 if (driver != null)
                 {
+                    //Check then Uncheck All Checkbox
+                    Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", true);
+                    Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", false);
+                    
                     for (int i = 0; i < shirt.ShirtTypes.Length; i++)
                     {
                         ShirtBase sb = shirt.ShirtTypes[i];
