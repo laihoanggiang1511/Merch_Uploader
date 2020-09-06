@@ -17,16 +17,6 @@ namespace UploadTemplate
     {
         private void Sheet1_Startup(object sender, System.EventArgs e)
         {
-            Excel.Range range = this.Range["A2"];
-            var btn_Translate = this.Controls.AddButton(range, "Auto Translate");
-            btn_Translate.Click += Btn_Translate_Click;
-        }
-
-        private void Btn_Translate_Click(object sender, EventArgs e)
-        {
-            int row = this.Application.ActiveCell.Row;
-            string translatedText = TranslateAPI.Translate("Hello, World", "vi");
-            this.Range["A3"].Value = translatedText;
         }
 
         private void Sheet1_Shutdown(object sender, System.EventArgs e)

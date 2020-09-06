@@ -16,11 +16,13 @@ namespace UploadTemplate
     {
         private void ThisWorkbook_Startup(object sender, System.EventArgs e)
         {
+
         }
 
         private void ThisWorkbook_Shutdown(object sender, System.EventArgs e)
         {
         }
+        // 1: Copy the following code block into the ThisAddin, ThisWorkbook, or ThisDocument class.
 
         #region VSTO Designer generated code
 

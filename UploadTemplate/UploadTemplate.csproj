@@ -106,7 +106,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper.cs" />
+    <Compile Include="TranslateAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Ribbon2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Ribbon2.Designer.cs">
+      <DependentUpon>Ribbon2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Sheet1.cs">
       <DependentUpon>UploadTemplate.xltx</DependentUpon>
     </Compile>
@@ -128,6 +135,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Ribbon2.resx">
+      <DependentUpon>Ribbon2.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
