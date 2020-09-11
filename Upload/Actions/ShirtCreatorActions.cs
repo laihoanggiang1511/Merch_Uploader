@@ -3,18 +3,18 @@ using Upload.ViewModel;
 using Common.MVVMCore;
 using System.Linq;
 using Upload.DataAccess;
-using Upload.Model;
 using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Controls.Primitives;
-using Upload.Definitions;
 using System.Windows;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Office.Interop.Excel;
-
+using Upload.DataAccess.Model;
+using System.Text.RegularExpressions;
+using Upload.DTO;
 
 namespace Upload.Actions
 {
@@ -68,7 +68,7 @@ namespace Upload.Actions
                 {
                     System.Windows.Controls.ListView listView = window.FindName("listShirts") as System.Windows.Controls.ListView;
                     Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
-                    ShirtBase[] shirtTypes = currentShirt.ShirtTypes;
+                    ShirtType[] shirtTypes = currentShirt.ShirtTypes;
                     for (int i = 1; i < listView.SelectedItems.Count; i++)
                     {
                         (listView.SelectedItems[i] as Shirt).ShirtTypes = shirtTypes;
@@ -104,12 +104,13 @@ namespace Upload.Actions
                     foreach (Shirt shirt in shirtVM.Shirts)
                     {
                         ShirtStatus errorCode = 0;
-                        if (!string.IsNullOrEmpty(shirt.DefaultPNGPath))
+                        if (!string.IsNullOrEmpty(shirt.ImagePath))
                         {
                             if (ValidateShirt(shirt, ref errorCode))
                             {
-                                XMLDataAccess dataAccess = new XMLDataAccess();
-                                dataAccess.SaveShirt(shirt);
+                                JsonDataAccess dataAccess = new JsonDataAccess();
+                                ShirtData sData = ShirtDTO.MapData(shirt,typeof(ShirtData)) as ShirtData;
+                                dataAccess.SaveShirt(sData);
                             }
                             else
                             {
@@ -122,7 +123,7 @@ namespace Upload.Actions
                         string errorMessage = "Following shirt(s) are invalid:\n";
                         foreach (var error in dictError)
                         {
-                            errorMessage += error.Key.DesignTitle + ": " + GetErrorMessage(error.Value) + "\n";
+                            errorMessage += error.Key.ImagePath + ": " + GetErrorMessage(error.Value) + "\n";
                         }
                         Utils.ShowErrorMessageBox(errorMessage);
                     }
@@ -215,9 +216,10 @@ namespace Upload.Actions
                         {
                             if (shirtVM.SelectedShirt != null)
                             {
-                                XMLDataAccess dataAccess = new XMLDataAccess(saveFileDialog.FileName);
-                                dataAccess.SaveShirt(shirtVM.SelectedShirt);
-                                System.Windows.MessageBox.Show(string.Format("Shirt saved in {0}", dataAccess.XmlFilePath), "Save Shirt", MessageBoxButton.OK, MessageBoxImage.Information);
+                                JsonDataAccess dataAccess = new JsonDataAccess();
+                                var sData = ShirtDTO.MapData(shirtVM.SelectedShirt,typeof(ShirtData)) as ShirtData;
+                                dataAccess.SaveShirt(sData);
+                                System.Windows.MessageBox.Show("Shirt saved!", "Save Shirt", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                             else
                             {
@@ -252,59 +254,67 @@ namespace Upload.Actions
         private void RemoveFrontImageCmdInvoke(object obj)
         {
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
-            if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
-                    shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
-                    shirtCreatorVM.SelectedShirtType is Raglan ||
-                    shirtCreatorVM.SelectedShirtType is StandardTShirt ||
-                    shirtCreatorVM.SelectedShirtType is SweetShirt ||
-                    shirtCreatorVM.SelectedShirtType is TankTop ||
-                    shirtCreatorVM.SelectedShirtType is VNeckTShirt)
-            {
-                shirtCreatorVM.SelectedShirt.FrontStdPath = string.Empty;
-                shirtCreatorVM.FrontImagePath = string.Empty;
-            }
-            else
-            if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
-                        shirtCreatorVM.SelectedShirtType is ZipHoodie)
-            {
-                shirtCreatorVM.SelectedShirt.FrontHoodiePath = string.Empty;
-                shirtCreatorVM.FrontImagePath = string.Empty;
-            }
-            else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
-            {
-                shirtCreatorVM.SelectedShirt.PopSocketsGripPath = string.Empty;
-                shirtCreatorVM.FrontImagePath = string.Empty;
-                shirtCreatorVM.BackImagePath = string.Empty;
-            }
+            shirtCreatorVM.SelectedShirt.ImagePath = string.Empty;
+            shirtCreatorVM.FrontImagePath = string.Empty;
+            shirtCreatorVM.BackImagePath = string.Empty;
+
+            //if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is Raglan ||
+            //        shirtCreatorVM.SelectedShirtType is StandardTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is SweetShirt ||
+            //        shirtCreatorVM.SelectedShirtType is TankTop ||
+            //        shirtCreatorVM.SelectedShirtType is VNeckTShirt)
+            //{
+            //    shirtCreatorVM.SelectedShirt.FrontStdPath = string.Empty;
+            //    shirtCreatorVM.FrontImagePath = string.Empty;
+            //}
+            //else
+            //if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
+            //            shirtCreatorVM.SelectedShirtType is ZipHoodie)
+            //{
+            //    shirtCreatorVM.SelectedShirt.FrontHoodiePath = string.Empty;
+            //    shirtCreatorVM.FrontImagePath = string.Empty;
+            //}
+            //else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
+            //{
+            //    shirtCreatorVM.SelectedShirt.PopSocketsGripPath = string.Empty;
+            //    shirtCreatorVM.FrontImagePath = string.Empty;
+            //    shirtCreatorVM.BackImagePath = string.Empty;
+            //}
         }
 
         private void RemoveBackImageCmdInvoke(object obj)
         {
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
-            if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
-                    shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
-                    shirtCreatorVM.SelectedShirtType is Raglan ||
-                    shirtCreatorVM.SelectedShirtType is StandardTShirt ||
-                    shirtCreatorVM.SelectedShirtType is SweetShirt ||
-                    shirtCreatorVM.SelectedShirtType is TankTop ||
-                    shirtCreatorVM.SelectedShirtType is VNeckTShirt)
-            {
-                shirtCreatorVM.SelectedShirt.BackStdPath = string.Empty;
-                shirtCreatorVM.BackImagePath = string.Empty;
-            }
-            else
-            if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
-                        shirtCreatorVM.SelectedShirtType is ZipHoodie)
-            {
-                shirtCreatorVM.SelectedShirt.BackHoodiePath = string.Empty;
-                shirtCreatorVM.BackImagePath = string.Empty;
-            }
-            else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
-            {
-                shirtCreatorVM.SelectedShirt.PopSocketsGripPath = string.Empty;
-                shirtCreatorVM.FrontImagePath = string.Empty;
-                shirtCreatorVM.BackImagePath = string.Empty;
-            }
+            shirtCreatorVM.SelectedShirt.ImagePath = string.Empty;
+            shirtCreatorVM.FrontImagePath = string.Empty;
+            shirtCreatorVM.BackImagePath = string.Empty;
+            //ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
+            //if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is Raglan ||
+            //        shirtCreatorVM.SelectedShirtType is StandardTShirt ||
+            //        shirtCreatorVM.SelectedShirtType is SweetShirt ||
+            //        shirtCreatorVM.SelectedShirtType is TankTop ||
+            //        shirtCreatorVM.SelectedShirtType is VNeckTShirt)
+            //{
+            //    shirtCreatorVM.SelectedShirt.BackStdPath = string.Empty;
+            //    shirtCreatorVM.BackImagePath = string.Empty;
+            //}
+            //else
+            //if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
+            //            shirtCreatorVM.SelectedShirtType is ZipHoodie)
+            //{
+            //    shirtCreatorVM.SelectedShirt.BackHoodiePath = string.Empty;
+            //    shirtCreatorVM.BackImagePath = string.Empty;
+            //}
+            //else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
+            //{
+            //    shirtCreatorVM.SelectedShirt.PopSocketsGripPath = string.Empty;
+            //    shirtCreatorVM.FrontImagePath = string.Empty;
+            //    shirtCreatorVM.BackImagePath = string.Empty;
+            //}
         }
 
         private void OpenCmdInvoke(object obj)
@@ -348,8 +358,7 @@ namespace Upload.Actions
                 if (shirtCreatorVM.MultiMode == false)
                 {
                     string imagePath = browseResult[0];
-                    if (string.IsNullOrEmpty(shirtCreatorVM.SelectedShirt.DesignTitle))
-                        shirtCreatorVM.SelectedShirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
+
                     if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
                         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
                         shirtCreatorVM.SelectedShirtType is Raglan ||
@@ -360,8 +369,10 @@ namespace Upload.Actions
                     {
                         if (ValidateImage(imagePath, 4500, 5400))
                         {
-                            shirtCreatorVM.SelectedShirt.FrontStdPath = imagePath;
-                            shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontStdPath;
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Standard_Front;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+
                         }
 
                     }
@@ -371,67 +382,87 @@ namespace Upload.Actions
                     {
                         if (ValidateImage(imagePath, 4500, 4050))
                         {
-                            shirtCreatorVM.SelectedShirt.FrontHoodiePath = imagePath;
-                            shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontHoodiePath;
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Hoodie_Front;
                         }
                     }
                     else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
                     {
                         if (ValidateImage(imagePath, 485, 485))
                         {
-                            shirtCreatorVM.SelectedShirt.PopSocketsGripPath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
                             shirtCreatorVM.FrontImagePath = imagePath;
-                            shirtCreatorVM.BackImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Popsockets;
                         }
                     }
+                    else if (shirtCreatorVM.SelectedShirtType is IPhoneCase)
+                    {
+                        if (ValidateImage(imagePath, 1800, 3200))
+                        {
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.iPhoneCase;
+                        }
+                    }
+                    else if (shirtCreatorVM.SelectedShirtType is SamsungCase)
+                    {
+                        if (ValidateImage(imagePath, 1800, 3200))
+                        {
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.SamsungCase;
+                        }
+                    }
+
                 }
                 else
                 {
-                    if (shirtCreatorVM.Shirts == null)
-                        shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
+                    //if (shirtCreatorVM.Shirts == null)
+                    //    shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
 
-                    foreach (string imagePath in browseResult)
-                    {
-                        Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
+                    //foreach (string imagePath in browseResult)
+                    //{
+                    //    Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
 
-                        if (string.IsNullOrEmpty(shirt.DesignTitle))
-                            shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
+                    //    if (string.IsNullOrEmpty(shirt.DesignTitle))
+                    //        shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
 
-                        if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
-                             shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
-                             shirtCreatorVM.SelectedShirtType is Raglan ||
-                             shirtCreatorVM.SelectedShirtType is StandardTShirt ||
-                             shirtCreatorVM.SelectedShirtType is SweetShirt ||
-                             shirtCreatorVM.SelectedShirtType is TankTop ||
-                             shirtCreatorVM.SelectedShirtType is VNeckTShirt)
-                        {
-                            if (/*ValidateImage(imagePath, 4500, 5400)*/true)
-                            {
-                                shirt.FrontStdPath = imagePath;
-                                shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontStdPath;
-                            }
-                        }
-                        else
-                        if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
-                                shirtCreatorVM.SelectedShirtType is ZipHoodie)
-                        {
-                            if (/*ValidateImage(imagePath, 4500, 4050)*/true)
-                            {
-                                shirt.FrontHoodiePath = imagePath;
-                                shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontHoodiePath;
-                            }
-                        }
-                        else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
-                        {
-                            if (/*ValidateImage(imagePath, 485, 485)*/true)
-                            {
-                                shirt.PopSocketsGripPath = imagePath;
-                                shirtCreatorVM.FrontImagePath = imagePath;
-                                shirtCreatorVM.BackImagePath = imagePath;
-                            }
-                        }
-                        shirtCreatorVM.Shirts.Add(shirt);
-                    }
+                    //    if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is Raglan ||
+                    //         shirtCreatorVM.SelectedShirtType is StandardTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is SweetShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is TankTop ||
+                    //         shirtCreatorVM.SelectedShirtType is VNeckTShirt)
+                    //    {
+                    //        if (/*ValidateImage(imagePath, 4500, 5400)*/true)
+                    //        {
+                    //            shirt.FrontStdPath = imagePath;
+                    //            shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontStdPath;
+                    //        }
+                    //    }
+                    //    else
+                    //    if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
+                    //            shirtCreatorVM.SelectedShirtType is ZipHoodie)
+                    //    {
+                    //        if (/*ValidateImage(imagePath, 4500, 4050)*/true)
+                    //        {
+                    //            shirt.FrontHoodiePath = imagePath;
+                    //            shirtCreatorVM.FrontImagePath = shirtCreatorVM.SelectedShirt.FrontHoodiePath;
+                    //        }
+                    //    }
+                    //    else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
+                    //    {
+                    //        if (/*ValidateImage(imagePath, 485, 485)*/true)
+                    //        {
+                    //            shirt.PopSocketsGripPath = imagePath;
+                    //            shirtCreatorVM.FrontImagePath = imagePath;
+                    //            shirtCreatorVM.BackImagePath = imagePath;
+                    //        }
+                    //    }
+                    //    shirtCreatorVM.Shirts.Add(shirt);
+                    //}
                 }
             }
         }
@@ -440,7 +471,7 @@ namespace Upload.Actions
             ShirtCreatorViewModel shirtCreatorVM = obj as ShirtCreatorViewModel;
             if (shirtCreatorVM != null)
             {
-                if (shirtCreatorVM.MultiMode && !string.IsNullOrEmpty(shirtCreatorVM.FrontImagePath))
+                if (shirtCreatorVM.MultiMode && !string.IsNullOrEmpty(shirtCreatorVM.BackImagePath))
                 {
                     ShowPopup(shirtCreatorVM, "Multi-Mode only support 1 image per shirt");
                     return;
@@ -449,8 +480,9 @@ namespace Upload.Actions
                 if (shirtCreatorVM.MultiMode == false)
                 {
                     string imagePath = browseResult[0];
-                    if (string.IsNullOrEmpty(shirtCreatorVM.SelectedShirt.DesignTitle))
-                        shirtCreatorVM.SelectedShirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
+                    if (string.IsNullOrEmpty(imagePath))
+                        shirtCreatorVM.SelectedShirt.ImagePath = Path.GetFileNameWithoutExtension(imagePath);
+
                     if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
                         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
                         shirtCreatorVM.SelectedShirtType is Raglan ||
@@ -461,78 +493,99 @@ namespace Upload.Actions
                     {
                         if (ValidateImage(imagePath, 4500, 5400))
                         {
-                            shirtCreatorVM.SelectedShirt.BackStdPath = imagePath;
-                            shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackStdPath;
-                        }
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.BackImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Standard_Back;
 
+                        }
                     }
                     else
                     if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
                             shirtCreatorVM.SelectedShirtType is ZipHoodie)
                     {
-                        if (ValidateImage(imagePath, 4500, 5400))
+                        if (ValidateImage(imagePath, 4500, 4050))
                         {
-                            shirtCreatorVM.SelectedShirt.BackHoodiePath = imagePath;
-                            shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackHoodiePath;
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.BackImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Hoodie_Back;
+
                         }
                     }
                     else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
                     {
                         if (ValidateImage(imagePath, 485, 485))
                         {
-                            shirtCreatorVM.SelectedShirt.PopSocketsGripPath = imagePath;
-                            shirtCreatorVM.BackImagePath = imagePath;
-                            shirtCreatorVM.BackImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.Popsockets;
+                        }
+                    }
+                    else if (shirtCreatorVM.SelectedShirtType is IPhoneCase)
+                    {
+                        if (ValidateImage(imagePath, 1800, 3200))
+                        {
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.iPhoneCase;
+                        }
+                    }
+                    else if (shirtCreatorVM.SelectedShirtType is SamsungCase)
+                    {
+                        if (ValidateImage(imagePath, 1800, 3200))
+                        {
+                            shirtCreatorVM.SelectedShirt.ImagePath = imagePath;
+                            shirtCreatorVM.FrontImagePath = imagePath;
+                            shirtCreatorVM.SelectedShirt.ImageType = (int)PNGImageType.SamsungCase;
                         }
                     }
                 }
                 else
                 {
-                    if (shirtCreatorVM.Shirts == null)
-                        shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
-                    foreach (string imagePath in browseResult)
-                    {
-                        Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
+                    //if (shirtCreatorVM.Shirts == null)
+                    //    shirtCreatorVM.Shirts = new System.Collections.ObjectModel.ObservableCollection<Shirt>();
+                    //foreach (string imagePath in browseResult)
+                    //{
+                    //    Shirt shirt = shirtCreatorVM.SelectedShirt.Clone() as Shirt;
 
-                        if (string.IsNullOrEmpty(shirt.DesignTitle))
-                            shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
+                    //    if (string.IsNullOrEmpty(shirt.DesignTitle))
+                    //        shirt.DesignTitle = Path.GetFileNameWithoutExtension(imagePath);
 
-                        if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
-                             shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
-                             shirtCreatorVM.SelectedShirtType is Raglan ||
-                             shirtCreatorVM.SelectedShirtType is StandardTShirt ||
-                             shirtCreatorVM.SelectedShirtType is SweetShirt ||
-                             shirtCreatorVM.SelectedShirtType is TankTop ||
-                             shirtCreatorVM.SelectedShirtType is VNeckTShirt)
-                        {
-                            if (ValidateImage(imagePath, 4500, 5400))
-                            {
-                                shirt.BackStdPath = imagePath;
-                                shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackStdPath;
-                            }
-                        }
-                        else
-                        if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
-                                shirtCreatorVM.SelectedShirtType is ZipHoodie)
-                        {
-                            if (ValidateImage(imagePath, 4500, 4050))
-                            {
-                                shirt.BackHoodiePath = imagePath;
-                                shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackHoodiePath;
-                            }
-                        }
-                        else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
-                        {
-                            if (ValidateImage(imagePath, 485, 485))
-                            {
-                                shirt.PopSocketsGripPath = imagePath;
-                                shirtCreatorVM.BackImagePath = imagePath;
-                                shirtCreatorVM.BackImagePath = imagePath;
-                            }
-                        }
-                        shirtCreatorVM.Shirts.Add(shirt);
-                        shirt = null;
-                    }
+                    //    if (shirtCreatorVM.SelectedShirtType is LongSleeveTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is PremiumTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is Raglan ||
+                    //         shirtCreatorVM.SelectedShirtType is StandardTShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is SweetShirt ||
+                    //         shirtCreatorVM.SelectedShirtType is TankTop ||
+                    //         shirtCreatorVM.SelectedShirtType is VNeckTShirt)
+                    //    {
+                    //        if (ValidateImage(imagePath, 4500, 5400))
+                    //        {
+                    //            shirt.BackStdPath = imagePath;
+                    //            shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackStdPath;
+                    //        }
+                    //    }
+                    //    else
+                    //    if (shirtCreatorVM.SelectedShirtType is PullOverHoodie ||
+                    //            shirtCreatorVM.SelectedShirtType is ZipHoodie)
+                    //    {
+                    //        if (ValidateImage(imagePath, 4500, 4050))
+                    //        {
+                    //            shirt.BackHoodiePath = imagePath;
+                    //            shirtCreatorVM.BackImagePath = shirtCreatorVM.SelectedShirt.BackHoodiePath;
+                    //        }
+                    //    }
+                    //    else if (shirtCreatorVM.SelectedShirtType is PopSocketsGrip)
+                    //    {
+                    //        if (ValidateImage(imagePath, 485, 485))
+                    //        {
+                    //            shirt.PopSocketsGripPath = imagePath;
+                    //            shirtCreatorVM.BackImagePath = imagePath;
+                    //            shirtCreatorVM.BackImagePath = imagePath;
+                    //        }
+                    //    }
+                    //    shirtCreatorVM.Shirts.Add(shirt);
+                    //    shirt = null;
+                    //}
                 }
             }
         }
@@ -556,9 +609,10 @@ namespace Upload.Actions
                     {
                         if (shirtCreatorVM.SelectedShirt != null && ValidateShirt(shirtCreatorVM.SelectedShirt, ref errorCode))
                         {
-                            XMLDataAccess dataAccess = new XMLDataAccess();
-                            dataAccess.SaveShirt(shirtCreatorVM.SelectedShirt);
-                            ShowPopup(shirtCreatorVM, string.Format("Shirt saved in {0}", dataAccess.XmlFilePath));
+                            JsonDataAccess dataAccess = new JsonDataAccess();
+                            ShirtData sData = ShirtDTO.MapData(shirtCreatorVM.SelectedShirt,typeof(ShirtData)) as ShirtData;
+                            dataAccess.SaveShirt(sData);
+                            ShowPopup(shirtCreatorVM,"Shirt saved!");
                         }
                         else
                         {
@@ -656,91 +710,87 @@ namespace Upload.Actions
                     return false;
                 }
 
-                if (string.IsNullOrEmpty(shirt.FrontStdPath) &&
-                    string.IsNullOrEmpty(shirt.BackStdPath) &&
-                    string.IsNullOrEmpty(shirt.FrontHoodiePath) &&
-                    string.IsNullOrEmpty(shirt.BackHoodiePath) &&
-                    string.IsNullOrEmpty(shirt.PopSocketsGripPath))
+                if (string.IsNullOrEmpty(shirt.ImagePath))
                 {
                     shirtError = ShirtStatus.EmptyPath;
                     return false;
                 }
-                //BrandName
-                bool brandNameEnglish = true;
-                bool brandNameGerman = true;
-                if (string.IsNullOrEmpty(shirt.BrandName))
-                    brandNameEnglish = false;
-                else
-                if ((shirt.BrandName.Length < 3 ||
-                     shirt.BrandName.Length > 50))
-                {
-                    shirtError = ShirtStatus.BrandNameFail;
-                    return false;
-                }
-                if (string.IsNullOrEmpty(shirt.BrandNameGerman))
-                {
-                    brandNameGerman = false;
-                }
-                else
-                if ((shirt.BrandNameGerman.Length < 3 ||
-                        shirt.BrandNameGerman.Length > 50))
-                {
-                    shirtError = ShirtStatus.BrandNameFail;
-                    return false;
-                }
-                if (!brandNameEnglish && !brandNameGerman)
-                {
-                    shirtError = ShirtStatus.BrandNameFail;
-                    return false;
-                }
-                //Design Title
-                bool titleEnglish = true;
-                bool titleGerman = true;
-                if (string.IsNullOrEmpty(shirt.DesignTitle))
-                    titleEnglish = false;
-                else
-                if ((shirt.DesignTitle.Length < 3 ||
-                     shirt.DesignTitle.Length > 60))
-                {
-                    shirtError = ShirtStatus.TitleFail;
-                    return false;
-                }
-                if (string.IsNullOrEmpty(shirt.BrandNameGerman))
-                {
-                    titleGerman = false;
-                }
-                else
-                if ((shirt.DesignTitleGerman.Length < 3 ||
-                        shirt.DesignTitleGerman.Length > 60))
-                {
-                    shirtError = ShirtStatus.TitleFail;
-                    return false;
-                }
-                if (!titleEnglish && !titleGerman)
-                {
-                    shirtError = ShirtStatus.TitleFail;
-                    return false;
-                }
-                //Feature Bullet
-                if (shirt.FeatureBullet1.Length > 256 ||
-                    shirt.FeatureBullet2.Length > 256 ||
-                    shirt.FeatureBullet1German.Length > 256 ||
-                    shirt.FeatureBullet2German.Length > 256)
-                {
-                    shirtError = ShirtStatus.FeatureBulletFail;
-                    return false;
-                }
-                //Description
-                if (!string.IsNullOrEmpty(shirt.Description) &&
-                    (shirt.Description.Length > 2000 || shirt.Description.Length < 75) ||
-                    !string.IsNullOrEmpty(shirt.DescriptionGerman) &&
-                    (shirt.DescriptionGerman.Length > 2000 || shirt.DescriptionGerman.Length < 75))
-                {
-                    shirtError = ShirtStatus.DescriptionFail;
-                    return false;
-                }
+                ////BrandName
+                //bool brandNameEnglish = true;
+                //bool brandNameGerman = true;
+                //if (string.IsNullOrEmpty(shirt.BrandName))
+                //    brandNameEnglish = false;
+                //else
+                //if ((shirt.BrandName.Length < 3 ||
+                //     shirt.BrandName.Length > 50))
+                //{
+                //    shirtError = ShirtStatus.BrandNameFail;
+                //    return false;
+                //}
+                //if (string.IsNullOrEmpty(shirt.BrandNameGerman))
+                //{
+                //    brandNameGerman = false;
+                //}
+                //else
+                //if ((shirt.BrandNameGerman.Length < 3 ||
+                //        shirt.BrandNameGerman.Length > 50))
+                //{
+                //    shirtError = ShirtStatus.BrandNameFail;
+                //    return false;
+                //}
+                //if (!brandNameEnglish && !brandNameGerman)
+                //{
+                //    shirtError = ShirtStatus.BrandNameFail;
+                //    return false;
+                //}
+                ////Design Title
+                //bool titleEnglish = true;
+                //bool titleGerman = true;
+                //if (string.IsNullOrEmpty(shirt.DesignTitle))
+                //    titleEnglish = false;
+                //else
+                //if ((shirt.DesignTitle.Length < 3 ||
+                //     shirt.DesignTitle.Length > 60))
+                //{
+                //    shirtError = ShirtStatus.TitleFail;
+                //    return false;
+                //}
+                //if (string.IsNullOrEmpty(shirt.BrandNameGerman))
+                //{
+                //    titleGerman = false;
+                //}
+                //else
+                //if ((shirt.DesignTitleGerman.Length < 3 ||
+                //        shirt.DesignTitleGerman.Length > 60))
+                //{
+                //    shirtError = ShirtStatus.TitleFail;
+                //    return false;
+                //}
+                //if (!titleEnglish && !titleGerman)
+                //{
+                //    shirtError = ShirtStatus.TitleFail;
+                //    return false;
+                //}
+                ////Feature Bullet
+                //if (shirt.FeatureBullet1.Length > 256 ||
+                //    shirt.FeatureBullet2.Length > 256 ||
+                //    shirt.FeatureBullet1German.Length > 256 ||
+                //    shirt.FeatureBullet2German.Length > 256)
+                //{
+                //    shirtError = ShirtStatus.FeatureBulletFail;
+                //    return false;
+                //}
+                ////Description
+                //if (!string.IsNullOrEmpty(shirt.Description) &&
+                //    (shirt.Description.Length > 2000 || shirt.Description.Length < 75) ||
+                //    !string.IsNullOrEmpty(shirt.DescriptionGerman) &&
+                //    (shirt.DescriptionGerman.Length > 2000 || shirt.DescriptionGerman.Length < 75))
+                //{
+                //    shirtError = ShirtStatus.DescriptionFail;
+                //    return false;
+                //}
                 //Color
-                foreach (ShirtBase s in shirt.ShirtTypes.Where(x => x.IsActive == true))
+                foreach (ShirtType s in shirt.ShirtTypes.Where(x => x.IsActive == true))
                 {
                     if (s.Colors == null)
                     {
@@ -785,7 +835,7 @@ namespace Upload.Actions
                     }
                     else if (button.IsChecked == false)
                     {
-                        Upload.Definitions.Color activeColor = shirtVM.SelectedShirtType.Colors.FirstOrDefault(x => x.IsActive == true);
+                        ViewModel.Color activeColor = shirtVM.SelectedShirtType.Colors.FirstOrDefault(x => x.IsActive == true);
                         if (activeColor != null)
                         {
                             shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + activeColor.ColorName + ".png";
@@ -822,34 +872,34 @@ namespace Upload.Actions
         #region Batch Replace
         private void ExportToExcel(object obj)
         {
-            if (obj is ShirtCreatorViewModel shirtVM)
-            {
-                ExcelActions xlActions = new ExcelActions();
-                if (shirtVM.Shirts != null && shirtVM.Shirts.Count > 0)
-                {
-                    xlActions.ExportToExel(shirtVM.Shirts);
-                }
+            //if (obj is ShirtCreatorViewModel shirtVM)
+            //{
+            //    ExcelActions xlActions = new ExcelActions();
+            //    if (shirtVM.Shirts != null && shirtVM.Shirts.Count > 0)
+            //    {
+            //        xlActions.ExportToExel(shirtVM.Shirts);
+            //    }
 
-                //ShowMultiReplaceWindow(shirtVM);
-            }
+            //    //ShowMultiReplaceWindow(shirtVM);
+            //}
         }
 
         private void ImportFromExcel(object obj)
         {
-            if (obj is ShirtCreatorViewModel shirtVM)
-            {
-                ExcelActions xlActions = new ExcelActions();
-                if (xlActions.ImportFromExcel(shirtVM.Shirts))
-                {
-                    shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
-                    ShowPopup(shirtVM, "Descriptions imported from excel");
-                }
-                else
-                {
-                    ShowPopup(shirtVM, "Import from excel failed");
-                }
-                //ShowMultiReplaceWindow(shirtVM);
-            }
+            //if (obj is ShirtCreatorViewModel shirtVM)
+            //{
+            //    ExcelActions xlActions = new ExcelActions();
+            //    if (xlActions.ImportFromExcel(shirtVM.Shirts))
+            //    {
+            //        shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
+            //        ShowPopup(shirtVM, "Descriptions imported from excel");
+            //    }
+            //    else
+            //    {
+            //        ShowPopup(shirtVM, "Import from excel failed");
+            //    }
+            //    //ShowMultiReplaceWindow(shirtVM);
+            //}
         }
 
         private void ShowMultiReplaceWindow(ShirtCreatorViewModel shirtVM)
@@ -865,7 +915,7 @@ namespace Upload.Actions
                     shirtVM.UpdateDescriptionsFromShirt(s);
                     shirtVM.MultiReplaceVM.ListShirts.Add(new DataGridModel()
                     {
-                        PNGPath = Path.GetFileName(s.DefaultPNGPath),
+                        PNGPath = Path.GetFileName(s.ImagePath),
                         Descriptions = shirtVM.Descriptions
                     });
                 }

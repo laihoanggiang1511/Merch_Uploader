@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Tools.Ribbon;
+using Upload.DataAccess.Model;
+using Upload.ViewModel;
 
 namespace UploadTemplate
 {
@@ -61,15 +63,23 @@ namespace UploadTemplate
             }
             for (int i = 0; i < images.Length; i++)
             {
+                
                 Globals.Sheet1.Cells[startRow + i, 1].Value = Path.GetFileName(images[i]);
                 Globals.Sheet1.Cells[startRow + i, 2].Value = Path.GetDirectoryName(images[i]);
-
             }
         }
 
         private void Btn_SaveFile_Click(object sender, RibbonControlEventArgs e)
         {
+            //string jsonData = 
+            //ShirtData sData = ShirtData. 
+        }
 
+        private void btn_Edit_Click(object sender, RibbonControlEventArgs e)
+        {
+
+            Shirt mShirt = new Shirt();
+            
         }
     }
 }

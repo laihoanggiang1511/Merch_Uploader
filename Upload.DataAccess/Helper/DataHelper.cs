@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Upload.Definitions;
-using Upload.Model;
+using Upload.DataAccess.Model;
 
 namespace Upload.DataAccess.Helper
 {
@@ -38,7 +37,7 @@ namespace Upload.DataAccess.Helper
             return result;
         }
 
-        public static bool[] StringToBoolArray(string input)
+        public static List<bool> StringToBoolArray(string input)
         {
             try
             {
@@ -48,14 +47,14 @@ namespace Upload.DataAccess.Helper
                 {
                     bool.TryParse(temp[i], out result[i]);
                 }
-                return result;
+                return result.ToList();
             }
             catch
             {
                 return null;
             }
         }
-        public static bool StringToColorArray(string input, Color[] colors)
+        public static bool StringToColorArray(string input, List<ColorData> colors)
         {
             //List<Color> lstColor = new List<Color>();
             try
@@ -64,7 +63,7 @@ namespace Upload.DataAccess.Helper
                 {
                     string[] temp = input.Split(',');
                     //bool[] parseResult = new bool[temp.Length];
-                    for (int i = 0; i < colors.Length; i++)
+                    for (int i = 0; i < colors.Count; i++)
                     {
                         bool.TryParse(temp[i], out bool result);
                         colors[i].IsActive = result;
@@ -94,7 +93,7 @@ namespace Upload.DataAccess.Helper
                 return null;
             }
         }
-        public static double[] StringToDoubleArray(string input)
+        public static List<double> StringToDoubleArray(string input)
         {
             try
             {
@@ -104,7 +103,7 @@ namespace Upload.DataAccess.Helper
                 {
                     double.TryParse(temp[i], out result[i]);
                 }
-                return result;
+                return result.ToList();
             }
             catch
             {

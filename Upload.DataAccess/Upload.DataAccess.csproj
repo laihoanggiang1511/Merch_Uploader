@@ -75,6 +75,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -83,21 +84,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Base\ColorData.cs" />
+    <Compile Include="Model\Base\DataModelBase.cs" />
+    <Compile Include="Model\Base\LanguageData.cs" />
+    <Compile Include="Model\Base\ShirtTypeData.cs" />
+    <Compile Include="Model\ShirtData.cs" />
     <Compile Include="XMLDataAccess.cs" />
     <Compile Include="Helper\DataHelper.cs" />
     <Compile Include="IDataAccess.cs" />
     <Compile Include="JsonDataAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Upload.Definitions\Upload.Definitions.csproj">
-      <Project>{DE7D9F54-7FF1-4648-A4E2-03181561FC34}</Project>
-      <Name>Upload.Definitions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
-      <Project>{f18802e3-6ab3-4a0d-afe6-880c34104fce}</Project>
-      <Name>Upload.Model</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

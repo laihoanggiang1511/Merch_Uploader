@@ -94,11 +94,5 @@
     <Compile Include="ShirtTypes\VNeckTShirt.cs" />
     <Compile Include="ShirtTypes\ZipHoodie.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Upload.Definitions\Upload.Definitions.csproj">
-      <Project>{de7d9f54-7ff1-4648-a4e2-03181561fc34}</Project>
-      <Name>Upload.Definitions</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

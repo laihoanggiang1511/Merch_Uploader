@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
 using Upload.DataAccess;
-using Upload.Model;
+
 using MessageBox = System.Windows.MessageBox;
+using Upload.ViewModel;
+using Upload.DataAccess.Model;
+using Upload.DTO;
 
 namespace Upload
 {
@@ -52,13 +55,15 @@ namespace Upload
                     Shirt s = new Shirt();
                     if (Path.GetExtension(filePath).ToLower() == ".json")
                     {
-                        JsonDataAccess jsonData = new JsonDataAccess(openFile.FileNames[i]);
-                        s = jsonData.GetShirt();
+                        JsonDataAccess jsonData = new JsonDataAccess();
+                        ShirtData sData  = jsonData.ReadShirt(filePath);
+                        s = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
                     }
                     else if (Path.GetExtension(filePath).ToLower() == ".xml")
                     {
-                        XMLDataAccess xmlData = new XMLDataAccess(filePath);
-                        s = xmlData.GetShirt();
+                        XMLDataAccess xmlData = new XMLDataAccess();
+                        ShirtData sData = xmlData.ReadShirt(filePath);
+                        s = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
                     }
                     if (s != null)
                     {

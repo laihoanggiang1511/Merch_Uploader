@@ -1,4 +1,4 @@
-﻿  using Common;
+﻿using Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Upload.ViewModel;
 
-namespace ChromeAPI
+namespace Upload.Actions.Chrome
 {
     public class UploadMerch
     {
@@ -88,31 +88,31 @@ namespace ChromeAPI
                     {
                         int row = (i) / 4 + 1;
                         int column = (i) % 4 + 1;
-                        ShirtBase s = shirt.ShirtTypes[i];
+                        ShirtType s = shirt.ShirtTypes[i];
                         if (s.IsActive)
                         {
                             Log.log.Info($"---i={i}---");
                             // Edit Detail-Standard                
                             Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
                             // Choose Fit type
-                            if (s.FitTypes != null && s.FitTypes.Length > 1)
+                            if (s.FitTypes != null && s.FitTypes.Count > 1)
                             {
-                                for (int j = 0; j < s.FitTypes.Length; j++)
+                                for (int j = 0; j < s.FitTypes.Count; j++)
                                 {
-                                                                  
+
                                     Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
                                         s.FitTypes[j]);
                                 }
                             }
                             // Select Color
-                            for (int j = 0; j < s.Colors.Length; j++)
+                            for (int j = 0; j < s.Colors.Count; j++)
                             {
-                                Color color = s.Colors[j];    
+                                Color color = s.Colors[j];
                                 Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
                                                                         $"/div[{j + 1}]/colorcheckbox/span", color.IsActive);
                             }
                             // Set Price
-                            for (int j = 0; j < s.MarketPlaces.Length; j++)
+                            for (int j = 0; j < s.MarketPlaces.Count; j++)
                             {
                                 if (s.MarketPlaces[j])
                                 {
@@ -127,30 +127,43 @@ namespace ChromeAPI
                     }
 
                     Log.log.Info("---Descriptions---");
-                    // Set English Descriptions
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-brandName"), shirt.BrandName);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-title"), shirt.DesignTitle);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet1"), shirt.FeatureBullet1);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-featureBullet2"), shirt.FeatureBullet2);
-                    Helper.SendKeysElement(driver, By.Id("designCreator-productEditor-description"), shirt.Description);
+                    Helper.ClickElement(driver, By.Id("acc-control-all"));
 
-                    //Set German Description
-                    if (shirt.ShirtTypes.FirstOrDefault(x => (x.MarketPlaces.Length > 2 && x.MarketPlaces[2] == true)) != null)
+                    // Set English Descriptions
+                    for (int i = 0; i <= 4; i++)
                     {
-                        Helper.ClickElement(driver, By.Id("acc-control-all"));
-                        string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
-                        //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
-                        if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
-                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
-                        if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
-                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
-                        if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
-                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
-                        if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
-                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
-                        if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
-                            Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
+                        if (shirt.Languages.Length > i)
+                        {
+                            string rootXPath = $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/product-text/ngb-accordion/div[{i+1}]/div[2]/div/product-text-editor/div/div/";
+                            if (!string.IsNullOrEmpty(shirt.Languages[i].BrandName))
+                                Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[1]/div[3]/input"), shirt.Languages[i].BrandName);
+                            if (!string.IsNullOrEmpty(shirt.Languages[i].Title))
+                                Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[1]/div[2]/input"), shirt.Languages[i].Title);
+                            if (!string.IsNullOrEmpty(shirt.Languages[i].FeatureBullet1))
+                                Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[2]/div[2]/input"), shirt.Languages[i].FeatureBullet1);
+                            if (!string.IsNullOrEmpty(shirt.Languages[i].FeatureBullet2))
+                                Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[2]/div[3]/input"), shirt.Languages[i].FeatureBullet2);
+                            if (!string.IsNullOrEmpty(shirt.Languages[i].Description))
+                                Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[2]/div[4]/input"), shirt.Languages[i].Description);
+                        }
                     }
+
+                    ////Set Other languages Description
+                    //if (shirt.ShirtTypes.FirstOrDefault(x => (x.MarketPlaces.Length > 2 && x.MarketPlaces[2] == true)) != null)
+                    //{
+                    //    string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
+                    //    //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
+                    //    if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
+                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
+                    //    if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
+                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
+                    //    if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
+                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
+                    //    if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
+                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
+                    //    if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
+                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
+                    //}
 
                     // Submit
                     Log.log.Info("---Summit---");
@@ -166,7 +179,7 @@ namespace ChromeAPI
             }
             catch (Exception ex)
             {
-                string strLog = $"---Fail at shirt {shirt.DefaultPNGPath}---\n{ex}";
+                string strLog = $"---Fail at shirt {shirt.ImagePath}---\n{ex}";
                 Log.log.Fatal(strLog);
                 return false;
             }
@@ -181,11 +194,11 @@ namespace ChromeAPI
                     //Check then Uncheck All Checkbox
                     Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", true);
                     Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", false);
-                    
+
                     for (int i = 0; i < shirt.ShirtTypes.Length; i++)
                     {
-                        ShirtBase sb = shirt.ShirtTypes[i];
-                        for (int j = 0; j < sb.MarketPlaces.Length; j++)
+                        ShirtType sb = shirt.ShirtTypes[i];
+                        for (int j = 0; j < sb.MarketPlaces.Count; j++)
                         {
                             Log.log.Info($"i={i};j={j}");
                             if (!Helper.ClickCheckBox(driver, $"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
@@ -219,43 +232,100 @@ namespace ChromeAPI
                 Log.log.Info("---Start UploadFilePNG---");
                 if (driver != null)
                 {
-                    if (!string.IsNullOrEmpty(shirt.FrontStdPath))
+                    switch (shirt.ImageType)
                     {
-                        Log.log.Info("-STANDARD_TSHIRT-FRONT-");
-                        IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
-                        webElement.SendKeys(shirt.FrontStdPath);
-                    }
-                    if (!string.IsNullOrEmpty(shirt.FrontHoodiePath))
-                    {
-                        Log.log.Info("-STANDARD_PULLOVER_HOODIE-FRONT-");
-                        IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
-                        webElement.SendKeys(shirt.FrontHoodiePath);
-                    }
-                    if (!string.IsNullOrEmpty(shirt.PopSocketsGripPath))
-                    {
-                        Log.log.Info("-POP_SOCKET-FRONT-");
-                        IWebElement webElement = driver.FindElement(By.Id("POP_SOCKET-FRONT"));
-                        webElement.SendKeys(shirt.PopSocketsGripPath);
-                    }
-                    if (!string.IsNullOrEmpty(shirt.BackStdPath))
-                    {
-                        Log.log.Info("-STANDARD_TSHIRT-BACK-");
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
-                        IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
-                        webElement.SendKeys(shirt.BackStdPath);
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                        case (int)PNGImageType.Standard_Front: 
+                            {
+                                Log.log.Info("-STANDARD_TSHIRT-FRONT-");
+                                IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                break;
+                            }
+                        case (int)PNGImageType.Standard_Back:   
+                            {
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                                IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                                break;
+                            }
+                        case (int)PNGImageType.Hoodie_Front:    
+                            {
+                                IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                break;
+                            }
+                        case (int)PNGImageType.Hoodie_Back:    
+                            {
+                                Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                                IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                                break;
+                            }
+                        case (int)PNGImageType.Popsockets:
+                            {
+                                Log.log.Info("-POP_SOCKET-FRONT-");
+                                IWebElement webElement = driver.FindElement(By.Id("POP_SOCKET-FRONT"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                break;
+                            }
 
+                        case (int)PNGImageType.iPhoneCase:
+                            {
+                                Log.log.Info("-Phone Case-");
+                                IWebElement webElement = driver.FindElement(By.Id("PHONE_CASE_APPLE_IPHONE-BACK"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                break;
+                            }
+                        case (int)PNGImageType.SamsungCase:
+                            {
+                                Log.log.Info("-Phone Case-");
+                                IWebElement webElement = driver.FindElement(By.Id("PHONE_CASE_SAMSUNG_GALAXY-BACK"));
+                                webElement.SendKeys(shirt.ImagePath);
+                                break;
+                            }
                     }
-                    if (!string.IsNullOrEmpty(shirt.BackHoodiePath))
-                    {
-                        Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
-                        IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
-                        webElement.SendKeys(shirt.BackStdPath);
-                        Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
-                    }
+                    //if (!string.IsNullOrEmpty(shirt.FrontStdPath))
+                    //{
+                    //    Log.log.Info("-STANDARD_TSHIRT-FRONT-");
+                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
+                    //    webElement.SendKeys(shirt.FrontStdPath);
+                    //}
+                    //if (!string.IsNullOrEmpty(shirt.FrontHoodiePath))
+                    //{
+                    //    Log.log.Info("-STANDARD_PULLOVER_HOODIE-FRONT-");
+                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
+                    //    webElement.SendKeys(shirt.FrontHoodiePath);
+                    //}
+                    //if (!string.IsNullOrEmpty(shirt.PopSocketsGripPath))
+                    //{
+                    //    Log.log.Info("-POP_SOCKET-FRONT-");
+                    //    IWebElement webElement = driver.FindElement(By.Id("POP_SOCKET-FRONT"));
+                    //    webElement.SendKeys(shirt.PopSocketsGripPath);
+                    //}
+                    //if (!string.IsNullOrEmpty(shirt.BackStdPath))
+                    //{
+                    //    Log.log.Info("-STANDARD_TSHIRT-BACK-");
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
+                    //    webElement.SendKeys(shirt.BackStdPath);
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
+
+                    //}
+                    //if (!string.IsNullOrEmpty(shirt.BackHoodiePath))
+                    //{
+                    //    Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
+                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
+                    //    webElement.SendKeys(shirt.BackStdPath);
+                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
+                    //}
                     Log.log.Info("---End UploadFilePNG---");
                     return true;
                 }

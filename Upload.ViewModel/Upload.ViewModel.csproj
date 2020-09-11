@@ -83,10 +83,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\Color.cs" />
+    <Compile Include="Base\Language.cs" />
+    <Compile Include="Base\PNGImageType.cs" />
+    <Compile Include="Base\ShirtType.cs" />
+    <Compile Include="Definitions.cs" />
     <Compile Include="ImageEditorViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="MultiReplaceViewModel.cs" />
+    <Compile Include="Shirt.cs" />
     <Compile Include="ShirtCreatorViewModel.cs" />
+    <Compile Include="ShirtTypes\LongSleeveTShirt.cs" />
+    <Compile Include="ShirtTypes\IPhoneCase.cs" />
+    <Compile Include="ShirtTypes\PopSocketsGrip.cs" />
+    <Compile Include="ShirtTypes\PremiumTShirt.cs" />
+    <Compile Include="ShirtTypes\PullOverHoodie.cs" />
+    <Compile Include="ShirtTypes\Raglan.cs" />
+    <Compile Include="ShirtTypes\SamsungCase.cs" />
+    <Compile Include="ShirtTypes\StandardTShirt.cs" />
+    <Compile Include="ShirtTypes\SweetShirt.cs" />
+    <Compile Include="ShirtTypes\TankTop.cs" />
+    <Compile Include="ShirtTypes\VNeckTShirt.cs" />
+    <Compile Include="ShirtTypes\ZipHoodie.cs" />
     <Compile Include="UploadWindowViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -105,14 +123,6 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
       <Name>Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Upload.Definitions\Upload.Definitions.csproj">
-      <Project>{DE7D9F54-7FF1-4648-A4E2-03181561FC34}</Project>
-      <Name>Upload.Definitions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
-      <Project>{f18802e3-6ab3-4a0d-afe6-880c34104fce}</Project>
-      <Name>Upload.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

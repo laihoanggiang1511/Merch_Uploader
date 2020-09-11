@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upload.Model
+namespace Upload.ViewModel
 {
-    public class PremiumTShirt : ShirtBase
+    public class PremiumTShirt : ShirtType
     {
         public PremiumTShirt()
         {
             this.TypeName = "PremiumTShirt";
             this.IsActive = false;
-            this.Colors = new Color[]
+            this.Colors = new ObservableCollection<Color>
             {
                 new Color("Asphalt",true),
                 new Color("Baby Blue",false),
@@ -36,30 +37,10 @@ namespace Upload.Model
                 new Color("Slate",false),
                 new Color("White",false),
             };
-            this.FitTypes = new bool[] { true, true, false };
-            this.MarketPlaces = new bool[] { true };
-            this.Prices = new double[] { 19.99 };
+            this.FitTypes = new ObservableCollection<bool> { true, true, false };
+            this.MarketPlaces = new ObservableCollection<bool> { true };
+            this.Prices = new ObservableCollection<double> { 19.99 };
         }
-        public override object Clone()
-        {
-            PremiumTShirt target = new PremiumTShirt();
-            target.IsActive = IsActive;
-            target.MarketPlaces = MarketPlaces?.Clone() as bool[];
-            target.Prices = Prices.Clone() as double[];
-            if (this.Colors != null)
-            {
-                List<Color> colors = new List<Color>();
-                this.Colors.ToList().ForEach(x => colors.Add(x));
-                target.Colors = colors.ToArray();
-            }
-            else
-            {
-                target.Colors = null;
-            }
-            target.FitTypes = FitTypes?.Clone() as bool[];
-            target.TypeName = TypeName;
-
-            return target;
-        }
+        
     }
 }

@@ -152,12 +152,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
-      <Project>{F18802E3-6AB3-4A0D-AFE6-880C34104FCE}</Project>
-      <Name>Upload.Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Image\VNeckTShirtBack\Baby Blue.png" />
     <Resource Include="Image\VNeckTShirt\Baby Blue.png" />
   </ItemGroup>
@@ -395,6 +389,12 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\Mesa de trabajo 1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Upload.ViewModel\Upload.ViewModel.csproj">
+      <Project>{FB7A56A9-B95B-401A-AEDD-A3F8F5AA6E5C}</Project>
+      <Name>Upload.ViewModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.1.0\build\MaterialDesignThemes.targets')" />

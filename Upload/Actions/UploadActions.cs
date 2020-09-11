@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Upload.DataAccess;
-using Upload.Model;
 using Upload.GUI;
 using Upload.ViewModel;
 using Common.MVVMCore;
 using System.Windows.Forms;
-using ChromeAPI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using Upload.Definitions;
 using System.Diagnostics;
 using OpenQA.Selenium.Internal;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Controls.Primitives;
 using Microsoft.Office.Interop.Excel;
+using Upload.Actions.Chrome;
+using Upload.DataAccess.Model;
+using Upload.DTO;
 
 namespace Upload.Actions
 {
@@ -166,10 +166,11 @@ namespace Upload.Actions
         private void SaveXmlCmdInvoke(object obj)
         {
             UploadWindowViewModel mainVM = obj as UploadWindowViewModel;
-            XMLDataAccess xMLDataAccess = new XMLDataAccess();
+            JsonDataAccess xMLDataAccess = new JsonDataAccess();
             foreach (Shirt s in mainVM.Shirts)
             {
-                xMLDataAccess.SaveShirt(s);
+                ShirtData sData = ShirtDTO.MapData(s, typeof(ShirtData)) as ShirtData;
+                xMLDataAccess.SaveShirt(sData);
             }
             System.Windows.MessageBox.Show("Saved!");
         }
@@ -305,7 +306,7 @@ namespace Upload.Actions
                             string message = "Following shirt(s) are invalid, please check them again before upload:\n";
                             foreach (var pair in invalidShirts)
                             {
-                                message += pair.Key.DesignTitle + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
+                                message += pair.Key.ImagePath + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
                             }
                             Utils.ShowErrorMessageBox(message);
                             return;
@@ -336,7 +337,7 @@ namespace Upload.Actions
                                 {
                                     string message = "Fail to upload following shirt(s):\n";
                                     foreach (Shirt shirt in failShirts)
-                                        message += shirt.DesignTitle + "\n";
+                                        message += shirt.ImagePath + "\n";
                                     System.Windows.MessageBox.Show(message);
                                 }
                             }

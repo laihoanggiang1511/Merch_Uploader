@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Upload</RootNamespace>
     <AssemblyName>Upload</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -122,6 +122,12 @@
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=10.0.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.10.0.0\lib\net461\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.9.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.9\lib\net45\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.6.1513, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.6\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
@@ -166,6 +172,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Actions\Chrome\Helper.cs" />
+    <Compile Include="Actions\Chrome\UploadMerch.cs" />
     <Compile Include="Actions\ExcelActions.cs" />
     <Compile Include="Actions\ImageEditorActions.cs" />
     <Compile Include="Actions\MainActions.cs" />
@@ -175,6 +183,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Actions\ShirtCreatorActions.cs" />
+    <Compile Include="DTO\ShirtDTO.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -201,10 +210,6 @@
     <Resource Include="Nike-Shirt-9.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ChromeAPI\ChromeAPI.csproj">
-      <Project>{6f934b52-c1ff-472e-a192-dcdc9d1427cf}</Project>
-      <Name>ChromeAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
       <Name>Common</Name>
@@ -213,17 +218,9 @@
       <Project>{684cbfe5-abb8-4630-bb48-2523e2d9fbeb}</Project>
       <Name>Upload.DataAccess</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Upload.Definitions\Upload.Definitions.csproj">
-      <Project>{DE7D9F54-7FF1-4648-A4E2-03181561FC34}</Project>
-      <Name>Upload.Definitions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Upload.GUI\Upload.GUI.csproj">
       <Project>{43a0714f-87e1-4b0c-b89e-94e70d9eaa2b}</Project>
       <Name>Upload.GUI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Upload.Model\Upload.Model.csproj">
-      <Project>{f18802e3-6ab3-4a0d-afe6-880c34104fce}</Project>
-      <Name>Upload.Model</Name>
     </ProjectReference>
     <ProjectReference Include="..\Upload.ViewModel\Upload.ViewModel.csproj">
       <Project>{FB7A56A9-B95B-401A-AEDD-A3F8F5AA6E5C}</Project>

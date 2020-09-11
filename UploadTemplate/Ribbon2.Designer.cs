@@ -44,8 +44,9 @@
             this.btn_Edit = this.Factory.CreateRibbonButton();
             this.btn_SaveFile = this.Factory.CreateRibbonButton();
             this.group2 = this.Factory.CreateRibbonGroup();
-            this.btn_Translate = this.Factory.CreateRibbonButton();
             this.cbb_Language = this.Factory.CreateRibbonComboBox();
+            this.btn_Translate = this.Factory.CreateRibbonButton();
+            this.button1 = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -63,6 +64,7 @@
             this.group1.Items.Add(this.btn_Browse);
             this.group1.Items.Add(this.btn_Edit);
             this.group1.Items.Add(this.btn_SaveFile);
+            this.group1.Items.Add(this.button1);
             this.group1.Label = "File";
             this.group1.Name = "group1";
             // 
@@ -76,6 +78,7 @@
             // 
             this.btn_Edit.Label = "Edit Shirt Template";
             this.btn_Edit.Name = "btn_Edit";
+            this.btn_Edit.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_Edit_Click);
             // 
             // btn_SaveFile
             // 
@@ -90,13 +93,6 @@
             this.group2.Label = "Language";
             this.group2.Name = "group2";
             // 
-            // btn_Translate
-            // 
-            this.btn_Translate.Label = "Translate";
-            this.btn_Translate.Name = "btn_Translate";
-            this.btn_Translate.ShowImage = true;
-            this.btn_Translate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Translate_Click);
-            // 
             // cbb_Language
             // 
             ribbonDropDownItemImpl1.Label = "German";
@@ -109,6 +105,19 @@
             this.cbb_Language.Items.Add(ribbonDropDownItemImpl4);
             this.cbb_Language.Label = "To";
             this.cbb_Language.Name = "cbb_Language";
+            this.cbb_Language.Text = null;
+            // 
+            // btn_Translate
+            // 
+            this.btn_Translate.Label = "Translate";
+            this.btn_Translate.Name = "btn_Translate";
+            this.btn_Translate.ShowImage = true;
+            this.btn_Translate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Translate_Click);
+            // 
+            // button1
+            // 
+            this.button1.Label = "button1";
+            this.button1.Name = "button1";
             // 
             // Ribbon2
             // 
@@ -135,6 +144,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_Edit;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_SaveFile;
         internal Microsoft.Office.Tools.Ribbon.RibbonComboBox cbb_Language;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
     }
 
     partial class ThisRibbonCollection

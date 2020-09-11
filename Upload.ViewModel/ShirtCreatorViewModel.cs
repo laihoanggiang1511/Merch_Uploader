@@ -1,5 +1,6 @@
 ﻿using Common.MVVMCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -11,8 +12,6 @@ using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
-using Upload.Definitions;
-using Upload.Model;
 
 namespace Upload.ViewModel
 {
@@ -70,7 +69,7 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private bool multiMode = true;
+        private bool multiMode = false;
         public bool MultiMode
         {
             get
@@ -108,7 +107,7 @@ namespace Upload.ViewModel
                     {
                         activeColors = new int[] { 1, 4, 8, 9, 10, 14, 16, 18, 19, 20 };
                     }
-                    for (int i = 0; i < SelectedShirtType.Colors.Length; i++)
+                    for (int i = 0; i < SelectedShirtType.Colors.Count; i++)
                     {
                         if (activeColors.ToList().Any(x => x == i))
                         {
@@ -165,8 +164,8 @@ namespace Upload.ViewModel
             }
         }
 
-        ObservableCollection<Definitions.Color> colors = new ObservableCollection<Definitions.Color>();
-        public ObservableCollection<Definitions.Color> Colors
+        ObservableCollection<Color> colors = new ObservableCollection<Color>();
+        public ObservableCollection<Color> Colors
         {
             get => colors;
             set
@@ -176,7 +175,7 @@ namespace Upload.ViewModel
                     colors = value;
                     if (SelectedShirtType != null && colors != null)
                     {
-                        SelectedShirtType.Colors = colors.ToArray();
+                        SelectedShirtType.Colors = colors;
                     }
                     RaisePropertyChanged("Colors");
                 }
@@ -212,8 +211,8 @@ namespace Upload.ViewModel
 
             }
         }
-        private ShirtBase selectedShirtType = null;
-        public ShirtBase SelectedShirtType
+        private ShirtType selectedShirtType = null;
+        public ShirtType SelectedShirtType
         {
             get
             {
@@ -287,8 +286,8 @@ namespace Upload.ViewModel
             }
         }
 
-        private bool[] fitTypesVisibility = new bool[3];
-        public bool[] FitTypesVisibility
+        private ObservableCollection<bool> fitTypesVisibility = new ObservableCollection<bool>() { true,true,true};
+        public ObservableCollection<bool> FitTypesVisibility
         {
             get
             {
@@ -303,8 +302,8 @@ namespace Upload.ViewModel
                 }
             }
         }
-        private bool[] marketPlacesVisibility = new bool[3];
-        public bool[] MarketPlacesVisibility
+        private ObservableCollection<bool> marketPlacesVisibility = new ObservableCollection<bool>() { true, true, true };
+        public ObservableCollection<bool> MarketPlacesVisibility
         {
             get
             {
@@ -541,70 +540,70 @@ namespace Upload.ViewModel
         }
         public void UpdateDescriptionsFromShirt(Shirt shirt)
         {
-            if (SelectedDescriptionIndex == 0)
-            {
-                Descriptions = shirt.BrandName + "\n" +
-                    shirt.DesignTitle + "\n" +
-                    shirt.FeatureBullet1 + "\n" +
-                    shirt.FeatureBullet2 + "\n" +
-                    shirt.Description + "\n";
-            }
-            else
-            {
-                Descriptions = shirt.BrandNameGerman + "\n" +
-                    shirt.DesignTitleGerman + "\n" +
-                    shirt.FeatureBullet1German + "\n" +
-                    shirt.FeatureBullet2German + "\n" +
-                    shirt.DescriptionGerman + "\n";
-            }
+            //if (SelectedDescriptionIndex == 0)
+            //{
+            //    Descriptions = shirt.BrandName + "\n" +
+            //        shirt.DesignTitle + "\n" +
+            //        shirt.FeatureBullet1 + "\n" +
+            //        shirt.FeatureBullet2 + "\n" +
+            //        shirt.Description + "\n";
+            //}
+            //else
+            //{
+            //    Descriptions = shirt.BrandNameGerman + "\n" +
+            //        shirt.DesignTitleGerman + "\n" +
+            //        shirt.FeatureBullet1German + "\n" +
+            //        shirt.FeatureBullet2German + "\n" +
+            //        shirt.DescriptionGerman + "\n";
+            //}
         }
         public void UpdateDescriptionsToShirt(Shirt shirt, string input)
         {
-            string strDescription = input;
-            strDescription = strDescription.Replace("\r", "");
-            char c = char.Parse("\n");
-            string[] temp = strDescription.Split(c);
-            for (int i = 0; i < temp.Length; i++)
-            {
-                switch (i)
-                {
-                    case 0:
-                        BrandNameLength = temp[0].Length;
-                        if (SelectedDescriptionIndex == 0)
-                            shirt.BrandName = temp[i];
-                        else
-                            shirt.BrandNameGerman = temp[i];
-                        break;
-                    case 1:
-                        DesignTitleLength = temp[1].Length;
-                        if (SelectedDescriptionIndex == 0)
-                            shirt.DesignTitle = temp[i];
-                        else
-                            shirt.DesignTitleGerman = temp[i];
-                        break;
-                    case 2:
-                        Feature1Length = temp[2].Length;
-                        if (SelectedDescriptionIndex == 0)
-                            shirt.FeatureBullet1 = temp[i];
-                        else
-                            shirt.FeatureBullet1German = temp[i];
-                        break;
-                    case 3:
-                        Feature2Length = temp[3].Length;
-                        if (SelectedDescriptionIndex == 0)
-                            shirt.FeatureBullet2 = temp[i];
-                        else
-                            shirt.FeatureBullet2German = temp[i];
-                        break;
-                    case 4:
-                        DescriptionLength = temp[4].Length;
-                        if (SelectedDescriptionIndex == 0)
-                            shirt.Description = temp[i];
-                        else
-                            shirt.DescriptionGerman = temp[i];
-                        break;
-                }
-            }
+            //string strDescription = input;
+            //strDescription = strDescription.Replace("\r", "");
+            //char c = char.Parse("\n");
+            //string[] temp = strDescription.Split(c);
+            //for (int i = 0; i < temp.Length; i++)
+            //{
+            //    switch (i)
+            //    {
+            //        case 0:
+            //            BrandNameLength = temp[0].Length;
+            //            if (SelectedDescriptionIndex == 0)
+            //                shirt.BrandName = temp[i];
+            //            else
+            //                shirt.BrandNameGerman = temp[i];
+            //            break;
+            //        case 1:
+            //            DesignTitleLength = temp[1].Length;
+            //            if (SelectedDescriptionIndex == 0)
+            //                shirt.DesignTitle = temp[i];
+            //            else
+            //                shirt.DesignTitleGerman = temp[i];
+            //            break;
+            //        case 2:
+            //            Feature1Length = temp[2].Length;
+            //            if (SelectedDescriptionIndex == 0)
+            //                shirt.FeatureBullet1 = temp[i];
+            //            else
+            //                shirt.FeatureBullet1German = temp[i];
+            //            break;
+            //        case 3:
+            //            Feature2Length = temp[3].Length;
+            //            if (SelectedDescriptionIndex == 0)
+            //                shirt.FeatureBullet2 = temp[i];
+            //            else
+            //                shirt.FeatureBullet2German = temp[i];
+            //            break;
+            //        case 4:
+            //            DescriptionLength = temp[4].Length;
+            //            if (SelectedDescriptionIndex == 0)
+            //                shirt.Description = temp[i];
+            //            else
+            //                shirt.DescriptionGerman = temp[i];
+            //            break;
+            //    }
+            //}
         }
 
 
@@ -649,16 +648,17 @@ namespace Upload.ViewModel
             {
                 if (SelectedShirt != null)
                 {
-                    if (SelectedShirtType is PullOverHoodie ||
-                        SelectedShirtType is ZipHoodie)
-                    {
-                        return SelectedShirt.FrontHoodiePath;
-                    }
-                    else if (SelectedShirtType is PopSocketsGrip)
-                    {
-                        return SelectedShirt.PopSocketsGripPath;
-                    }
-                    else return SelectedShirt.FrontStdPath;
+                    return SelectedShirt.ImagePath;
+                    //if (SelectedShirtType is PullOverHoodie ||
+                    //    SelectedShirtType is ZipHoodie)
+                    //{
+                    //    return SelectedShirt.FrontHoodiePath;
+                    //}
+                    //else if (SelectedShirtType is PopSocketsGrip)
+                    //{
+                    //    return SelectedShirt.PopSocketsGripPath;
+                    //}
+                    //else return SelectedShirt.FrontStdPath;
                 }
                 else return string.Empty;
             }
@@ -678,16 +678,17 @@ namespace Upload.ViewModel
             {
                 if (SelectedShirt != null)
                 {
-                    if (SelectedShirtType is PullOverHoodie ||
-                        SelectedShirtType is ZipHoodie)
-                    {
-                        return SelectedShirt.BackHoodiePath;
-                    }
-                    else if (SelectedShirtType is PopSocketsGrip)
-                    {
-                        return SelectedShirt.PopSocketsGripPath;
-                    }
-                    else return SelectedShirt.BackStdPath;
+                    return SelectedShirt.ImagePath;
+                    //if (SelectedShirtType is PullOverHoodie ||
+                    //    SelectedShirtType is ZipHoodie)
+                    //{
+                    //    return SelectedShirt.BackHoodiePath;
+                    //}
+                    //else if (SelectedShirtType is PopSocketsGrip)
+                    //{
+                    //    return SelectedShirt.PopSocketsGripPath;
+                    //}
+                    //else return SelectedShirt.BackStdPath;
                 }
                 else return string.Empty;
             }
@@ -702,14 +703,14 @@ namespace Upload.ViewModel
         }
 
 
-        private void NullToFalseConverter(Array source, bool[] target)
+        private void NullToFalseConverter(ICollection source, ObservableCollection<bool> target)
         {
             int startIndex = -1;
             if (source != null)
             {
-                startIndex = source.Length;
+                startIndex = source.Count;
             }
-            for (int i = 0; i < target.Length; i++)
+            for (int i = 0; i < target.Count; i++)
             {
                 if (i < startIndex)
                 {

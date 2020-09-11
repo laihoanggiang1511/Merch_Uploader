@@ -6,29 +6,41 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Upload.Model;
+using Upload.DataAccess.Model;
 
 namespace Upload.DataAccess
 {
     public class JsonDataAccess : IDataAccess
     {
-        private string data = string.Empty;
-        private string jsonFilePath = string.Empty;
-        public JsonDataAccess(string jsonFilePath)
-        {
-            data = System.IO.File.ReadAllText(jsonFilePath);
-            this.jsonFilePath = jsonFilePath;
-        }
+        //private string data = string.Empty;
+        //private string jsonFilePath = string.Empty;
+        //public JsonDataAccess(string jsonFilePath)
+        //{
+        //    data = System.IO.File.ReadAllText(jsonFilePath);
+        //    this.jsonFilePath = jsonFilePath;
+        //}
 
-        public JsonDataAccess()
-        {
-        }
+        //public JsonDataAccess()
+        //{
+        //}
 
-        public bool SaveShirt(Shirt s)
+        public bool SaveShirt(ShirtData s)
         {
-            string json = JsonConvert.SerializeObject(s);
-            System.IO.File.WriteAllText(@"D:\path.txt", json);
-            return true;
+            try
+            {
+                string path = GetJsonPathFromImage(s.ImagePath);
+                s.ImagePath = Path.GetFileName(s.ImagePath);
+                string json = JsonConvert.SerializeObject(s,Formatting.Indented);
+                if (!string.IsNullOrEmpty(path) && !string.IsNullOrEmpty(json))
+                {
+                    File.WriteAllText(path, json);
+                    return true;
+                }
+            }
+            catch 
+            { 
+            }
+            return false;
         }
 
         public bool DeleteShirt()
@@ -36,48 +48,52 @@ namespace Upload.DataAccess
             throw new NotImplementedException();
         }
 
-        public Shirt GetShirt()
+        public ShirtData ReadShirt(string filePath)
         {
             try
             {
-                Shirt s = new Shirt();
-                string temp = Between(data, "STANDARD_TSHIRT-prices-US: ", ",");
-                if (!double.TryParse(Regex.Replace(temp, " ", ""), out double price))
-                {
-                    price = 19.99;
-                }
-                s.StandardTShirt.Prices[0] = price;
+                string json = File.ReadAllText(filePath);
+                ShirtData result = JsonConvert.DeserializeObject<ShirtData>(json);
+                result.ImagePath = Path.Combine(Path.GetDirectoryName(filePath), result.ImagePath);
+                return result;
+                //Shirt s = new Shirt();
+                //string temp = Between(data, "STANDARD_TSHIRT-prices-US: ", ",");
+                //if (!double.TryParse(Regex.Replace(temp, " ", ""), out double price))
+                //{
+                //    price = 19.99;
+                //}
+                //s.StandardTShirt.Prices[0] = price;
 
-                //PNG File Name
-                temp = Between(data, "\"FRONT\": \"", "\"");
-                s.FrontStdPath = Path.GetDirectoryName(jsonFilePath) + "\\" + temp;
+                ////PNG File Name
+                //temp = Between(data, "\"FRONT\": \"", "\"");
+                //s.FrontStdPath = Path.GetDirectoryName(jsonFilePath) + "\\" + temp;
 
-                //Fit Types
-                temp = Between(data, "\"STANDARD_TSHIRT\": {", "]");
-                s.StandardTShirt.FitTypes[0] = temp.Contains("\"men\"");
-                s.StandardTShirt.FitTypes[1] = temp.Contains("\"women\"");
-                s.StandardTShirt.FitTypes[2] = temp.Contains("\"youth\"");
+                ////Fit Types
+                //temp = Between(data, "\"STANDARD_TSHIRT\": {", "]");
+                //s.StandardTShirt.FitTypes[0] = temp.Contains("\"men\"");
+                //s.StandardTShirt.FitTypes[1] = temp.Contains("\"women\"");
+                //s.StandardTShirt.FitTypes[2] = temp.Contains("\"youth\"");
 
-                //Price
-                string strPrice_US = Between(data, "\"prices-US\":", ",");
-                if (double.TryParse(strPrice_US, out double price_US))
-                    s.StandardTShirt.Prices[0] = price_US;
+                ////Price
+                //string strPrice_US = Between(data, "\"prices-US\":", ",");
+                //if (double.TryParse(strPrice_US, out double price_US))
+                //    s.StandardTShirt.Prices[0] = price_US;
 
-                //BrandName
-                s.BrandName = Between(data, "\"brandName\": \"", "\"");
-                s.DesignTitle = Between(data, "\"designTitle\": \"", "\"");
-                s.FeatureBullet1 = Between(data, "\"featureBullet1\": \"", "\"");
-                s.FeatureBullet2 = Between(data, "\"featureBullet2\": \"", "\"");
-                s.Description = Between(data, "\"description\": \"", "\"");
-                return s;
+                ////BrandName
+                //s.BrandName = Between(data, "\"brandName\": \"", "\"");
+                //s.DesignTitle = Between(data, "\"designTitle\": \"", "\"");
+                //s.FeatureBullet1 = Between(data, "\"featureBullet1\": \"", "\"");
+                //s.FeatureBullet2 = Between(data, "\"featureBullet2\": \"", "\"");
+                //s.Description = Between(data, "\"description\": \"", "\"");
+                //return s;
             }
             catch
             {
-                return null;
             }
+            return null;
         }
 
-        public bool UpdateShirt(Shirt s)
+        public bool UpdateShirt(ShirtData s)
         {
             throw new NotImplementedException();
         }
@@ -90,7 +106,14 @@ namespace Upload.DataAccess
             else
                 return temp.Substring(left.Length, temp.Length - left.Length - 1);
         }
+        private string GetJsonPathFromImage(string PNGPath)
+        {
+            string xmlFilePath = Path.GetDirectoryName(PNGPath) + "\\"
+                                + Path.GetFileNameWithoutExtension(PNGPath) +
+                                ".json";
+            return xmlFilePath;
+        }
 
-   
+
     }
 }

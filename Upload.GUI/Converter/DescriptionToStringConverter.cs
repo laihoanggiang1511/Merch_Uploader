@@ -5,16 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using Upload.Model;
 
 namespace Upload.GUI.Converter
 {
     class DescriptionToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            Shirt s = value as Shirt;
-            return null;
+        { 
+                return value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
