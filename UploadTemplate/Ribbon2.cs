@@ -7,6 +7,7 @@ using System.Text;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Tools.Ribbon;
 using Upload.DataAccess.Model;
+using Upload.DTO;
 using Upload.ViewModel;
 
 namespace UploadTemplate
@@ -15,7 +16,7 @@ namespace UploadTemplate
     {
         private void Ribbon2_Load(object sender, RibbonUIEventArgs e)
         {
-
+            cbb_Language.Text = "German";
         }
 
         private void Btn_Translate_Click(object sender, RibbonControlEventArgs e)
@@ -63,22 +64,20 @@ namespace UploadTemplate
             }
             for (int i = 0; i < images.Length; i++)
             {
-                
-                Globals.Sheet1.Cells[startRow + i, 1].Value = Path.GetFileName(images[i]);
-                Globals.Sheet1.Cells[startRow + i, 2].Value = Path.GetDirectoryName(images[i]);
+                Shirt shirt = new Shirt();
+                ShirtData sData = ShirtDTO.MapData(shirt, typeof(ShirtData)) as ShirtData;
+                sData.ImagePath = images[i];
+                new ExcelActions().MapShirtToExcel(sData, startRow+i);
             }
         }
 
         private void Btn_SaveFile_Click(object sender, RibbonControlEventArgs e)
         {
-            //string jsonData = 
-            //ShirtData sData = ShirtData. 
         }
 
         private void btn_Edit_Click(object sender, RibbonControlEventArgs e)
         {
 
-            Shirt mShirt = new Shirt();
             
         }
     }

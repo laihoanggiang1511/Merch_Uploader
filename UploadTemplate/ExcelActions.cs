@@ -32,6 +32,7 @@ namespace UploadTemplate
                 }
                 string stringJSON = JsonConvert.SerializeObject(sData);
                 rJson.WrapText = true;
+                rJson.RowHeight = 100;
                 rJson.Value = stringJSON;
                 for (int i = 0; i < sData.Languages.Count; i++)
                 {

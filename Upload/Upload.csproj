@@ -72,7 +72,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Upload.App</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>F39233A91A2F9F74AC3F347394B533DCFB3C0D5A</ManifestCertificateThumbprint>

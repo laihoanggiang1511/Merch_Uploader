@@ -108,24 +108,26 @@ namespace Upload.DTO
                                 var objProp = sourceObj.GetType().GetProperty(item.Name);
                                 if (objProp != null)
                                 {
-                                    if(item.Name == "ImagePath")
-                                    {
-
-                                    }
                                     if (item.PropertyType.IsCollectionType())
                                     {
-                                        var destinationType = item.PropertyType.GetElementType();     
+                                        
+                                        var destinationType = item.PropertyType.GetGenericArguments()[0];     
                                         IList<object> objects = objProp.GetValue(sourceObj) as IList<object>;
                                         if (objects != null && objects.Count > 0)
                                         {
-                                            IList lstMapResult = Activator.CreateInstance(item.PropertyType) as IList;
-                                            for (int i = 0; i < objects.Count; i++)
+                                            IList lstMapResult = item.GetValue(newOb) as IList;
+                                            if (lstMapResult != null)
                                             {
-                                                object ob = objects[i];
-                                                object mapResult = MapData(ob, destinationType);
-                                                lstMapResult.Add(mapResult);
+                                                lstMapResult.Clear();
+
+                                                for (int i = 0; i < objects.Count; i++)
+                                                {
+                                                    object ob = objects[i];
+                                                    object mapResult = MapData(ob, destinationType);
+                                                    lstMapResult.Add(mapResult);
+                                                }
+                                                item.SetValue(newOb, lstMapResult);
                                             }
-                                            item.SetValue(newOb, lstMapResult);
                                         }
                                     }
                                     //else if (item.PropertyType.IsClass)

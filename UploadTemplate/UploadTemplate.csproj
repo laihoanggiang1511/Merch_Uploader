@@ -9,13 +9,14 @@
     <RootNamespace>UploadTemplate</RootNamespace>
     <AssemblyName>UploadTemplate</AssemblyName>
     <VSTO_HostDocumentName>UploadTemplate.xltx</VSTO_HostDocumentName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
     <OfficeApplication>Excel</OfficeApplication>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <BootstrapperComponentsLocation>HomeSite</BootstrapperComponentsLocation>
     <ProjectGuid>{97971640-1D83-454F-A2CC-1EDECBD528A6}</ProjectGuid>
     <SolutionID>c38c2e56-fea2-4e6b-9302-23a0f268c270</SolutionID>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
@@ -139,6 +140,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Ribbon2.resx">
       <DependentUpon>Ribbon2.cs</DependentUpon>
