@@ -12,27 +12,28 @@ using Upload.DataAccess;
 using Upload.Model;
 using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 using System.Windows.Forms;
 using ChromeAPI;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Upload.Definitions;
 using System.Diagnostics;
+using OpenQA.Selenium.Internal;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Windows.Controls.Primitives;
+using Microsoft.Office.Interop.Excel;
 
 namespace Upload.Actions
 {
     public class UploadActions
     {
-        UploadWindowViewModel mainVM = null;
-        UploadWindow uploadWindow = null;
-        ChromeDriver driver = null;
 
         public void ShowWindow()
         {
-            uploadWindow = new UploadWindow();
+            UploadWindow uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
-            mainVM = new UploadWindowViewModel
+            UploadWindowViewModel mainVM = new UploadWindowViewModel
             {
                 BrowseCmd = new RelayCommand(BrowseCmdInvoke),
                 OpenChromeCmd = new RelayCommand(OpenChromeCmdInvoke),
@@ -42,16 +43,69 @@ namespace Upload.Actions
                 ChooseFolderCmd = new RelayCommand(ChooseFolderCmdInvoke),
                 SaveXmlCmd = new RelayCommand(SaveXmlCmdInvoke),
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
-                UserFolderPath = Properties.Settings.Default.UserFolderPath,
-                Email = Miscellaneous.Crypt.Decrypt(Properties.Settings.Default.Email, true),
+                ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
+                RemoveFolderCmd = new RelayCommand(RemoveFolderCmdInvoke),
+                Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true),
             };
-            if (uploadWindow != null)
-            {
-                PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
-                passwordBox.Password = Miscellaneous.Crypt.Decrypt(Properties.Settings.Default.Password, true);
-            }
+            mainVM.UserFolders = GetUserFolders();
+            mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => Properties.Settings.Default.UserFolderPath.EndsWith(x));
+            mainVM.Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true);
+
+            SetPassWord(uploadWindow, Common.Crypt.Decrypt(Properties.Settings.Default.Password, true));
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
+        }
+
+        private void RemoveFolderCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                if (Directory.Exists(uploadVM.UserFolderPath))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(uploadVM.UserFolderPath);
+                    directoryInfo.Delete(true);
+                }
+                uploadVM.UserFolders = GetUserFolders();
+                uploadVM.SelectedPath = uploadVM.UserFolders.FirstOrDefault();
+            }
+        }
+
+        private void ShowConfigurationCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                uploadVM.ShowConfiguration = !uploadVM.ShowConfiguration;
+            }
+        }
+
+        public string GetDataDirectory()
+        {
+            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            dataFolder += "\\Upload\\UserFolders";
+            return dataFolder;
+        }
+
+        public ObservableCollection<string> GetUserFolders()
+        {
+            ObservableCollection<string> result = new ObservableCollection<string>();
+            string dataFolder = GetDataDirectory();
+            if (!Directory.Exists(dataFolder))
+            {
+                Directory.CreateDirectory(dataFolder);
+            }
+            string[] userFolders = Directory.GetDirectories(dataFolder);
+            if (userFolders != null && userFolders.Length > 0)
+            {
+                foreach (string userFolder in userFolders)
+                {
+                    if (!string.IsNullOrEmpty(userFolder) && userFolder.Contains("\\"))
+                    {
+                        result.Add(userFolder.Split('\\').Last());
+                    }
+
+                }
+            }
+            return result;
         }
 
         private void EditShirtCmdInvoke(object obj)
@@ -84,19 +138,21 @@ namespace Upload.Actions
         {
             try
             {
-                //Save Setting
-                Properties.Settings.Default.UserFolderPath = mainVM.UserFolderPath;
-                Properties.Settings.Default.Email = Miscellaneous.Crypt.Encrypt(mainVM.Email, true);
-                if (uploadWindow != null)
+                UploadWindow wind = sender as UploadWindow;
+                if (wind != null)
                 {
-                    PasswordBox passwordBox = uploadWindow.FindName("password") as PasswordBox;
+                    UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
+                    //Save Setting
+                    Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
+                    Properties.Settings.Default.Email = Common.Crypt.Encrypt(uploadVM.Email, true);
+                    PasswordBox passwordBox = wind.FindName("password") as PasswordBox;
                     if (passwordBox != null)
                     {
-                        Properties.Settings.Default.Password = Miscellaneous.Crypt.Encrypt(passwordBox.Password, true);
+                        Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
                     }
+                    Properties.Settings.Default.Save();
+                    UploadMerch.QuitDriver();
                 }
-                Properties.Settings.Default.Save();
-                Helper.QuitDriver(driver);
             }
             catch
             {
@@ -120,39 +176,104 @@ namespace Upload.Actions
 
         private void ChooseFolderCmdInvoke(object obj)
         {
-            FolderBrowserDialog openFile = new FolderBrowserDialog();
-            if (openFile.ShowDialog() == DialogResult.OK)
+            if (obj is UploadWindowViewModel uploadVM)
             {
-                (obj as UploadWindowViewModel).UserFolderPath = openFile.SelectedPath;
+                if (!string.IsNullOrEmpty(uploadVM.UserFolderPath))
+                {
+                    char[] invalidChars = Path.GetInvalidPathChars();
+                    if (!invalidChars.ToList().Any(x => uploadVM.UserFolderPath.Contains(x) == true))
+                    {
+                        string dataFolder = GetDataDirectory();
+                        string folderPath = Path.Combine(dataFolder, uploadVM.UserFolderPath);
+                        if (!Directory.Exists(folderPath))
+                        {
+                            Directory.CreateDirectory(folderPath);
+                            uploadVM.UserFolders = GetUserFolders();
+                            uploadVM.RaisePropertyChanged("UserFolders");
+                            uploadVM.UserFolderPath = folderPath;
+                        }
+                        else
+                        {
+                            Helper.ShowErrorMessageBox("Name already exist, please choose a new name");
+                        }
+                    }
+                    else
+                    {
+                        Helper.ShowErrorMessageBox("Name contains invalid character, please choose a new name");
+                    }
+                }
+                else
+                {
+                    Helper.ShowErrorMessageBox("Folder name is empty");
+                }
+                //uploadVM.UserFolderPath
+                //if (!string.IsNullOrEmpty(uploadVM.UserFolderPath) && uploadVM.UserFolderPath .
             }
         }
         private void OpenChromeCmdInvoke(object obj)
         {
-            UploadWindowViewModel mainVM = (obj as UploadWindowViewModel);
-            driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-            //if still null, try again
-            if (driver == null)
+
+            if (obj is UploadWindow uploadWind)
             {
-                driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
+                UploadWindowViewModel uploadVM = uploadWind.DataContext as UploadWindowViewModel;
+                uploadVM.password = GetPassword(uploadWind);
+                if (uploadVM.IsUploading == true)
+                {
+                    Helper.ShowInfoMessageBox("Another proccess is running");
+                    return;
+                }
+                if (!Directory.Exists(uploadVM.UserFolderPath))
+                {
+                    Helper.ShowErrorMessageBox("User folder does not exist");
+                    return;
+                }
+
+                ParameterizedThreadStart paramsThreadStart = new ParameterizedThreadStart(ManualLogInCallBack);
+                Thread thrd = new Thread(paramsThreadStart);
+                thrd.Start(uploadVM);
             }
-            if (driver != null)
+        }
+        public void ManualLogInCallBack(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
             {
-                driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                try
+                {
+                    UploadMerch upload = new UploadMerch(uploadVM.password, uploadVM.Email);
+                    upload.OpenChrome(uploadVM.UserFolderPath);
+                    UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                    upload.Log_In();
+                    if(UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
+                    {
+                        Helper.ShowInfoMessageBox("Log in Sucess!");
+                        uploadVM.IsUploading = false;
+                    }
+                }
+                catch
+                { 
+                }
             }
+
         }
         private void UploadCmdInvoke(object obj)
         {
             UploadWindow mainWindow = obj as UploadWindow;
             if (mainWindow != null)
             {
-                System.Windows.Controls.PasswordBox passwordBox = mainWindow.FindName("password") as System.Windows.Controls.PasswordBox;
                 UploadWindowViewModel mainVM = mainWindow.DataContext as UploadWindowViewModel;
+                mainVM.password = GetPassword(mainWindow);
+
                 if (mainVM != null)
                 {
-                    mainVM.Password = passwordBox.Password;
+                    if (mainVM.IsUploading == true)
+                    {
+                        Helper.ShowInfoMessageBox("Another proccess is running!");
+                        return;
+                    }
                     Thread thread = new Thread(UploadShirt);
                     thread.Start(mainVM);
                     mainVM.IsUploading = true;
+
                 }
             }
         }
@@ -165,66 +286,74 @@ namespace Upload.Actions
             {
                 if (mainVM.Shirts != null && mainVM.Shirts.Count > 0)
                 {
-                    Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
-                    bool bContinue = true;
-                    foreach (Shirt s in mainVM.Shirts)
+                    try
                     {
-                        ShirtStatus errorCode = 0;
-                        if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
-                        {
-                            invalidShirts.Add(s, errorCode);
-                            bContinue = false;
-                        }
-                    }
-                    if (bContinue == false)
-                    {
-                        string message = "Following shirt(s) are invalid, please check them again before upload:\n";
-                        foreach (var pair in invalidShirts)
-                        {
-                            message += pair.Key.DesignTitle + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
-                        }
-                        Utils.ShowErrorMessageBox(message);
-                        return;
-                    }
-                    driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-                    if (driver == null)
-                    {
-                        driver = ChromeAPI.Helper.OpenChrome(driver, mainVM.UserFolderPath);
-                    }
-                    if (driver != null)
-                    {
-                        UploadMerch upload = new UploadMerch();
-                        try
-                        {
-                            driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
 
-                            upload.Log_In(driver, mainVM.Password);
-                            for (int i = 0; i < mainVM.Shirts.Count; i++)
+                        Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
+                        bool bContinue = true;
+                        foreach (Shirt s in mainVM.Shirts)
+                        {
+                            ShirtStatus errorCode = 0;
+                            if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
                             {
-                                mainVM.SelectedShirt = mainVM.Shirts[i];
-                                if (!upload.Upload(driver, mainVM.Shirts[i]))
-                                    failShirts.Add(mainVM.Shirts[i]);
-                            }
-                            if (failShirts == null || failShirts.Count == 0)
-                            {
-                                System.Windows.MessageBox.Show("Job Done!");
-                            }
-                            else
-                            {
-                                string message = "Fail to upload following shirt(s):\n";
-                                foreach (Shirt shirt in failShirts)
-                                    message += shirt.DesignTitle + "\n";
-                                System.Windows.MessageBox.Show(message);
+                                invalidShirts.Add(s, errorCode);
+                                bContinue = false;
                             }
                         }
-                        catch (Exception ex)
+                        if (bContinue == false)
                         {
-                            Utils.ShowErrorMessageBox(ex.Message);
+                            string message = "Following shirt(s) are invalid, please check them again before upload:\n";
+                            foreach (var pair in invalidShirts)
+                            {
+                                message += pair.Key.DesignTitle + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
+                            }
+                            Utils.ShowErrorMessageBox(message);
+                            return;
+                        }
+
+                        UploadMerch upload = new UploadMerch(mainVM.password, mainVM.Email);
+
+                        if (Directory.Exists(mainVM.UserFolderPath))
+                        {
+                            upload.OpenChrome(mainVM.UserFolderPath);
+                            if (UploadMerch.driver != null)
+                            {
+                                UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                                upload.Log_In();
+
+                                for (int i = 0; i < mainVM.Shirts.Count; i++)
+                                {
+                                    mainVM.SelectedShirt = mainVM.Shirts[i];
+                                    if (!upload.Upload(mainVM.Shirts[i]))
+                                        failShirts.Add(mainVM.Shirts[i]);
+                                }
+                                UploadMerch.QuitDriver();
+                                if (failShirts == null || failShirts.Count == 0)
+                                {
+                                    System.Windows.MessageBox.Show("Job Done!");
+                                }
+                                else
+                                {
+                                    string message = "Fail to upload following shirt(s):\n";
+                                    foreach (Shirt shirt in failShirts)
+                                        message += shirt.DesignTitle + "\n";
+                                    System.Windows.MessageBox.Show(message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Helper.ShowErrorMessageBox("User folder does not exist");
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        Utils.ShowErrorMessageBox(ex.Message);
+                    }
+
                 }
+                mainVM.IsUploading = false;
             }
-            mainVM.IsUploading = false;
         }
 
         private void DeleteCmdInvoke(object obj)
@@ -243,6 +372,36 @@ namespace Upload.Actions
                 lstShirts.ForEach(x => mainVM.Shirts.Add(x));
             }
         }
+        private string GetPassword(UploadWindow uploadWind)
+        {
+            try
+            {
+                uploadWind.FindName("password");
+                PasswordBox passwordBox = uploadWind.FindName("password") as PasswordBox;
+                return passwordBox.Password;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+
+        }
+        private bool SetPassWord(UploadWindow uploadWind, string password)
+        {
+            try
+            {
+                uploadWind.FindName("password");
+                PasswordBox passwordBox = uploadWind.FindName("password") as PasswordBox;
+                passwordBox.Password = password;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
     }
 }
 

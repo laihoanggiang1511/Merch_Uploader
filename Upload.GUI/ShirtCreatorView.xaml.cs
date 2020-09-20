@@ -24,9 +24,16 @@ namespace Upload.GUI
             InitializeComponent();
         }
 
-        private void DockPanel_MouseEnter(object sender, MouseEventArgs e)
+        private void Btn_ToExcel_Click(object sender, RoutedEventArgs e)
         {
+            FromExcel.Visibility = Visibility.Visible;
+            ToExcel.Visibility = Visibility.Collapsed;
+        }
 
+        private void Btn_FromExcel_Click(object sender, RoutedEventArgs e)
+        {
+            ToExcel.Visibility = Visibility.Visible;
+            FromExcel.Visibility = Visibility.Collapsed;
         }
     }
 }

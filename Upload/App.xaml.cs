@@ -1,8 +1,9 @@
-﻿using Cryptlex;
+﻿using Common.LicenseManager;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,8 +19,11 @@ namespace Upload
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            LexActivator.SetProductData("RERERkM0RjRDOEQwOTUyODVGMzc4OTE5QjM5MUI3M0Y=.t0KklKKyhwa5tUij0vbSNtNQ6xayIYRRB79wGOlZkeffscybfJi4+d9SnUQ3YVhZxohwgGz90pNeRQYX/6xu4P0WcfBgMYUpr/v8izz+zmZsmCdKhCjvN35Wo4FKWm1J4eXOlbc0PJhmID2SIf8llfHDDRImb8Rr2R/RBXYSaOoIGt4eddK/CZKKzirYG1ZrnThADks2syE/BVSM7J5WBWIkHxqqGay3gyb5q9/n/Ugwe1FGCVHBB+i1eaigCn62i3U3GbJekOzmdq/f6MfQqr83ka7FivPEcHxcCt0511153635oKjeIV49x+zWtss34a+jkRCyVCiwKgvCRrGgoNTE1P2P71sgltHTVIqfa8vjEd9xQOu5kqX7n8S5UJeXSh8neRasnby9q6w4fzAl4cYspnzvlm+8OxGlnSp+kBPdDhO1NylZwiHqYsyPnkoOZn/isZkJGEltDM6JNwta0xGGQ2CYcEczfU16NGWrBUFTILwdWbgq35mUhoEhqrnj4NAJLlfF7h0jkV1B+DM/a0zX1vgcRa5MSA2ZbqOtYoTfTS4Wiwe1YtvRF235G/9wpFtg1ZBsp691DSLkGmKTQYkahPAHmAneeYNUxrecR9MGYF/JMeBwGnuXUnQnweFE2b/vQvre/2UHCL36KZgZatcMtLy6NkTTXmvqO0iLNDp16ispKzZA+1aY2cwzjuJk3eIu2TkCOmLQyVp1Xp/jhxIMfg7ZCzw/HtvT+wgem7M=");
-            LexActivator.SetProductId("b1ca06a5-d046-46bb-a6ab-9347495cac1d", LexActivator.PermissionFlags.LA_USER);
+            string path = @"Upload\MerchUploadLog.txt";
+            Common.Log.SetUpLog("MerchUploadLog.txt", path);
+            string productData = "RDI1NTc1OTIzMzhCRUVERUFCQkIyMzNFRTIwQTFFODA=.TDwstW7iNSV7Glp0cfbefpY1A1vuVnalijoG2HVIlSiJLDv6D/5K7dBts+Sm+GRFF+PU3okSn6u+/uyDL1hveBrF45PXU2fzQp675VWqRaD9vzama8hnsHUEyZNru3RAxpx5SkAqIzlLmQSEPG33RHJZ80flEuN4Y+hmzIfK4prFHyL7EnLrBCLEajyHX1UvyhH/XHr/toRCiNr/0RrUS/XZILiFMoFF4pIHBMkJCD/Mc78kUsIV1ODkjBzZL8+Xw6wp7Gk6d730e+S7PPcwNXYggsAjwArNWa7qkGX5vVZ2pZdbUnp9H6JLHaPGuA38enDoIvBfdbKDAfU5qHA/O2NejWZoD5MOW1MK7TnjX3CY9jLRCnu74bxxWCTfRCeKskrdvKulpVPyAn68xVHqa4ycxj/jmvohZpC4lCPq9DabB9ZBR41T8+ckT+gucZLyP7/I2ZDLkEXIu0xFk2lIVXwqEW2dRrdsoTY7yfRiIYKN/ip0gj34WiK9N/VhbKomqSG382R3/VyyQ2VDspQujLZXDnYsuKDkCKCm38GU10mdoyV4mfZCPVpZRyQUWtgFVIotuNtY0R8QxbByFHvqhBHErAXxGVnK8axDRtqhD8/lyufypgFnPiclIqkqU4b12YxclixPOcMCuIsjCx9zQMkjTwEudl5RzwhMtBWeTnofPolV6hWCHNL6wThMdPmFq4IGfgXDgVz9HewsANa+E6OYGYpdflrho6tnVL6rJAY=";
+            string productId = "d26ecd19-9ba5-4372-b509-7041becc28d1";
+            CryptlexLicenseManager.SetLicenseData(productData, productId,1);
             Actions.MainActions actions = new Actions.MainActions();
             actions.ShowMainWindow();
         }

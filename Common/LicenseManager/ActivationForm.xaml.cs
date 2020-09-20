@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Miscellaneous
+namespace Common.LicenseManager
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -24,6 +25,11 @@ namespace Miscellaneous
         public ActivationForm()
         {
             InitializeComponent();
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://www.facebook.com/groups/1027118591079225/");
         }
     }
 }

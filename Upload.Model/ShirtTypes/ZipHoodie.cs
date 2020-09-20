@@ -25,8 +25,29 @@ namespace Upload.Model
                 new Color("Royal Blue",false),
             };
             this.FitTypes = null;//ko co
-            this.MarketPlaces = new bool[] { true };
-            this.Prices = new double[] { 33.99 };
+            this.MarketPlaces = new bool[] { true ,false,false};
+            this.Prices = new double[] { 33.99,28.99,32.99};
+        }
+        public override object Clone()
+        {
+            ZipHoodie target = new ZipHoodie();
+            target.IsActive = IsActive;
+            target.MarketPlaces = MarketPlaces?.Clone() as bool[];
+            target.Prices = Prices.Clone() as double[];
+            if (this.Colors != null)
+            {
+                List<Color> colors = new List<Color>();
+                this.Colors.ToList().ForEach(x => colors.Add(x));
+                target.Colors = colors.ToArray();
+            }
+            else
+            {
+                target.Colors = null;
+            }
+            target.FitTypes = FitTypes?.Clone() as bool[];
+            target.TypeName = TypeName;
+
+            return target;
         }
     }
 }

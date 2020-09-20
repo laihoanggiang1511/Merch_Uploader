@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace Upload.ViewModel.MVVMCore
+namespace Common.MVVMCore
 {
-
     public class RelayCommand : ICommand
     {
         #region Fields

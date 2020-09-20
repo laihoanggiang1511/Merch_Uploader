@@ -1,35 +1,24 @@
-﻿using Miscellaneous;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
-using Cryptlex;
-using RelayCommand = Upload.ViewModel.MVVMCore.RelayCommand;
+using Common.MVVMCore;
 using System.Windows;
 using System.Threading;
 using System.Drawing;
 using System.Windows.Media;
-using Miscellaneous.LicenseValidator;
+using Common.LicenseManager;
 
 namespace Upload.Actions
 {
     public class MainActions
     {
-        //const int PRODUCT_ID = 6059;
-        //KeyInfoResult keyInfo;
         public void ShowMainWindow()
         {
-            string licenseKey = LexActivator.GetLicenseKey();
-            if (!string.IsNullOrEmpty(licenseKey))
-            {
-                LexActivator.SetLicenseKey(licenseKey);
-            }
-            if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK ||
-                LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
+            try
             {
                 MainWindow mainWindow = new MainWindow();
                 MainViewModel mainVM = new MainViewModel
@@ -41,95 +30,45 @@ namespace Upload.Actions
 
                 };
                 mainWindow.DataContext = mainVM;
-                string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
-                if (bool.TryParse(metaData, out bool enableCreate))
+                if (CryptlexLicenseManager.IsLicenseOK() == true)
                 {
-                    if (enableCreate)
-                        mainVM.EnableCreate = true;
+                    mainVM.EnableCreate = true;
+                    mainVM.EnableUpload = true;
+                    //Allow Create
+                    string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
+                    if (bool.TryParse(metaData, out bool enableCreate))
+                    {
+                        if (enableCreate)
+                            mainVM.EnableCreate = true;
+                        else
+                            mainVM.EnableCreate = false;
+                        //mainVM.EnableCreate = true;
+                    }
                     else
-                        //mainVM.EnableCreate = false;
+                    {
                         mainVM.EnableCreate = true;
+                    }
+                    mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", CryptlexLicenseManager.GetDayLeft());
                 }
                 else
-                    mainVM.EnableCreate = true;
-
-                mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", CryptlexLicenseManager.GetDayLeft());
+                {
+                    mainVM.LicenseStatus = "License is not valid or expired!\n Please go to \"License\" to activate the product";
+                }
+#if DEBUG
+                mainVM.EnableCreate = true;
+                mainVM.EnableUpload = true;
+#endif
                 mainWindow.Show();
             }
-            else
+            catch (Exception ex)
             {
-                MessageBoxResult msgBoxResult = MessageBox.Show("No valid license found\nDo you want to open license form now?", "License validation fail", MessageBoxButton.YesNo, MessageBoxImage.Error);
-                if (msgBoxResult == MessageBoxResult.Yes || msgBoxResult == MessageBoxResult.OK)
-                {
-                    LicenseWindowCmdInvoke(null);
-                }
-                else
-                {
-                    Environment.Exit(0);
-                }
+                Environment.Exit(0);
             }
-
-            //keyInfo = obj as KeyInfoResult;
-            //string serialNumber = LicenseManager.LoadLicense();
-            //string errorMessage = string.Empty;
-            //if (keyInfo == null)
-            //{
-            //    keyInfo = LicenseManager.GetKey(PRODUCT_ID, serialNumber, ref errorMessage);
-            //}
-            //if (keyInfo != null)
-            //    {
-            //    MainWindow mainWindow = new MainWindow();
-            //    MainViewModel mainVM = new MainViewModel
-            //    {
-            //        CreateWindowCmd = new RelayCommand(CreateWindowCmdInvoke),
-            //        UploadWindowCmd = new RelayCommand(UploadCmdInvoke),
-            //        LicenseWindowCmd = new RelayCommand(LicenseWindowCmdInvoke),
-            //    };
-            //    mainWindow.DataContext = mainVM;
-            //    if (keyInfo.LicenseKey.F3 == true||
-            //        keyInfo.LicenseKey.F2 == true)
-            //        mainVM.EnableCreate = true;
-            //    else
-            //        mainVM.EnableCreate = false;
-            //    if (keyInfo.LicenseKey.F2 == true||
-            //        keyInfo.LicenseKey.F3 == true)
-            //        mainVM.EnableUpload = true;
-            //    else
-            //        mainVM.EnableUpload = false;
-
-            //    mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", keyInfo.LicenseKey.DaysLeft());
-            //    mainWindow.Show();
-            //}
-            //else
-            //{
-            //    //MainWindow mainWindow = new MainWindow();
-            //    //MainViewModel mainVM = new MainViewModel
-            //    //{
-            //    //    CreateWindowCmd = new RelayCommand(CreateWindowCmdInvoke),
-            //    //    UploadWindowCmd = new RelayCommand(UploadCmdInvoke),
-            //    //    LicenseWindowCmd = new RelayCommand(LicenseWindowCmdInvoke),
-            //    //};
-            //    //mainVM.EnableUpload = true;
-            //    //mainVM.EnableCreate = true;
-
-            //    //mainWindow.DataContext = mainVM;
-            //    //mainWindow.Show();
-
-            //    MessageBoxResult msgBoxResult = MessageBox.Show(errorMessage + "\nDo you want to open license form now?", "License validation fail", MessageBoxButton.YesNo, MessageBoxImage.Error);
-            //    if (msgBoxResult == MessageBoxResult.Yes || msgBoxResult == MessageBoxResult.OK)
-            //    {
-            //        LicenseWindowCmdInvoke(null);
-            //    }
-            //    else
-            //    {
-            //        Environment.Exit(0);
-            //    }
-            //}
         }
 
         private void HelpCmdInvoke(object obj)
         {
-            System.Diagnostics.Process.Start("https://www.youtube.com/playlist?list=PLGpC6oEVINHN0cYaQj8P5gL930DQiDN2M");
+            System.Diagnostics.Process.Start("https://www.youtube.com/playlist?list=PLiGK-5tw14EYTIb2o5-WUgaIHnhsBSuM1");
         }
 
         private void LicenseWindowCmdInvoke(object obj)

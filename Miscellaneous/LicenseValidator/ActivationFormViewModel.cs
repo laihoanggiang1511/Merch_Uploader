@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Brush = System.Windows.Media.Brush;
+using Common.MVVMCore;
 
 namespace Miscellaneous
 {
@@ -254,9 +255,8 @@ namespace Miscellaneous
         }
         public ActivationFormViewModel()
         {
-            MachineCode = FingerPrint.Value();
-
-
+           // MachineCode = FingerPrint.Value();
+            
         }
         #endregion
     }

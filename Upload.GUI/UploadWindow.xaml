@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Upload.GUI"
-             mc:Ignorable="d" Height="500" Width="550"
-             MinHeight="350" MinWidth="500"
+             xmlns:local="clr-namespace:Upload.GUI" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converter="clr-namespace:Upload.GUI.Converter"
+        mc:Ignorable="d" Height="500" Width="550"
+             MinHeight="400" MinWidth="500"
              Title="Upload"
                  TextElement.Foreground="{DynamicResource MaterialDesignBody}"
          TextElement.FontWeight="Regular"
@@ -16,75 +17,145 @@
          FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
+        <converter:InvertableBoolToVisibility x:Key="ReverseBoolToVis"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="Delete"
+                    Command="{Binding DeleteCmd}" CommandParameter="{Binding}"/>
+    </Window.InputBindings>
+    
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition />
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <GroupBox Header="Account Configurations" BorderThickness="0" Padding="2">
+            <GroupBox.HeaderTemplate>
+                <DataTemplate>
+                    <Grid Width="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=ActualWidth}">
+                        <TextBlock Margin="2" Text="{Binding RelativeSource={RelativeSource AncestorType=GroupBox}, Path=Header}" VerticalAlignment="Center"/>
+                        <Button x:Name="enable_configuration" Visibility="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ShowConfiguration,Converter={StaticResource BoolToVisibility}}" 
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext.ShowConfigurationCmd}"  
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" 
+                                Height="20" Width="20" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="10" 
+                                Style="{DynamicResource MaterialDesignFlatButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ChevronDoubleUp" Width="20" Height="20" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Visibility="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ShowConfiguration,Converter={StaticResource ReverseBoolToVis},ConverterParameter=1}"  
+                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext.ShowConfigurationCmd}"  
+                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window},Path=DataContext}" 
+                                Height="20" Width="20" Padding="0" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="10" 
+                                Style="{DynamicResource MaterialDesignFlatButton}">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="ChevronDoubleDown" Width="20" Height="20" Foreground="White"/>
+                            </Button.Content>
+                        </Button>
 
-        <StackPanel Grid.Row="0" Height="Auto" Width="{Binding Width,ElementName=lstShirt}" Grid.ColumnSpan="2" Margin="10,0">
-            <Grid HorizontalAlignment="Stretch"  Margin="0,5,0,0">
+                    </Grid>
+                </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <Grid Visibility="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.ShowConfiguration,Converter={StaticResource BoolToVisibility}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="92*"/>
-                    <ColumnDefinition Width="193*"/>
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Chrome user folder:" Margin="5" Grid.Row ="0" Grid.Column="0" VerticalAlignment="Center"/>
-                <TextBox Text="{Binding UserFolderPath}" Height="25" HorizontalAlignment="Stretch" Margin="5" Grid.Row ="0" Grid.Column="1" Grid.ColumnSpan="2"></TextBox>
-                <!--<TextBlock Grid.Row ="1" Grid.Column="0" Text="Email:" Margin="5"/>
-                <TextBox Text="{Binding Email}" Grid.Row ="1" Grid.Column="1" Margin="5" HorizontalAlignment="Stretch"/>-->
+                <TextBlock Text="Folder Name:" Margin="5" Grid.Row ="0" Grid.Column="0" VerticalAlignment="Center" 
+                           ToolTip ="Choose a folder to save your cookies for automatically logging in next time"/>
+                <Grid Grid.Row ="0" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <ComboBox FontSize="10" IsEditable="True" Text="{Binding SelectedPath}" ItemsSource="{Binding UserFolders}" Height="25" Margin="5" Grid.Column="0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column ="1">
+                        <Button Grid.Column="1" Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Margin="5,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" 
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            ToolTip="Enter a new name to the list then click add">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="Add" Width="25" Height="25" Foreground="{DynamicResource Button.Static.Background}"/>
+                            </Button.Content>
+                        </Button>
+                        <Button Grid.Column="1" Command="{Binding RemoveFolderCmd}" CommandParameter="{Binding}" Margin="0,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Right" FontSize="10" 
+                            Style="{DynamicResource MaterialDesignFlatButton}"
+                            ToolTip ="Remove folder">
+                            <Button.Content>
+                                <materialDesign:PackIcon Kind="Close" Width="25" Height="25" Foreground="Crimson"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Grid.Row ="1" Grid.Column="0" Text="Merch Email:" Margin="5"/>
+                <TextBox Margin="5,5,105,5" Text="{Binding Email}" Grid.Row ="1" Grid.Column="1" HorizontalAlignment="Stretch"/>
                 <TextBlock Grid.Row ="2" Grid.Column="0" Text="Merch Password:" Margin="5" VerticalAlignment="Center"/>
-                <PasswordBox Grid.Row ="2" Grid.Column="1" x:Name="password" Margin="5,5,5,10" HorizontalAlignment="Stretch" Grid.ColumnSpan="2"/>
+                <Grid Grid.Row ="2" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <PasswordBox Grid.Column="0" x:Name="password" Margin="5" HorizontalAlignment="Stretch"
+                             ToolTip="Your password will be encrypted and safe"/>
+                    <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Manual Log In" Padding="0" FontSize="10" Height="25" VerticalAlignment="Center"
+                            ToolTip="Manual log in for first time or in case Merch requires Authentication"/>
+                </Grid>
             </Grid>
-        </StackPanel>
-        <Button Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}" Content ="Choose Folder"  Grid.Column="2" Margin="10,10,10,0" Height="25" VerticalAlignment="Top" FontSize="10"></Button>
-        <Separator Grid.ColumnSpan="3" Grid.Row="0" VerticalAlignment="Bottom" Margin="0"/>
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,0,0,0">
-            <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
-            <Button Command="{Binding EditShirtCmd}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>
-            <Button Command="{Binding DeleteCmd}" CommandParameter="{Binding}"  Margin="5" Content="Delete"  Height="25" VerticalAlignment="Center" FontSize="12"/>
-            <Button Command="{Binding OpenChromeCmd}" CommandParameter="{Binding}" Margin="5" Content="Manual Log in" FontSize="10"  Height="25" VerticalAlignment="Center"/>
-            <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
-            <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
+        </GroupBox>
+        <GroupBox Header="Upload" Grid.Row="1" Grid.ColumnSpan="3" BorderThickness="0" Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Width="100" Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
+                        <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
+                        <Button Command="{Binding EditShirtCmd}" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>
+                        <Button Command="{Binding DeleteCmd}" Background="Crimson" BorderBrush="Crimson" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}"  Margin="5" Content="Remove"  Height="25" VerticalAlignment="Center" FontSize="12"/>
+                        <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
+                        <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
 
-            <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
+                        <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
             <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>-->
-        </StackPanel>
-        <ListView Name="lstShirt" ItemsSource="{Binding Shirts}" SelectedItem="{Binding SelectedShirt}" Grid.Row="1" Width="400" Margin="10,10,10,10.5" Grid.ColumnSpan="2">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding DesignTitle}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <!--<Grid Grid.Row="1" Grid.Column="2" VerticalAlignment="Bottom" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}">
-            <ProgressBar  Height="15" IsIndeterminate="true"/>
-            <TextBlock Text="Uploading" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="10" />
-        </Grid>-->
-        <ScrollViewer MaxHeight="130" Grid.Row="2" Grid.ColumnSpan="3" 
-                      Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}"
-                      VerticalScrollBarVisibility="Auto">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width ="Auto"/>
-                </Grid.ColumnDefinitions>
-                <Image Width="100" Height="120" Grid.Column="0" Source="{Binding ImagePath}" VerticalAlignment="Top"/>
-                <TextBlock MaxWidth="{Binding ElementName=lstShirt,Path=Width}" Grid.Column="1" Text="{Binding Descriptions}" 
-                       TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </StackPanel>
+                    <ListView BorderThickness="1" Grid.Column="0" Name="lstShirt" VerticalAlignment="Stretch" ItemsSource="{Binding Shirts}" SelectedItem="{Binding SelectedShirt}" Margin="5" >
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0" VerticalAlignment="Stretch" Width="{Binding RelativeSource={RelativeSource AncestorType=ListView},Path=ActualWidth}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding DesignTitle}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+                <Grid Grid.Row="1" Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Image Width="100" Height="120" Grid.Column="0" Source="{Binding ImagePath}" VerticalAlignment="Top"/>
+                    <ScrollViewer Grid.Column="1" Height="150"
+                                    Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}"
+                                    VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <TextBlock MaxWidth="{Binding ElementName=lstShirt,Path=Width}" Grid.Column="1" Text="{Binding Descriptions}" 
+                        TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </ScrollViewer>
+                </Grid>
             </Grid>
-        </ScrollViewer>
+        </GroupBox>
     </Grid>
+
 </Window>

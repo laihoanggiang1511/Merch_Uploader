@@ -81,6 +81,19 @@ namespace Upload.Model
                 };
                 return shirtTypes;
             }
+            set
+            {
+                this.StandardTShirt = value[0].Clone() as StandardTShirt;
+                this.PremiumTShirt = value[1].Clone() as PremiumTShirt;
+                this.VNeckTShirt = value[2].Clone() as VNeckTShirt;
+                this.TankTop = value[3].Clone() as TankTop;
+                this.LongSleeveTShirt = value[4].Clone() as LongSleeveTShirt;
+                this.Raglan = value[5].Clone() as Raglan;
+                this.SweetShirt = value[6].Clone() as SweetShirt;
+                this.PullOverHoodie = value[7].Clone() as PullOverHoodie;
+                this.ZipHoodie = value[8].Clone() as ZipHoodie;
+                this.PopSocketsGrip = value[9].Clone() as PopSocketsGrip;
+            }
         }
 
         public Shirt()
@@ -122,8 +135,17 @@ namespace Upload.Model
                 PropertyInfo[] properties = this.GetType().GetProperties();
                 foreach (PropertyInfo property in properties)
                 {
-                    if (property.CanWrite)
+                    if (property.GetType() == typeof(ShirtBase))
+                    {
+                        ShirtBase sBase = property.GetValue(this) as ShirtBase;
+                        property.SetValue(s, sBase.Clone());
+                    }
+                    else
+                    if (property.CanWrite /*&&
+                            property.Name != "ShirtTypes"*/)
+                    {
                         property.SetValue(s, property.GetValue(this));
+                    }
 
                 }
                 return s;

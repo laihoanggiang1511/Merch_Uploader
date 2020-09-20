@@ -1,6 +1,6 @@
 ﻿using Upload.GUI;
 using Upload.ViewModel;
-using Upload.ViewModel.MVVMCore;
+using Common.MVVMCore;
 using System.Linq;
 using Upload.DataAccess;
 using Upload.Model;
@@ -13,16 +13,17 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.Office.Interop.Excel;
+
 
 namespace Upload.Actions
 {
     internal class ShirtCreatorActions
     {
-        ShirtCreatorViewModel shirtVM = null;
         public void ShowShirtCreatorWindow(Shirt editShirt = null)
         {
             ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
-            shirtVM = new ShirtCreatorViewModel();
+            ShirtCreatorViewModel shirtVM = new ShirtCreatorViewModel();
             shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
             shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
             shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
@@ -36,8 +37,10 @@ namespace Upload.Actions
             shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
             shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
             shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
-            shirtVM.MultiReplaceCmd = new RelayCommand(MultiReplaceCmdInvoke);
-
+            shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
+            shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
+            shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
+            shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
             if (editShirt != null)
             {
                 shirtVM.SelectedShirt = editShirt;
@@ -46,8 +49,49 @@ namespace Upload.Actions
 
             if (shirtVM.SelectedShirt.ShirtTypes != null)
                 shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
+            if (editShirt == null)
+            {
+                shirtVM.LightColor = true;
+            }
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        private void CopyShirtCmdInvoke(object obj)
+        {
+            object[] objParams = obj as object[];
+            ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+            System.Windows.Window window = objParams[1] as System.Windows.Window;
+            try
+            {
+                if (shirtVM != null && window != null)
+                {
+                    System.Windows.Controls.ListView listView = window.FindName("listShirts") as System.Windows.Controls.ListView;
+                    Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
+                    ShirtBase[] shirtTypes = currentShirt.ShirtTypes;
+                    for (int i = 1; i < listView.SelectedItems.Count; i++)
+                    {
+                        (listView.SelectedItems[i] as Shirt).ShirtTypes = shirtTypes;
+                    }
+                    ShowPopup(shirtVM, "Shirt Style Copied!");
+                }
+            }
+            catch
+            {
+                ShowPopup(shirtVM, "Copy Failed!");
+            }
+        }
+
+        private void RemoveShirtCmdInvoke(object obj)
+        {
+            object[] objParams = obj as object[];
+            ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+            Shirt s = objParams[1] as Shirt;
+            if (shirtVM != null && s != null && shirtVM.Shirts != null && shirtVM.Shirts.Count > 1 && shirtVM.Shirts.Contains(s))
+            {
+                shirtVM.Shirts.Remove(s);
+                shirtVM.SelectedShirt = shirtVM.Shirts.Last();
+            }
         }
 
         private void SaveAllCmdInvoke(object obj)
@@ -96,7 +140,7 @@ namespace Upload.Actions
             }
 
         }
-        private void ShowPopup(ShirtCreatorViewModel viewModel, string message)
+        public void ShowPopup(ShirtCreatorViewModel viewModel, string message)
         {
 
             if (viewModel != null)
@@ -132,15 +176,10 @@ namespace Upload.Actions
             {
                 if (shirtVM.Shirts != null)
                 {
-                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count > 0)
+                    while (shirtVM.SelectedShirt != null && shirtVM.Shirts.Count > 1)
                         shirtVM.Shirts.Remove(shirtVM.SelectedShirt);
                 }
-                if (shirtVM.Shirts.Count == 0)
-                {
-                    shirtVM.Shirts.Add(new Shirt());
-                }
-                shirtVM.SelectedShirt = shirtVM.Shirts[0];
-
+                shirtVM.SelectedShirt = shirtVM.Shirts.Last();
             }
         }
 
@@ -277,16 +316,20 @@ namespace Upload.Actions
                 if (mainVM.CreateMode == true)
                 {
                     List<Shirt> lstShirts = Utils.BrowseForShirts();
-                    if (lstShirts.Count == 1)
+                    if (lstShirts != null && lstShirts.Count > 0)
                     {
-                        mainVM.SelectedShirt = lstShirts[0];
-                    }
-                    else
-                    {
-                        lstShirts.ForEach(x => mainVM.Shirts.Add(x));
-                        if (mainVM.SelectedShirt == null && mainVM.Shirts != null && mainVM.Shirts.Count > 0)
+                        if (lstShirts.Count == 1)
                         {
-                            mainVM.SelectedShirt = mainVM.Shirts.FirstOrDefault();
+                            mainVM.SelectedShirt = lstShirts[0];
+                        }
+                        else
+                        {
+                            mainVM.MultiMode = true;
+                            lstShirts.ForEach(x => mainVM.Shirts.Add(x));
+                            if (mainVM.SelectedShirt == null && mainVM.Shirts != null && mainVM.Shirts.Count > 0)
+                            {
+                                mainVM.SelectedShirt = mainVM.Shirts.FirstOrDefault();
+                            }
                         }
                     }
                 }
@@ -517,7 +560,7 @@ namespace Upload.Actions
                         {
                             XMLDataAccess dataAccess = new XMLDataAccess();
                             dataAccess.SaveShirt(shirtCreatorVM.SelectedShirt);
-                            System.Windows.MessageBox.Show(string.Format("Shirt saved in {0}", dataAccess.XmlFilePath), "Save Shirt", MessageBoxButton.OK, MessageBoxImage.Information);
+                            ShowPopup(shirtCreatorVM, string.Format("Shirt saved in {0}", dataAccess.XmlFilePath));
                         }
                         else
                         {
@@ -583,6 +626,14 @@ namespace Upload.Actions
                         {
                             ImageEditCmdInvoke(path);
                         }
+                        System.Windows.MessageBox.Show("Wrong Image Dimension!");
+                        //MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
+                        //    "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+                        //if (result == MessageBoxResult.Yes ||
+                        //    result == MessageBoxResult.OK)
+                        //{
+                        //    ImageEditCmdInvoke(path);
+                        //}
                         return false;
                     }
                 }
@@ -724,9 +775,15 @@ namespace Upload.Actions
         {
             try
             {
-                ToggleButton button = obj as ToggleButton;
-                if (button != null)
+                object[] objParams = obj as object[];
+                ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+                ToggleButton button = objParams[1] as ToggleButton;
+
+                if (shirtVM != null && button != null)
                 {
+                    shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
+                    shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
+
                     string colorName = button.ToolTip.ToString();
                     if (button.IsChecked == true)
                     {
@@ -738,24 +795,28 @@ namespace Upload.Actions
                     else if (button.IsChecked == false)
                     {
                         Upload.Definitions.Color activeColor = shirtVM.SelectedShirtType.Colors.FirstOrDefault(x => x.IsActive == true);
-                        shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + activeColor.ColorName + ".png";
-                        shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "Back" + "/" + activeColor.ColorName + ".png";
+                        if (activeColor != null)
+                        {
+                            shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + activeColor.ColorName + ".png";
+                            shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "Back" + "/" + activeColor.ColorName + ".png";
+                        }
                     }
                 }
                 shirtVM.CountColor = shirtVM.SelectedShirtType.Colors.Where(x => x.IsActive == true).ToArray().Length;
             }
             catch
             {
-                shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
-                shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
             }
         }
         private void MouseEnterCmdInvoke(object obj)
         {
             try
             {
-                ToggleButton button = obj as ToggleButton;
-                if (button != null)
+                object[] objParams = obj as object[];
+                ShirtCreatorViewModel shirtVM = objParams[0] as ShirtCreatorViewModel;
+                ToggleButton button = objParams[1] as ToggleButton;
+
+                if (shirtVM != null && button != null)
                 {
                     string colorName = button.ToolTip.ToString();
                     shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + shirtVM.SelectedShirtType.TypeName + "/" + colorName.ToUpper() + ".png";
@@ -765,16 +826,38 @@ namespace Upload.Actions
             }
             catch
             {
-                shirtVM.FrontMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirt/Asphalt.png";
-                shirtVM.BackMockup = ShirtCreatorViewModel.RootFolderPath + "StandardTShirtBack/Asphalt.png";
             }
         }
         #region Batch Replace
-        private void MultiReplaceCmdInvoke(object obj)
+        private void ExportToExcel(object obj)
         {
             if (obj is ShirtCreatorViewModel shirtVM)
             {
-                ShowMultiReplaceWindow(shirtVM);
+                ExcelActions xlActions = new ExcelActions();
+                if (shirtVM.Shirts != null && shirtVM.Shirts.Count > 0)
+                {
+                    xlActions.ExportToExel(shirtVM.Shirts);
+                }
+
+                //ShowMultiReplaceWindow(shirtVM);
+            }
+        }
+
+        private void ImportFromExcel(object obj)
+        {
+            if (obj is ShirtCreatorViewModel shirtVM)
+            {
+                ExcelActions xlActions = new ExcelActions();
+                if (xlActions.ImportFromExcel(shirtVM.Shirts))
+                {
+                    shirtVM.UpdateDescriptionsFromShirt(shirtVM.SelectedShirt);
+                    ShowPopup(shirtVM, "Descriptions imported from excel");
+                }
+                else
+                {
+                    ShowPopup(shirtVM, "Import from excel failed");
+                }
+                //ShowMultiReplaceWindow(shirtVM);
             }
         }
 

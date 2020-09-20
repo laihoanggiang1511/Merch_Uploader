@@ -1,13 +1,17 @@
-﻿using Upload.ViewModel.MVVMCore;
+﻿using Common.MVVMCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media.Media3D;
+using Upload.Definitions;
 using Upload.Model;
 
 namespace Upload.ViewModel
@@ -18,6 +22,9 @@ namespace Upload.ViewModel
         public ICommand SaveCmd { get; set; }
         public ICommand OpenCmd { get; set; }
         public ICommand DeleteCmd { get; set; }
+        public ICommand RemoveShirtCmd { get; set; }
+        public ICommand ImportFromExcelCmd { get; set; }
+
         public ICommand SaveAllCmd { get; set; }
         public ICommand ClickFrontImageCmd { get; set; }
         public ICommand ClickBackImageCmd { get; set; }
@@ -29,7 +36,7 @@ namespace Upload.ViewModel
         public ICommand SaveAsCmd { get; set; }
         public ICommand MultiReplaceCmd { get; set; }
         public ICommand EnterKeyCmd { get; set; }
-
+        public ICommand CopyShirtCmd { get; set; }
 
         public ICommand ImageEditCmd { get; set; }
 
@@ -58,13 +65,12 @@ namespace Upload.ViewModel
                     createMode = value;
                     if (createMode == false)
                     {
-                        
                     }
                     RaisePropertyChanged("CreateMode");
                 }
             }
         }
-        private bool multiMode = false;
+        private bool multiMode = true;
         public bool MultiMode
         {
             get
@@ -80,7 +86,102 @@ namespace Upload.ViewModel
                 }
             }
         }
+        private bool lightColor = false;
+        public bool LightColor
+        {
+            get
+            {
+                return lightColor;
+            }
+            set
+            {
+                if (lightColor != value)
+                {
+                    lightColor = value;
+                    int[] activeColors;
+                    if (lightColor == true)
+                    {
+                        activeColors = new int[] { 0, 2, 3, 5, 7, 11, 12, 15, 17, 19 };
 
+                    }
+                    else
+                    {
+                        activeColors = new int[] { 1, 4, 8, 9, 10, 14, 16, 18, 19, 20 };
+                    }
+                    for (int i = 0; i < SelectedShirtType.Colors.Length; i++)
+                    {
+                        if (activeColors.ToList().Any(x => x == i))
+                        {
+                            Colors[i].IsActive = true;
+                        }
+                        else
+                        {
+                            Colors[i].IsActive = false;
+                        }
+                    }
+                    RaisePropertyChanged("LightColor");
+
+                }
+            }
+        }
+        private bool selectAllColor = false;
+        public bool SelectAllColor
+        {
+            get
+            {
+                return selectAllColor;
+            }
+            set
+            {
+                if (selectAllColor != value)
+                {
+                    selectAllColor = value;
+                    if (selectAllColor == true && SelectedShirtType != null && SelectedShirtType.Colors != null)
+                    {
+                        if (SelectedShirtType.GetType() != typeof(StandardTShirt) &&
+                           SelectedShirtType.GetType() != typeof(PremiumTShirt))
+                        {
+                            SelectedShirtType.Colors.ToList().ForEach(x => x.IsActive = true);
+                        }
+                    }
+                    RaisePropertyChanged("SelectAllColor");
+                }
+            }
+        }
+        private bool allowDelete = false;
+        public bool AllowDelete
+        {
+            get
+            {
+                return allowDelete;
+            }
+            set
+            {
+                if (allowDelete != value)
+                {
+                    allowDelete = value;
+                    RaisePropertyChanged("AllowDelete");
+                }
+            }
+        }
+
+        ObservableCollection<Definitions.Color> colors = new ObservableCollection<Definitions.Color>();
+        public ObservableCollection<Definitions.Color> Colors
+        {
+            get => colors;
+            set
+            {
+                if (colors != value)
+                {
+                    colors = value;
+                    if (SelectedShirtType != null && colors != null)
+                    {
+                        SelectedShirtType.Colors = colors.ToArray();
+                    }
+                    RaisePropertyChanged("Colors");
+                }
+            }
+        }
         private Shirt selectedShirt = null;
         public Shirt SelectedShirt
         {
@@ -98,7 +199,11 @@ namespace Upload.ViewModel
                         SelectedShirtType = SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                         SelectedDescriptionIndex = 0;
                         UpdateDescriptionsFromShirt(SelectedShirt);
-
+                        AllowDelete = true;
+                    }
+                    else
+                    {
+                        AllowDelete = false;
                     }
                     RaisePropertyChanged("SelectedShirt");
                     RaisePropertyChanged("FrontImagePath");
@@ -132,7 +237,9 @@ namespace Upload.ViewModel
                         RaisePropertyChanged("CountColor");
                         if (SelectedShirtType.Colors != null)
                         {
-                            var firstActiveColor = SelectedShirtType.Colors[0];
+                            this.Colors.Clear();
+                            SelectedShirtType.Colors.ToList().ForEach(x => this.Colors.Add(x));
+                            var firstActiveColor = this.Colors.FirstOrDefault();
                             FrontMockup = RootFolderPath + SelectedShirtType.TypeName + "/" + firstActiveColor.ColorName + ".png";
                             BackMockup = RootFolderPath + SelectedShirtType.TypeName + "Back" + "/" + firstActiveColor.ColorName + ".png";
                         }
@@ -225,9 +332,9 @@ namespace Upload.ViewModel
                 {
                     if (SelectedShirtType.Colors != null)
                         return SelectedShirtType.Colors.Where(x => x.IsActive == true).ToArray().Length;
-                    else return countColor;
+                    else return 0;
                 }
-                else return countColor;
+                else return 0;
             }
             set
             {
@@ -270,7 +377,6 @@ namespace Upload.ViewModel
                 }
             }
         }
-
         #region Descriptions
         private int selectedDescriptionIndex = 0;
         public int SelectedDescriptionIndex
@@ -452,7 +558,7 @@ namespace Upload.ViewModel
                     shirt.DescriptionGerman + "\n";
             }
         }
-        public void UpdateDescriptionsToShirt(Shirt shirt,string input)
+        public void UpdateDescriptionsToShirt(Shirt shirt, string input)
         {
             string strDescription = input;
             strDescription = strDescription.Replace("\r", "");
@@ -541,16 +647,20 @@ namespace Upload.ViewModel
         {
             get
             {
-                if (SelectedShirtType is PullOverHoodie ||
-                    SelectedShirtType is ZipHoodie)
+                if (SelectedShirt != null)
                 {
-                    return SelectedShirt.FrontHoodiePath;
+                    if (SelectedShirtType is PullOverHoodie ||
+                        SelectedShirtType is ZipHoodie)
+                    {
+                        return SelectedShirt.FrontHoodiePath;
+                    }
+                    else if (SelectedShirtType is PopSocketsGrip)
+                    {
+                        return SelectedShirt.PopSocketsGripPath;
+                    }
+                    else return SelectedShirt.FrontStdPath;
                 }
-                else if (SelectedShirtType is PopSocketsGrip)
-                {
-                    return SelectedShirt.PopSocketsGripPath;
-                }
-                else return SelectedShirt.FrontStdPath;
+                else return string.Empty;
             }
             set
             {
@@ -566,16 +676,20 @@ namespace Upload.ViewModel
         {
             get
             {
-                if (SelectedShirtType is PullOverHoodie ||
-                    SelectedShirtType is ZipHoodie)
+                if (SelectedShirt != null)
                 {
-                    return SelectedShirt.BackHoodiePath;
+                    if (SelectedShirtType is PullOverHoodie ||
+                        SelectedShirtType is ZipHoodie)
+                    {
+                        return SelectedShirt.BackHoodiePath;
+                    }
+                    else if (SelectedShirtType is PopSocketsGrip)
+                    {
+                        return SelectedShirt.PopSocketsGripPath;
+                    }
+                    else return SelectedShirt.BackStdPath;
                 }
-                else if (SelectedShirtType is PopSocketsGrip)
-                {
-                    return SelectedShirt.PopSocketsGripPath;
-                }
-                else return SelectedShirt.BackStdPath;
+                else return string.Empty;
             }
             set
             {
@@ -590,7 +704,7 @@ namespace Upload.ViewModel
 
         private void NullToFalseConverter(Array source, bool[] target)
         {
-            int startIndex = 0;
+            int startIndex = -1;
             if (source != null)
             {
                 startIndex = source.Length;

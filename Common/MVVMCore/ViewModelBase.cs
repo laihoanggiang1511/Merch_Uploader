@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
-namespace Upload.ViewModel.MVVMCore
+namespace Common.MVVMCore
 {
-
     public class ViewModelBase : INotifyPropertyChanged
     {
         //basic ViewModelBase
@@ -21,5 +21,4 @@ namespace Upload.ViewModel.MVVMCore
         public event PropertyChangedEventHandler PropertyChanged;
 
     }
-
 }

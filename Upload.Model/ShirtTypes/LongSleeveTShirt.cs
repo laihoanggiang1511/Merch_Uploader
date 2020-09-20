@@ -25,6 +25,27 @@ namespace Upload.Model
             };
             this.Prices = new double[] { 22.99, 21.99, 22.99 };
         }
+        public override object Clone()
+        {
+            LongSleeveTShirt target = new LongSleeveTShirt();
+            target.IsActive = IsActive;
+            target.MarketPlaces = MarketPlaces?.Clone() as bool[];
+            target.Prices = Prices.Clone() as double[];
+            if (this.Colors != null)
+            {
+                List<Color> colors = new List<Color>();
+                this.Colors.ToList().ForEach(x => colors.Add(x));
+                target.Colors = colors.ToArray();
+            }
+            else
+            {
+                target.Colors = null;
+            }
+            target.FitTypes = FitTypes?.Clone() as bool[];
+            target.TypeName = TypeName;
+
+            return target;
+        }
 
     }
 }

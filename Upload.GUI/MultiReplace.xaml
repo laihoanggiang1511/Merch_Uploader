@@ -8,28 +8,49 @@
              mc:Ignorable="d" 
              Height="600"  Width="800" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterOwner" Title="Descriptions">
 
-    
+
     <Grid DataContext="{Binding MultiReplaceVM}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
-        <DataGrid ItemsSource="{Binding ListShirts}" AutoGenerateColumns="False"
+
+        <!--<ListView ItemsSource="{Binding ListShirts}" Margin="5">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="PNG Path" DisplayMemberBinding="{Binding PNGPath}"/>
+                        <GridViewColumn Header="Descriptions" DisplayMemberBinding="{Binding Descriptions}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Text="{Binding}" AcceptsReturn="True" TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding ReplaceText}" Header="Replace" Width="150"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding ReplaceByText}" Header="With" Width="150"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>-->
+
+        <DataGrid Margin="5" ItemsSource="{Binding ListShirts}" AutoGenerateColumns="False"
                   SelectionMode="Extended" AlternatingRowBackground="AliceBlue" CanUserReorderColumns="False" CanUserSortColumns="False"
                   CanUserAddRows="False" CanUserDeleteRows="False" GridLinesVisibility="All" VerticalScrollBarVisibility="Auto" 
                   VerticalGridLinesBrush="Black" HorizontalGridLinesBrush="Black" HorizontalAlignment="Stretch"
-                  Margin="5" Grid.Row="0" BorderBrush="AliceBlue">
+                  Grid.Row="0" BorderBrush="AliceBlue">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding PNGPath}" CanUserResize="True" Header="PNG Path" IsReadOnly="True" Width="150"/>
                 <DataGridTemplateColumn CanUserResize="True" Header="Descriptions" MinWidth="300">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Descriptions}" AcceptsReturn="True" TextWrapping="Wrap">
+
                                 <!--<TextBox.InputBindings>
                                     <KeyBinding Key="Return" Command="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.EnterKeyCmd}" 
                                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}}"/>
                                 </TextBox.InputBindings>-->
+
                             </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

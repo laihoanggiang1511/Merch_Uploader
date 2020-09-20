@@ -4,12 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Upload.GUI"
-             xmlns:converter="clr-namespace:ShirtCreator.GUI.Converter"
+             xmlns:converter="clr-namespace:Upload.GUI.Converter"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
-
+        <converter:BoolReverseConverter x:Key="BoolReverseConverter"/>
+        <converter:ShirtTypeToVisibilityConverter x:Key="ShirtTypeToVisibility"/>
         <Style x:Key="ImageBrowseButton" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -52,9 +54,12 @@
                                 <Image Source="{Binding Text, ElementName=imagePath}"       
                                    Width="50" Height="50"
                                    VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Fill"/>
+                                <materialDesign:PackIcon Visibility="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=IsChecked,
+                                                                        Converter={StaticResource BoolToVisibility} }"
+                                    Background="Transparent" Foreground="White" Kind="Check" Width="25" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
-                        <ControlTemplate.Triggers>
+                        <!--<ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter Property="BorderThickness" TargetName="border" Value="1.5"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="MediumPurple"/>
@@ -68,11 +73,12 @@
                                 <Setter Property="BorderBrush" TargetName="border" Value="MediumPurple"/>
 
                             </Trigger>
-                        </ControlTemplate.Triggers>
+                        </ControlTemplate.Triggers>-->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
     </UserControl.Resources>
     <!--<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">-->
     <StackPanel>
@@ -105,15 +111,17 @@
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickFrontImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
-                            Style="{StaticResource MaterialDesignIconButton}">
-                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
+                            Style="{DynamicResource MaterialDesignFlatButton}" Padding="0">
+                        <materialDesign:PackIcon Kind="ImageAdd" Width="35" Height="35"/>
+                        <!--<Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>-->
                     </Button>
                     <Button ToolTip="Remove Image"
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveFrontImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
-                            Style="{StaticResource MaterialDesignIconButton}">
-                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
+                            Style="{StaticResource MaterialDesignFlatButton}" Padding="0">
+                        <materialDesign:PackIcon Kind="DeleteEmpty" Width="35" Height="35"/>
+                        <!--<Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>-->
                     </Button>
                 </StackPanel>
             </StackPanel>
@@ -141,15 +149,17 @@
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickBackImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
-                        Style="{StaticResource MaterialDesignIconButton}">
-                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>
+                        Style="{StaticResource MaterialDesignFlatButton}" Padding="0">
+                        <materialDesign:PackIcon Kind="ImageAdd" Width="35" Height="35"/>
+                        <!--<Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/folder.png"/>-->
                     </Button>
                     <Button ToolTip="Remove Image"
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.RemoveBackImageCmd}"
                         CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext}"
-                        Style="{StaticResource MaterialDesignIconButton}">
-                        <Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>
+                        Style="{StaticResource MaterialDesignFlatButton}" Padding="0">
+                        <materialDesign:PackIcon Kind="DeleteEmpty" Width="35" Height="35"/>
+                        <!--<Image Width="30" Height="30" VerticalAlignment="Center" HorizontalAlignment="Center" Source="Resources/ico55.ico"/>-->
                     </Button>
                 </StackPanel>
             </StackPanel>
@@ -185,7 +195,15 @@
         <!--Color picker-->
         <StackPanel Grid.Row="2">
             <TextBlock Text="Colors" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
-            <ItemsControl ItemsSource="{Binding Colors}" HorizontalContentAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" Visibility="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext,Converter={StaticResource ShirtTypeToVisibility},ConverterParameter=0}">
+                <CheckBox Content="Dark" Margin="10,5" IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path = DataContext.LightColor}" FontSize="14"/>
+                <CheckBox Content="Light" Margin="10,5" IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path = DataContext.LightColor,Converter={StaticResource BoolReverseConverter}}" FontSize="14"/>
+            </StackPanel>
+            <CheckBox Content="Select All" Visibility="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext,Converter={StaticResource ShirtTypeToVisibility},ConverterParameter=1}"
+                      Margin="10,5" IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path = DataContext.SelectAllColor}" FontSize="14"/>
+
+
+            <ItemsControl ItemsSource="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.Colors}" HorizontalContentAlignment="Stretch" >
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <VirtualizingStackPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -200,20 +218,39 @@
                                 <i:EventTrigger EventName="Checked">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.ChangeColorCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.ChangeColorCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
+                                                           
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="Unchecked">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.ChangeColorCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.ChangeColorCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="MouseEnter">
                                     <i:InvokeCommandAction Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                                                      AncestorType={x:Type Window}},
-                                                                     Path= DataContext.MouseEnterCmd}"
-                                                           CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}}"/>
+                                                                     Path= DataContext.MouseEnterCmd}">
+                                        <i:InvokeCommandAction.CommandParameter>
+                                            <MultiBinding Converter="{StaticResource MultiBindingConverter}">
+                                                <Binding RelativeSource="{RelativeSource AncestorType=Window}" Path="DataContext"/>
+                                                <Binding RelativeSource="{RelativeSource AncestorType=ToggleButton}"/>
+                                            </MultiBinding>
+                                        </i:InvokeCommandAction.CommandParameter>
+                                    </i:InvokeCommandAction>
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </ToggleButton>
