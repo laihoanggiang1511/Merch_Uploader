@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.LicenseManager;
+using Common.MVVMCore;
+using Microsoft.Office.Interop.Excel;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Windows;
 using Upload.GUI;
 using Upload.ViewModel;
-using Common.MVVMCore;
-using System.Windows;
-using System.Threading;
-using System.Drawing;
-using System.Windows.Media;
-using Common.LicenseManager;
+using UploadTemplate;
 
 namespace Upload.Actions
 {
     public class MainActions
     {
+        public void ShowMainWindow(string jsonShirt, string excelFile)
+        {
+
+        }
         public void ShowMainWindow()
         {
             try
@@ -110,7 +111,7 @@ namespace Upload.Actions
             #endregion
 
             ActivationActions activateActions = new ActivationActions();
-            activateActions.ShowMainWindow = new Action(ShowMainWindow);
+            activateActions.ShowMainWindow = new System.Action(ShowMainWindow);
             activateActions.ShowActivationForm();
             if (mainWnd != null)
             {
@@ -129,9 +130,10 @@ namespace Upload.Actions
         private void CreateWindowCmdInvoke(object obj)
         {
             MainWindow mainWin = obj as MainWindow;
-            (new ShirtCreatorActions()).ShowShirtCreatorWindow();
-            if (mainWin != null)
-                mainWin.Close();
+            (new ExcelActions()).StartExcel();
+            //if (mainWin != null)
+            //    mainWin.Hide();
         }
+
     }
 }

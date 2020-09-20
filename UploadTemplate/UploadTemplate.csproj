@@ -17,6 +17,8 @@
     <ProjectGuid>{97971640-1D83-454F-A2CC-1EDECBD528A6}</ProjectGuid>
     <SolutionID>c38c2e56-fea2-4e6b-9302-23a0f268c270</SolutionID>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
@@ -32,7 +34,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Upload\bin\debug\</OutputPath>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <DefineConstants>$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <WarningLevel>4</WarningLevel>
@@ -110,8 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColumnDefinitions.cs" />
-    <Compile Include="ExcelActions.cs" />
-    <Compile Include="Helper.cs" />
+    <Compile Include="Actions.cs" />
     <Compile Include="TranslateAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ribbon2.cs">
@@ -172,14 +173,12 @@
     <ProjectReference Include="..\Upload.DataAccess\Upload.DataAccess.csproj">
       <Project>{684cbfe5-abb8-4630-bb48-2523e2d9fbeb}</Project>
       <Name>Upload.DataAccess</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Upload.ViewModel\Upload.ViewModel.csproj">
       <Project>{fb7a56a9-b95b-401a-aedd-a3f8f5aa6e5c}</Project>
       <Name>Upload.ViewModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Upload\Upload.csproj">
-      <Project>{5df46a45-c43d-4d85-b5de-b7c31b66f7cd}</Project>
-      <Name>Upload</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

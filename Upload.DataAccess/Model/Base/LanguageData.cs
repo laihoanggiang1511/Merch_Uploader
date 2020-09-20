@@ -13,6 +13,8 @@ namespace Upload.DataAccess.Model
         [DataMember]
         public int Id { get; set; }
         [DataMember]
+        public string Name { get; set; }
+        [DataMember]
         public string BrandName { get; set; }
         [DataMember]
         public string Title { get; set; }
@@ -29,6 +31,11 @@ namespace Upload.DataAccess.Model
         public LanguageData() 
         {
             this.Id = 0;
+        }
+        public LanguageData(int id,string name)
+        {
+            this.Id = id;
+            this.Name = Name;
         }
     }
 }

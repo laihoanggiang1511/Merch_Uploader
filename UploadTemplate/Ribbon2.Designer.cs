@@ -46,8 +46,6 @@
             this.group2 = this.Factory.CreateRibbonGroup();
             this.cbb_Language = this.Factory.CreateRibbonComboBox();
             this.btn_Translate = this.Factory.CreateRibbonButton();
-            this.buttonGroup1 = this.Factory.CreateRibbonButtonGroup();
-            this.button1 = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -90,8 +88,6 @@
             // 
             this.group2.Items.Add(this.cbb_Language);
             this.group2.Items.Add(this.btn_Translate);
-            this.group2.Items.Add(this.buttonGroup1);
-            this.group2.Items.Add(this.button1);
             this.group2.Label = "Language";
             this.group2.Name = "group2";
             // 
@@ -115,15 +111,6 @@
             this.btn_Translate.Name = "btn_Translate";
             this.btn_Translate.ShowImage = true;
             this.btn_Translate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Translate_Click);
-            // 
-            // buttonGroup1
-            // 
-            this.buttonGroup1.Name = "buttonGroup1";
-            // 
-            // button1
-            // 
-            this.button1.Label = "button1";
-            this.button1.Name = "button1";
             // 
             // Ribbon2
             // 
@@ -150,8 +137,6 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_Edit;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_SaveFile;
         internal Microsoft.Office.Tools.Ribbon.RibbonComboBox cbb_Language;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButtonGroup buttonGroup1;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton button1;
     }
 
     partial class ThisRibbonCollection

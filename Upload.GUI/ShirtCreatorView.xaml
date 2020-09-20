@@ -122,7 +122,7 @@
                             <!--<Button Content="X" Command="{Binding DeleteCmd}" CommandParameter="{Binding}" ToolTip="Delete"
                                 FontSize="15" Width="20" Height="20" Style="{StaticResource ButtonBlueStyle}" Margin="10" Background="DarkRed"/>-->
                             <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}"
-                                FontSize="12" Width="0" Height="25" Style="{StaticResource MaterialDesignRaisedDarkButton}"/>
+                                FontSize="12" Width="0" Height="25" Style="{DynamicResource MaterialDesignRaisedDarkButton}"/>
                             <Button Command="{Binding ClickFrontImageCmd}" CommandParameter="{Binding}"
                                 FontSize="10" Padding="0" Width="25" Height="25" Style="{DynamicResource MaterialDesignFlatButton}" ToolTip="Browse">
                                 <Button.Content>
@@ -283,10 +283,10 @@
                                 Width="120" Margin="5,0" Padding="0">
             </Button>
             <Button Content="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}"
-                                 Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                                 Width="100" Margin="5,0,5,0" Style="{DynamicResource MaterialDesignRaisedAccentButton}">
             </Button>
             <Button Content="Save All" Command="{Binding SaveAllCmd}" CommandParameter="{Binding}" Visibility="{Binding MultiMode, Converter={StaticResource BooleanToVisibility}}"
-                                 Width="100" Margin="5,0,5,0" Style="{StaticResource MaterialDesignRaisedAccentButton}">
+                                 Width="100" Margin="5,0,5,0" Style="{DynamicResource MaterialDesignRaisedAccentButton}">
             </Button>
 
         </StackPanel>

@@ -12,7 +12,7 @@ using Upload.DataAccess;
 using MessageBox = System.Windows.MessageBox;
 using Upload.ViewModel;
 using Upload.DataAccess.Model;
-using Upload.DTO;
+using Upload.DataAccess.DTO;
 
 namespace Upload
 {

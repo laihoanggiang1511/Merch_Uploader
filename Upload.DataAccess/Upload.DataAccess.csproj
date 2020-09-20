@@ -84,6 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTO\ShirtDTO.cs" />
     <Compile Include="Model\Base\ColorData.cs" />
     <Compile Include="Model\Base\DataModelBase.cs" />
     <Compile Include="Model\Base\LanguageData.cs" />

@@ -10,6 +10,8 @@ namespace Upload.ViewModel
     public class Language
     {
         public int Id { get; set; }
+
+        public string Name { get; set; }
         public string BrandName { get; set; }
         public string Title { get; set; }
         public string FeatureBullet1 { get; set; }
@@ -22,6 +24,11 @@ namespace Upload.ViewModel
         public Language()
         {
             this.Id = 0;
+        }
+        public Language(int id, string name)
+        {
+            this.Id = 0;
+            this.Name = name;
         }
     }
 }

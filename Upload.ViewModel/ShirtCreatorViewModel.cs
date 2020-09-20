@@ -50,6 +50,28 @@ namespace Upload.ViewModel
 
         public MultiReplaceViewModel MultiReplaceVM { get; set; }
 
+        bool excelMode = false;
+        public bool ExcelMode
+        {
+            get
+            {
+                return excelMode;
+            }
+            set
+            {
+                if (excelMode != value)
+                {
+                    excelMode = value;
+                    if(excelMode == true)
+                    {
+                        CreateMode = false;
+                        MultiMode = false;
+                    }
+                    RaisePropertyChanged("ExcelMode");
+                }
+            }
+        }
+
         bool createMode = true;
         public bool CreateMode
         {

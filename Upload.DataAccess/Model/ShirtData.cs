@@ -24,11 +24,11 @@ namespace Upload.DataAccess.Model
             this.ImageType = 0;
             Languages = new List<LanguageData>()
             {
-                new LanguageData (0), //English
-                new LanguageData(1),
-                new LanguageData(2),
-                new LanguageData(3),
-                new LanguageData (4),
+                new LanguageData (0,"English"), //English
+                new LanguageData(1, "German"),
+                new LanguageData(2, "French"),
+                new LanguageData(3, "Italian"),
+                new LanguageData (4, "Spanish"),
             };
             ShirtTypes = new List<ShirtTypeData>();
         }

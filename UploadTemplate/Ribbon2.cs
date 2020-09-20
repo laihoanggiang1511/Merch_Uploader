@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Tools.Ribbon;
+using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
+using Upload.DataAccess;
 using Upload.DataAccess.Model;
-using Upload.DTO;
+using Upload.DataAccess.DTO;
 using Upload.ViewModel;
 
 namespace UploadTemplate
 {
+
     public partial class Ribbon2
     {
         private void Ribbon2_Load(object sender, RibbonUIEventArgs e)
@@ -56,7 +62,7 @@ namespace UploadTemplate
 
         private void Btn_Browse_Click(object sender, RibbonControlEventArgs e)
         {
-            string[] images = Helper.BrowseForFilePath("PNG file |*.PNG| All Files |*.*", true);
+            string[] images = Actions.BrowseForFilePath("PNG file |*.PNG| All Files |*.*", true);
             int startRow = Globals.Sheet1.Application.ActiveCell.Row;
             if (startRow < 4)
             {
@@ -67,18 +73,63 @@ namespace UploadTemplate
                 Shirt shirt = new Shirt();
                 ShirtData sData = ShirtDTO.MapData(shirt, typeof(ShirtData)) as ShirtData;
                 sData.ImagePath = images[i];
-                new ExcelActions().MapShirtToExcel(sData, startRow+i);
+                Actions.MapShirtToExcel(sData, startRow + i);
             }
         }
 
         private void Btn_SaveFile_Click(object sender, RibbonControlEventArgs e)
         {
+            int startRow = 4;
+            int i = startRow;
+            int countBlank = 0;
+            while (true)
+            {
+                string strJSON = Globals.Sheet1.Cells[i, (int)ColumnDefinitions.JSON].Value;
+                if (string.IsNullOrEmpty(strJSON))
+                {
+                    countBlank++;
+                }
+                else
+                {
+                    countBlank = 0;
+                    ShirtData sData = Actions.MapExcelToShirt(i);
+                    if (sData != null && !string.IsNullOrEmpty(sData.ImagePath))
+                    {
+                        new JsonDataAccess().SaveShirt(sData);
+                    }
+                }
+                if (countBlank > 10)
+                    break;
+                i++;
+            }
+            MessageBox.Show("Saved!");
         }
 
         private void btn_Edit_Click(object sender, RibbonControlEventArgs e)
         {
+            int startRow = Globals.Sheet1.Application.ActiveCell.Row;
+            if (startRow < 4)
+            {
+                startRow = 4;
+            }
+            ShirtData sData = Actions.MapExcelToShirt(startRow);
+            //string strJson = JsonConvert.SerializeObject(sData);
+            //string strJsonFileName = Path.GetTempFileName();
+            //File.WriteAllText(strJsonFileName, strJson);
 
-            
+            //string excelFileName = Globals.ThisWorkbook.Name;
+            //string argument = string.Format("{0} {1} {2}",
+            //                                strJsonFileName,excelFileName, startRow);
+            //string folder = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            //string excelFile = "Upload.exe";
+            //excelFile = Path.Combine(folder, excelFile);
+            //Process.Start(excelFile,argument);
+
+            if (Actions.EditShirtCallBack != null)
+            {
+                Actions.EditShirtCallBack.Invoke(sData);
+            }
+
         }
     }
 }

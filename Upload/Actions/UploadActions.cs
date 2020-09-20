@@ -22,7 +22,7 @@ using System.Windows.Controls.Primitives;
 using Microsoft.Office.Interop.Excel;
 using Upload.Actions.Chrome;
 using Upload.DataAccess.Model;
-using Upload.DTO;
+using Upload.DataAccess.DTO;
 
 namespace Upload.Actions
 {

@@ -1,99 +1,89 @@
-﻿using AutoMapper;
-using AutoMapper.Internal;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Upload.DataAccess.Model;
-using Upload.ViewModel;
 
-namespace Upload.DTO
+namespace Upload.DataAccess.DTO
 {
     public class ShirtDTO
     {
-        //public static T MapData<T>(object obj)
+        ////public static T MapData<T>(object obj)
+        ////{
+        ////    object result = Activator.CreateInstance(typeof(T));
+        ////    if (typeof(T) == typeof(ShirtData))
+        ////    {
+        ////        var config = new MapperConfiguration(cfg => { cfg.CreateMap<Shirt, ShirtData>(); });
+        ////        IMapper iMapper = config.CreateMapper();
+        ////        result = iMapper.Map<Shirt, ShirtData>(obj as Shirt);
+        ////    }
+        ////    else if (typeof(T) == typeof(Shirt))
+        ////    {
+        ////        var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtData, Shirt>(); });
+        ////        IMapper iMapper = config.CreateMapper();
+        ////        result = iMapper.Map<ShirtData, Shirt>(obj as ShirtData);
+        ////    }
+        ////    return (T)result;
+
+        ////}
+
+        //public static T MapLanguage<T>(object obj)
         //{
-        //    object result = Activator.CreateInstance(typeof(T));
-        //    if (typeof(T) == typeof(ShirtData))
+        //    object result = null;
+        //    if (typeof(T) == typeof(LanguageData))
         //    {
-        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<Shirt, ShirtData>(); });
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<Language, LanguageData>(); });
         //        IMapper iMapper = config.CreateMapper();
-        //        result = iMapper.Map<Shirt, ShirtData>(obj as Shirt);
+        //        result = iMapper.Map<Language, LanguageData>(obj as Language);
         //    }
-        //    else if (typeof(T) == typeof(Shirt))
+        //    else if (typeof(T) == typeof(Language))
         //    {
-        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtData, Shirt>(); });
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<LanguageData, Language>(); });
         //        IMapper iMapper = config.CreateMapper();
-        //        result = iMapper.Map<ShirtData, Shirt>(obj as ShirtData);
+        //        result = iMapper.Map<LanguageData, Language>(obj as LanguageData);
         //    }
         //    return (T)result;
-
         //}
-
-        public static T MapLanguage<T>(object obj)
-        {
-            object result = null;
-            if (typeof(T) == typeof(LanguageData))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<Language, LanguageData>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<Language, LanguageData>(obj as Language);
-            }
-            else if (typeof(T) == typeof(Language))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<LanguageData, Language>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<LanguageData, Language>(obj as LanguageData);
-            }
-            return (T)result;
-        }
-        public static T MapShirtType<T>(object obj)
-        {
-            object result = null;
-            if (typeof(T) == typeof(ShirtTypeData))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtType, ShirtTypeData>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<ShirtType, ShirtTypeData>(obj as ShirtType);
-            }
-            else if (typeof(T) == typeof(ShirtType))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtTypeData, ShirtType>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<ShirtTypeData, ShirtType>(obj as ShirtTypeData);
-            }
-            return (T)result;
-        }
-        public static T MapColor<T>(object obj)
-        {
-            object result = null;
-            if (typeof(T) == typeof(ColorData))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<Color, ColorData>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<Color, ColorData>(obj as Color);
-            }
-            else if (typeof(T) == typeof(ShirtType))
-            {
-                var config = new MapperConfiguration(cfg => { cfg.CreateMap<ColorData, Color>(); });
-                IMapper iMapper = config.CreateMapper();
-                result = iMapper.Map<ColorData, Color>(obj as ColorData);
-            }
-            return (T)result;
-        }
+        //public static T MapShirtType<T>(object obj)
+        //{
+        //    object result = null;
+        //    if (typeof(T) == typeof(ShirtTypeData))
+        //    {
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtType, ShirtTypeData>(); });
+        //        IMapper iMapper = config.CreateMapper();
+        //        result = iMapper.Map<ShirtType, ShirtTypeData>(obj as ShirtType);
+        //    }
+        //    else if (typeof(T) == typeof(ShirtType))
+        //    {
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<ShirtTypeData, ShirtType>(); });
+        //        IMapper iMapper = config.CreateMapper();
+        //        result = iMapper.Map<ShirtTypeData, ShirtType>(obj as ShirtTypeData);
+        //    }
+        //    return (T)result;
+        //}
+        //public static T MapColor<T>(object obj)
+        //{
+        //    object result = null;
+        //    if (typeof(T) == typeof(ColorData))
+        //    {
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<Color, ColorData>(); });
+        //        IMapper iMapper = config.CreateMapper();
+        //        result = iMapper.Map<Color, ColorData>(obj as Color);
+        //    }
+        //    else if (typeof(T) == typeof(ShirtType))
+        //    {
+        //        var config = new MapperConfiguration(cfg => { cfg.CreateMap<ColorData, Color>(); });
+        //        IMapper iMapper = config.CreateMapper();
+        //        result = iMapper.Map<ColorData, Color>(obj as ColorData);
+        //    }
+        //    return (T)result;
+        //}
 
 
 
 
         public static object MapData(object sourceObj, Type targetType)
         {
-            try
-            {
+            //try
+            //{
                 if (sourceObj != null)
                 {
                     if (targetType != null)
@@ -108,9 +98,8 @@ namespace Upload.DTO
                                 var objProp = sourceObj.GetType().GetProperty(item.Name);
                                 if (objProp != null)
                                 {
-                                    if (item.PropertyType.IsCollectionType())
+                                    if (IsCollectionType(item.PropertyType))
                                     {
-                                        
                                         var destinationType = item.PropertyType.GetGenericArguments()[0];     
                                         IList<object> objects = objProp.GetValue(sourceObj) as IList<object>;
                                         if (objects != null && objects.Count > 0)
@@ -146,13 +135,17 @@ namespace Upload.DTO
                         return newOb;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //}
             return null;
         }
 
+        static bool IsCollectionType(Type type)
+        {
+            return (type.GetInterface(nameof(ICollection)) != null);
+        }
         //public static T MapData<T>(object source)
         //{
 

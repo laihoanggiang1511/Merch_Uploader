@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -35,7 +36,7 @@ namespace Upload.ViewModel
         public string ImagePath { get; set; }
         public int ImageType { get; set; }  
 
-        public Language[] Languages { get; set; }
+        public ObservableCollection<Language> Languages { get; set; }
 
         private StandardTShirt StandardTShirt { get; set; }
         private PremiumTShirt PremiumTShirt { get; set; }
@@ -50,11 +51,11 @@ namespace Upload.ViewModel
         private IPhoneCase IPhoneCase { get; set; }
         private SamsungCase SSCase { get; set; }
 
-        public ShirtType[] ShirtTypes
+        public ObservableCollection<ShirtType> ShirtTypes
         {
             get
             {
-                ShirtType[] shirtTypes = new ShirtType[]
+                ObservableCollection<ShirtType> shirtTypes = new ObservableCollection<ShirtType>()
                 {
                     this.StandardTShirt,
                     this.PremiumTShirt,
@@ -73,18 +74,21 @@ namespace Upload.ViewModel
             }
             set
             {
-                this.StandardTShirt = value[0].Clone() as StandardTShirt;
-                this.PremiumTShirt = value[1].Clone() as PremiumTShirt;
-                this.VNeckTShirt = value[2].Clone() as VNeckTShirt;
-                this.TankTop = value[3].Clone() as TankTop;
-                this.LongSleeveTShirt = value[4].Clone() as LongSleeveTShirt;
-                this.Raglan = value[5].Clone() as Raglan;
-                this.SweetShirt = value[6].Clone() as SweetShirt;
-                this.PullOverHoodie = value[7].Clone() as PullOverHoodie;
-                this.ZipHoodie = value[8].Clone() as ZipHoodie;
-                this.PopSocketsGrip = value[9].Clone() as PopSocketsGrip;
-                this.IPhoneCase = value[10].Clone() as IPhoneCase;
-                this.SSCase = value[11].Clone() as SamsungCase;
+                if (value.Count > 11)
+                {
+                    this.StandardTShirt = value[0].Clone() as StandardTShirt;
+                    this.PremiumTShirt = value[1].Clone() as PremiumTShirt;
+                    this.VNeckTShirt = value[2].Clone() as VNeckTShirt;
+                    this.TankTop = value[3].Clone() as TankTop;
+                    this.LongSleeveTShirt = value[4].Clone() as LongSleeveTShirt;
+                    this.Raglan = value[5].Clone() as Raglan;
+                    this.SweetShirt = value[6].Clone() as SweetShirt;
+                    this.PullOverHoodie = value[7].Clone() as PullOverHoodie;
+                    this.ZipHoodie = value[8].Clone() as ZipHoodie;
+                    this.PopSocketsGrip = value[9].Clone() as PopSocketsGrip;
+                    this.IPhoneCase = value[10].Clone() as IPhoneCase;
+                    this.SSCase = value[11].Clone() as SamsungCase;
+                }
             }
         }
 
@@ -96,13 +100,13 @@ namespace Upload.ViewModel
             //this.BackHoodiePath = string.Empty;
             //this.PopSocketsGripPath = string.Empty;
             this.ImageType = 0;
-            Languages = new Language[]
+            Languages = new ObservableCollection<Language>()
             {
-                new Language (0), //English
-                new Language(1),
-                new Language(2),
-                new Language(3),
-                new Language (4),
+                new Language (0,"English"), //English
+                new Language(1,"German"),
+                new Language(2,"French"),
+                new Language(3,"Italian"),
+                new Language (4,"Spanish"),
             };
 
             this.LongSleeveTShirt = new LongSleeveTShirt();

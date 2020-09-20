@@ -14,47 +14,77 @@ using System.Threading;
 using Microsoft.Office.Interop.Excel;
 using Upload.DataAccess.Model;
 using System.Text.RegularExpressions;
-using Upload.DTO;
+using Upload.DataAccess.DTO;
+using System.Collections.ObjectModel;
 
 namespace Upload.Actions
 {
-    internal class ShirtCreatorActions
+    public class ShirtCreatorActions
     {
+        public void ShowMainWindow(string jsonFile, string excelName, string row)
+        {
+            try
+            {
+                ShirtData sData = new JsonDataAccess().ReadShirt(jsonFile);
+                Shirt s = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
+                File.Delete(jsonFile);
+                ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
+                ShirtCreatorViewModel shirtVM = CreateShirtViewModel(s);
+                shirtVM.ExcelMode = true;
+                shirtCreatorWindow.DataContext = shirtVM;
+                shirtCreatorWindow.Show();
+
+                
+            }
+            catch
+            {
+                Utils.ShowErrorMessageBox("Error opening file");
+            }
+        }
         public void ShowShirtCreatorWindow(Shirt editShirt = null)
         {
             ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
-            ShirtCreatorViewModel shirtVM = new ShirtCreatorViewModel();
-            shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
-            shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
-            shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
-            shirtVM.OpenCmd = new RelayCommand(OpenCmdInvoke);
-            shirtVM.ChangeColorCmd = new RelayCommand(ChangeColorCmdInvoke);
-            shirtVM.MouseEnterCmd = new RelayCommand(MouseEnterCmdInvoke);
-            shirtVM.RemoveBackImageCmd = new RelayCommand(RemoveBackImageCmdInvoke);
-            shirtVM.RemoveFrontImageCmd = new RelayCommand(RemoveFrontImageCmdInvoke);
-            shirtVM.ReplaceCmd = new RelayCommand(ReplaceCmdInvoke);
-            shirtVM.SaveAsCmd = new RelayCommand(SaveAsCmdInvoke);
-            shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
-            shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
-            shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
-            shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
-            shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
-            shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
-            shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
-            if (editShirt != null)
-            {
-                shirtVM.SelectedShirt = editShirt;
-                shirtVM.CreateMode = false;
-            }
-
-            if (shirtVM.SelectedShirt.ShirtTypes != null)
-                shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
-            if (editShirt == null)
-            {
-                shirtVM.LightColor = true;
-            }
+            ShirtCreatorViewModel shirtVM = CreateShirtViewModel(editShirt);
             shirtCreatorWindow.DataContext = shirtVM;
             shirtCreatorWindow.Show();
+        }
+
+        public ShirtCreatorViewModel CreateShirtViewModel(Shirt editShirt = null)
+        {
+            ShirtCreatorViewModel shirtVM = new ShirtCreatorViewModel();
+            if (editShirt != null)
+            {
+                shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
+                shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
+                shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
+                shirtVM.OpenCmd = new RelayCommand(OpenCmdInvoke);
+                shirtVM.ChangeColorCmd = new RelayCommand(ChangeColorCmdInvoke);
+                shirtVM.MouseEnterCmd = new RelayCommand(MouseEnterCmdInvoke);
+                shirtVM.RemoveBackImageCmd = new RelayCommand(RemoveBackImageCmdInvoke);
+                shirtVM.RemoveFrontImageCmd = new RelayCommand(RemoveFrontImageCmdInvoke);
+                shirtVM.ReplaceCmd = new RelayCommand(ReplaceCmdInvoke);
+                shirtVM.SaveAsCmd = new RelayCommand(SaveAsCmdInvoke);
+                shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
+                shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
+                shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
+                shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
+                shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
+                shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
+                shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
+                if (editShirt != null)
+                {
+                    shirtVM.SelectedShirt = editShirt;
+                    shirtVM.CreateMode = false;
+                }
+
+                if (shirtVM.SelectedShirt.ShirtTypes != null)
+                    shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
+                if (editShirt == null)
+                {
+                    shirtVM.LightColor = true;
+                }
+            }
+            return shirtVM;
         }
 
         private void CopyShirtCmdInvoke(object obj)
@@ -68,7 +98,7 @@ namespace Upload.Actions
                 {
                     System.Windows.Controls.ListView listView = window.FindName("listShirts") as System.Windows.Controls.ListView;
                     Shirt currentShirt = shirtVM.SelectedShirt.Clone() as Shirt;
-                    ShirtType[] shirtTypes = currentShirt.ShirtTypes;
+                    ObservableCollection<ShirtType> shirtTypes = currentShirt.ShirtTypes;
                     for (int i = 1; i < listView.SelectedItems.Count; i++)
                     {
                         (listView.SelectedItems[i] as Shirt).ShirtTypes = shirtTypes;
@@ -109,7 +139,7 @@ namespace Upload.Actions
                             if (ValidateShirt(shirt, ref errorCode))
                             {
                                 JsonDataAccess dataAccess = new JsonDataAccess();
-                                ShirtData sData = ShirtDTO.MapData(shirt,typeof(ShirtData)) as ShirtData;
+                                ShirtData sData = ShirtDTO.MapData(shirt, typeof(ShirtData)) as ShirtData;
                                 dataAccess.SaveShirt(sData);
                             }
                             else
@@ -217,7 +247,7 @@ namespace Upload.Actions
                             if (shirtVM.SelectedShirt != null)
                             {
                                 JsonDataAccess dataAccess = new JsonDataAccess();
-                                var sData = ShirtDTO.MapData(shirtVM.SelectedShirt,typeof(ShirtData)) as ShirtData;
+                                var sData = ShirtDTO.MapData(shirtVM.SelectedShirt, typeof(ShirtData)) as ShirtData;
                                 dataAccess.SaveShirt(sData);
                                 System.Windows.MessageBox.Show("Shirt saved!", "Save Shirt", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
@@ -607,12 +637,16 @@ namespace Upload.Actions
                     ShirtCreatorViewModel shirtCreatorVM = input as ShirtCreatorViewModel;
                     if (shirtCreatorVM != null)
                     {
+                        if(shirtCreatorVM.ExcelMode == true)
+                        {
+                        }
+                        else
                         if (shirtCreatorVM.SelectedShirt != null && ValidateShirt(shirtCreatorVM.SelectedShirt, ref errorCode))
                         {
                             JsonDataAccess dataAccess = new JsonDataAccess();
-                            ShirtData sData = ShirtDTO.MapData(shirtCreatorVM.SelectedShirt,typeof(ShirtData)) as ShirtData;
+                            ShirtData sData = ShirtDTO.MapData(shirtCreatorVM.SelectedShirt, typeof(ShirtData)) as ShirtData;
                             dataAccess.SaveShirt(sData);
-                            ShowPopup(shirtCreatorVM,"Shirt saved!");
+                            ShowPopup(shirtCreatorVM, "Shirt saved!");
                         }
                         else
                         {

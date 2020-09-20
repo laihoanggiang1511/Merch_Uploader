@@ -84,7 +84,7 @@ namespace Upload.Actions.Chrome
 
                     //Input detail
                     Log.log.Info("---Input Detail---");
-                    for (int i = 0; i < shirt.ShirtTypes.Length; i++)
+                    for (int i = 0; i < shirt.ShirtTypes.Count; i++)
                     {
                         int row = (i) / 4 + 1;
                         int column = (i) % 4 + 1;
@@ -132,7 +132,7 @@ namespace Upload.Actions.Chrome
                     // Set English Descriptions
                     for (int i = 0; i <= 4; i++)
                     {
-                        if (shirt.Languages.Length > i)
+                        if (shirt.Languages.Count > i)
                         {
                             string rootXPath = $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/product-text/ngb-accordion/div[{i+1}]/div[2]/div/product-text-editor/div/div/";
                             if (!string.IsNullOrEmpty(shirt.Languages[i].BrandName))
@@ -195,7 +195,7 @@ namespace Upload.Actions.Chrome
                     Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", true);
                     Helper.ClickCheckBox(driver, "/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", false);
 
-                    for (int i = 0; i < shirt.ShirtTypes.Length; i++)
+                    for (int i = 0; i < shirt.ShirtTypes.Count; i++)
                     {
                         ShirtType sb = shirt.ShirtTypes[i];
                         for (int j = 0; j < sb.MarketPlaces.Count; j++)
