@@ -20,6 +20,7 @@
         </Style>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
         <converter:MultiBindingConverter x:Key="MultiBindingConverter"/>
+        <converter:InvertableBoolToVisibility x:Key="ReverseBoolToVis"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Modifiers="Control"
@@ -37,27 +38,7 @@
             <RowDefinition/>
             <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
-            <!--<MenuItem Header="File">
-                <MenuItem Header="Browse..." Command="{Binding OpenCmd}" CommandParameter="{Binding}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/folder.png" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Save" Command="{Binding SaveCmd}" CommandParameter="{Binding}">
-                    <MenuItem.Icon>
-                        <Image Source="Resources/Upload.ico" />
-                    </MenuItem.Icon>
-                </MenuItem>
-                <MenuItem Header="Save As Template" Command="{Binding SaveCmd}" CommandParameter="{Binding}">
-                    <MenuItem.Icon>
-                        <Image/>
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-            <MenuItem Header="Image Editor" Command="{Binding ImageEditCmd}" CommandParameter="{Binding}"/>-->
-        </Menu>
-        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Margin="5" IsEnabled="{Binding CreateMode}">
+        <StackPanel Visibility="{Binding ExcelMode,Converter={StaticResource ReverseBoolToVis}}" HorizontalAlignment="Right" Orientation="Horizontal" Margin="5" IsEnabled="{Binding CreateMode}">
             <TextBlock Text="Multi Mode" VerticalAlignment="Center"/>
             <ToggleButton Grid.Row="0"  Height="20" Width="50" Margin="10,0,20,0"
                       Style="{DynamicResource MaterialDesignSwitchToggleButton}" IsChecked="{Binding MultiMode}"/>
@@ -209,7 +190,7 @@
                             </TabControl.ContentTemplate>
                         </TabControl>
                     </Grid>
-                    <StackPanel Grid.Row="1">
+                    <StackPanel Grid.Row="1" Visibility="{Binding ExcelMode,Converter={StaticResource ReverseBoolToVis}}">
                         <TextBlock Text="Descriptions" FontSize="16" FontWeight="DemiBold" Foreground="Blue"/>
                         <Grid Width="{Binding ElementName=propertyView, Path=ActualWidth}">
                             <Grid.ColumnDefinitions>

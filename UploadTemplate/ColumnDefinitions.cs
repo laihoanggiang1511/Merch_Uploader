@@ -10,10 +10,7 @@ namespace UploadTemplate
     {
         Name = 1,
         Folder = 2,
-        FitType = 3,
-        JSON = 4,
-        Price_US = 5,
-        Price_UK = 6,
-        Description = 7
+        JSON = 3,
+        Description = 4
     }
 }

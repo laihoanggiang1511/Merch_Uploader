@@ -46,6 +46,7 @@
             this.group2 = this.Factory.CreateRibbonGroup();
             this.cbb_Language = this.Factory.CreateRibbonComboBox();
             this.btn_Translate = this.Factory.CreateRibbonButton();
+            this.btn_CheckTM = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -55,7 +56,7 @@
             // 
             this.tab1.Groups.Add(this.group1);
             this.tab1.Groups.Add(this.group2);
-            this.tab1.Label = "Merch Uploader";
+            this.tab1.Label = "MERCH UPLOADER";
             this.tab1.Name = "tab1";
             // 
             // group1
@@ -68,26 +69,34 @@
             // 
             // btn_Browse
             // 
+            this.btn_Browse.Image = global::UploadTemplate.Properties.Resources.browse;
             this.btn_Browse.Label = "Browse Image...";
             this.btn_Browse.Name = "btn_Browse";
+            this.btn_Browse.ShowImage = true;
             this.btn_Browse.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Browse_Click);
             // 
             // btn_Edit
             // 
-            this.btn_Edit.Label = "Edit Shirt Template";
+            this.btn_Edit.Image = global::UploadTemplate.Properties.Resources.sketch;
+            this.btn_Edit.Label = "Edit Template";
             this.btn_Edit.Name = "btn_Edit";
+            this.btn_Edit.ShowImage = true;
             this.btn_Edit.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_Edit_Click);
             // 
             // btn_SaveFile
             // 
+            this.btn_SaveFile.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.btn_SaveFile.Image = global::UploadTemplate.Properties.Resources.save;
             this.btn_SaveFile.Label = "Save JSON";
             this.btn_SaveFile.Name = "btn_SaveFile";
+            this.btn_SaveFile.ShowImage = true;
             this.btn_SaveFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_SaveFile_Click);
             // 
             // group2
             // 
             this.group2.Items.Add(this.cbb_Language);
             this.group2.Items.Add(this.btn_Translate);
+            this.group2.Items.Add(this.btn_CheckTM);
             this.group2.Label = "Language";
             this.group2.Name = "group2";
             // 
@@ -107,10 +116,19 @@
             // 
             // btn_Translate
             // 
+            this.btn_Translate.Image = global::UploadTemplate.Properties.Resources.translate;
             this.btn_Translate.Label = "Translate";
             this.btn_Translate.Name = "btn_Translate";
             this.btn_Translate.ShowImage = true;
             this.btn_Translate.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Translate_Click);
+            // 
+            // btn_CheckTM
+            // 
+            this.btn_CheckTM.Image = global::UploadTemplate.Properties.Resources.trademark;
+            this.btn_CheckTM.Label = "Check Trademark (US)";
+            this.btn_CheckTM.Name = "btn_CheckTM";
+            this.btn_CheckTM.ShowImage = true;
+            this.btn_CheckTM.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_CheckTM_Click);
             // 
             // Ribbon2
             // 
@@ -137,6 +155,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_Edit;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_SaveFile;
         internal Microsoft.Office.Tools.Ribbon.RibbonComboBox cbb_Language;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_CheckTM;
     }
 
     partial class ThisRibbonCollection

@@ -14,8 +14,8 @@ namespace Upload.ViewModel
             this.TypeName = "PopSocketsGrip";
             this.IsActive = false;
             this.MarketPlaces = new ObservableCollection<bool>() { true, false, false };
-            this.FitTypes = null;
-            this.Colors = null;
+            this.FitTypes = new ObservableCollection<bool>();
+            this.Colors = new ObservableCollection<Color>();
             this.Prices = new ObservableCollection<double>() { 14.99, 11.99, 12.99 };
         }                          
        

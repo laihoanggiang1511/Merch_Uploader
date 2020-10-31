@@ -34,63 +34,11 @@ namespace Upload.ViewModel
         //    }
         //}
         public string ImagePath { get; set; }
-        public int ImageType { get; set; }  
+        public int ImageType { get; set; }
 
         public ObservableCollection<Language> Languages { get; set; }
 
-        private StandardTShirt StandardTShirt { get; set; }
-        private PremiumTShirt PremiumTShirt { get; set; }
-        private LongSleeveTShirt LongSleeveTShirt { get; set; }
-        private PopSocketsGrip PopSocketsGrip { get; set; }
-        private PullOverHoodie PullOverHoodie { get; set; }
-        private Raglan Raglan { get; set; }
-        private SweetShirt SweetShirt { get; set; }
-        private TankTop TankTop { get; set; }
-        private VNeckTShirt VNeckTShirt { get; set; }
-        private ZipHoodie ZipHoodie { get; set; }
-        private IPhoneCase IPhoneCase { get; set; }
-        private SamsungCase SSCase { get; set; }
-
-        public ObservableCollection<ShirtType> ShirtTypes
-        {
-            get
-            {
-                ObservableCollection<ShirtType> shirtTypes = new ObservableCollection<ShirtType>()
-                {
-                    this.StandardTShirt,
-                    this.PremiumTShirt,
-                    this.VNeckTShirt,
-                    this.TankTop,
-                    this.LongSleeveTShirt,
-                    this.Raglan,
-                    this.SweetShirt,
-                    this.PullOverHoodie,
-                    this.ZipHoodie,
-                    this.PopSocketsGrip,
-                    this.IPhoneCase,
-                    this.SSCase,
-                };
-                return shirtTypes;
-            }
-            set
-            {
-                if (value.Count > 11)
-                {
-                    this.StandardTShirt = value[0].Clone() as StandardTShirt;
-                    this.PremiumTShirt = value[1].Clone() as PremiumTShirt;
-                    this.VNeckTShirt = value[2].Clone() as VNeckTShirt;
-                    this.TankTop = value[3].Clone() as TankTop;
-                    this.LongSleeveTShirt = value[4].Clone() as LongSleeveTShirt;
-                    this.Raglan = value[5].Clone() as Raglan;
-                    this.SweetShirt = value[6].Clone() as SweetShirt;
-                    this.PullOverHoodie = value[7].Clone() as PullOverHoodie;
-                    this.ZipHoodie = value[8].Clone() as ZipHoodie;
-                    this.PopSocketsGrip = value[9].Clone() as PopSocketsGrip;
-                    this.IPhoneCase = value[10].Clone() as IPhoneCase;
-                    this.SSCase = value[11].Clone() as SamsungCase;
-                }
-            }
-        }
+        public ObservableCollection<ShirtType> ShirtTypes { get; set; }
 
         public Shirt()
         {
@@ -108,19 +56,21 @@ namespace Upload.ViewModel
                 new Language(3,"Italian"),
                 new Language (4,"Spanish"),
             };
-
-            this.LongSleeveTShirt = new LongSleeveTShirt();
-            this.PopSocketsGrip = new PopSocketsGrip();
-            this.PremiumTShirt = new PremiumTShirt();
-            this.PullOverHoodie = new PullOverHoodie();
-            this.Raglan = new Raglan();
-            this.StandardTShirt = new StandardTShirt();
-            this.SweetShirt = new SweetShirt();
-            this.TankTop = new TankTop();
-            this.VNeckTShirt = new VNeckTShirt();
-            this.ZipHoodie = new ZipHoodie();
-            this.IPhoneCase = new IPhoneCase();
-            this.SSCase = new SamsungCase();
+            ShirtTypes = new ObservableCollection<ShirtType>()
+            {
+                 new StandardTShirt(),
+                 new PremiumTShirt(),
+                 new VNeckTShirt(),
+                 new TankTop(),
+                 new LongSleeveTShirt(),
+                 new Raglan(),
+                 new SweetShirt(),
+                 new PullOverHoodie(),
+                 new ZipHoodie(),
+                 new PopSocketsGrip(),
+                 new IPhoneCase(),
+                 new SamsungCase(),
+            };
         }
         public object Clone()
         {

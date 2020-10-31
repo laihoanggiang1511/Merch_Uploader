@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.Office.Interop.Excel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Internal;
-using Upload.ViewModel;
-using UploadTemplate;
+//using Upload.DataAccess.Model;
+//using Upload.ViewModel;
+//using UploadTemplate;
 
 namespace Upload.Actions
 {
@@ -27,11 +28,6 @@ namespace Upload.Actions
             ExcelApp = new Application();
             ExcelApp.Visible = true;
             ExcelWorkBook = ExcelApp.Workbooks.Open(excelFile, ReadOnly:false);
-            UploadTemplate.Actions.EditShirtCallBack = new EditShirt(EditShirtInvoke);
-        }
-        private void EditShirtInvoke(object obj)
-        {
-            System.Windows.MessageBox.Show("HAHAHA");
         }
     }
 }

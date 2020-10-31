@@ -68,19 +68,19 @@ namespace Upload.GUI.Converter
         {
             try
             {
-                if (value != null)
+                ShirtType selectedShirtType = value as ShirtType;
+                if (selectedShirtType != null)
                 {
                     int option = int.Parse(parameter.ToString());
-                    Type selectedType = value.GetType();
-                    if (selectedType == typeof(StandardTShirt) ||
-                        selectedType == typeof(PremiumTShirt))
+                    if (selectedShirtType.TypeName == "StandardTShirt" ||
+                        selectedShirtType.TypeName == "PremiumTShirt")
                     {
                         if (option == 0) // Light/Dark
                         {
                             return Visibility.Visible;
                         }
                     }
-                    else if (selectedType != typeof(PopSocketsGrip))
+                    else if (selectedShirtType.TypeName != "PopSocketsGrip")
                     {
                         if (option == 1) // Select All
                         {

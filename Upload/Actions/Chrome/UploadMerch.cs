@@ -76,65 +76,16 @@ namespace Upload.Actions.Chrome
                     // Upload .png files
                     if (!UploadFilePNG(shirt))
                         return false;
-                    // Select Products
-                    if (!Helper.ClickElement(driver, By.Id("select-marketplace-button")))
-                        return false;
-                    if (!SelectProduct(shirt))
-                        return false;
 
-                    //Input detail
-                    Log.log.Info("---Input Detail---");
-                    for (int i = 0; i < shirt.ShirtTypes.Count; i++)
-                    {
-                        int row = (i) / 4 + 1;
-                        int column = (i) % 4 + 1;
-                        ShirtType s = shirt.ShirtTypes[i];
-                        if (s.IsActive)
-                        {
-                            Log.log.Info($"---i={i}---");
-                            // Edit Detail-Standard                
-                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
-                            // Choose Fit type
-                            if (s.FitTypes != null && s.FitTypes.Count > 1)
-                            {
-                                for (int j = 0; j < s.FitTypes.Count; j++)
-                                {
-
-                                    Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
-                                        s.FitTypes[j]);
-                                }
-                            }
-                            // Select Color
-                            for (int j = 0; j < s.Colors.Count; j++)
-                            {
-                                Color color = s.Colors[j];
-                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div" +
-                                                                        $"/div[{j + 1}]/colorcheckbox/span", color.IsActive);
-                            }
-                            // Set Price
-                            for (int j = 0; j < s.MarketPlaces.Count; j++)
-                            {
-                                if (s.MarketPlaces[j])
-                                {
-                                    //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
-                                                            s.Prices[j].ToString());
-                                }
-                            }
-                            //Click again to close pallete
-                            Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
-                        }
-                    }
-
+                    //Set descriptions
                     Log.log.Info("---Descriptions---");
                     Helper.ClickElement(driver, By.Id("acc-control-all"));
 
-                    // Set English Descriptions
                     for (int i = 0; i <= 4; i++)
                     {
                         if (shirt.Languages.Count > i)
                         {
-                            string rootXPath = $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/product-text/ngb-accordion/div[{i+1}]/div[2]/div/product-text-editor/div/div/";
+                            string rootXPath = $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/product-text/ngb-accordion/div[{i + 1}]/div[2]/div/product-text-editor/div/div/";
                             if (!string.IsNullOrEmpty(shirt.Languages[i].BrandName))
                                 Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[1]/div[3]/input"), shirt.Languages[i].BrandName);
                             if (!string.IsNullOrEmpty(shirt.Languages[i].Title))
@@ -147,6 +98,15 @@ namespace Upload.Actions.Chrome
                                 Helper.SendKeysElement(driver, By.XPath(rootXPath + "div[2]/div[4]/input"), shirt.Languages[i].Description);
                         }
                     }
+
+                    // Select Products
+                    if (!Helper.ClickElement(driver, By.Id("select-marketplace-button")))
+                        return false;
+                    if (!SelectProduct(shirt))
+                        return false;
+
+                    //Input detail
+                    InputDetail(shirt);
 
                     ////Set Other languages Description
                     //if (shirt.ShirtTypes.FirstOrDefault(x => (x.MarketPlaces.Length > 2 && x.MarketPlaces[2] == true)) != null)
@@ -184,6 +144,102 @@ namespace Upload.Actions.Chrome
                 return false;
             }
         }
+
+        private bool InputDetail(Shirt shirt)
+        {
+            try
+            {
+                Log.log.Info("---Input Detail---");
+                for (int i = 0; i < shirt.ShirtTypes.Count; i++)
+                {
+                    int row = (i) / 4 + 1;
+                    int column = (i) % 4 + 1;
+                    ShirtType s = shirt.ShirtTypes[i];
+                    if (s.IsActive)
+                    {
+                        Log.log.Info($"---i={i}---");
+                        // Edit Detail-Standard                
+                        Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+                        // Choose Fit type
+                        if (s.FitTypes != null && s.FitTypes.Count > 1)
+                        {
+                            for (int j = 0; j < s.FitTypes.Count; j++)
+                            {
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
+                                    s.FitTypes[j]);
+                            }
+                        }
+
+                        // Select Color - non japanese types
+                        if (s.TypeName != "StandardTShirt" &&
+                           s.TypeName != "LongSleeveTShirt" &&
+                           s.TypeName != "SweetShirt" &&
+                           s.TypeName != "PullOverHoodie")
+                        {
+                            for (int j = 0; j < s.Colors.Count; j++)
+                            {
+                                Color color = s.Colors[j];
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 1}]/colorcheckbox/span", color.IsActive);
+                            }
+                        }
+                        else
+                        {
+                            List<Color> japaneseColor = new List<Color>();
+                            List<Color> nonJapaneseColor = new List<Color>();
+
+                            //Process for japanese colors
+                            for (int j = 0; j < s.Colors.Count; j++)
+                            {
+
+                                Color col = s.Colors[j];
+                                if (col.ColorName == "Brown" ||
+                                    col.ColorName == "Dark Heather" ||
+                                    col.ColorName == "Grass" ||
+                                    col.ColorName == "Heather Blue" ||
+                                    col.ColorName == "Silver" ||
+                                    col.ColorName == "Slate")
+                                {
+                                    japaneseColor.Add(col);
+                                }
+                                else
+                                {
+                                    nonJapaneseColor.Add(col);
+                                }
+                            }
+                            for (int j = 0; j < nonJapaneseColor.Count; j++)
+                            {
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 2}]/colorcheckbox/span", nonJapaneseColor[j].IsActive);
+                            }
+                            for (int j = 0; j < japaneseColor.Count; j++)
+                            {
+                                Helper.ClickCheckBox(driver, $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[3]/div[{j + 2}]/colorcheckbox/span", japaneseColor[j].IsActive);
+                            }
+                        }
+
+                        // Set Price
+                        for (int j = 0; j < s.MarketPlaces.Count; j++)
+                        {
+                            if (s.MarketPlaces[j])
+                            {
+                                //"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[1]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[2]/colorcheckbox/span/i"
+                                //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
+                                Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                                        s.Prices[j].ToString());
+
+                            }
+                        }
+                        //Click again to close pallete
+                        Helper.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+                return false;
+            }
+        }
         private bool SelectProduct(Shirt shirt)
         {
             try
@@ -198,6 +254,7 @@ namespace Upload.Actions.Chrome
                     for (int i = 0; i < shirt.ShirtTypes.Count; i++)
                     {
                         ShirtType sb = shirt.ShirtTypes[i];
+                        Log.log.Info(sb.TypeName.ToString());
                         for (int j = 0; j < sb.MarketPlaces.Count; j++)
                         {
                             Log.log.Info($"i={i};j={j}");
@@ -234,14 +291,14 @@ namespace Upload.Actions.Chrome
                 {
                     switch (shirt.ImageType)
                     {
-                        case (int)PNGImageType.Standard_Front: 
+                        case (int)PNGImageType.Standard_Front:
                             {
                                 Log.log.Info("-STANDARD_TSHIRT-FRONT-");
                                 IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
                                 webElement.SendKeys(shirt.ImagePath);
                                 break;
                             }
-                        case (int)PNGImageType.Standard_Back:   
+                        case (int)PNGImageType.Standard_Back:
                             {
                                 Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
                                 Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
@@ -250,13 +307,13 @@ namespace Upload.Actions.Chrome
                                 Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
                                 break;
                             }
-                        case (int)PNGImageType.Hoodie_Front:    
+                        case (int)PNGImageType.Hoodie_Front:
                             {
                                 IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
                                 webElement.SendKeys(shirt.ImagePath);
                                 break;
                             }
-                        case (int)PNGImageType.Hoodie_Back:    
+                        case (int)PNGImageType.Hoodie_Back:
                             {
                                 Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
                                 Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));

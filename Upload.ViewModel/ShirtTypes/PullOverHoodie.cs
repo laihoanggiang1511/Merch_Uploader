@@ -21,7 +21,7 @@ namespace Upload.ViewModel
                 new Color("Navy", true),
                 new Color("Royal Blue", true),
             };
-            this.FitTypes = null;
+            this.FitTypes = new ObservableCollection<bool>();
             this.MarketPlaces = new ObservableCollection<bool> { true, false, false };
             this.Prices = new ObservableCollection<double> { 31.99, 33.99, 36.99 };
         }

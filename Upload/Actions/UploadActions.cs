@@ -56,6 +56,7 @@ namespace Upload.Actions
             uploadWindow.Show();
         }
 
+
         private void RemoveFolderCmdInvoke(object obj)
         {
             if (obj is UploadWindowViewModel uploadVM)
@@ -116,7 +117,7 @@ namespace Upload.Actions
                 ShirtCreatorViewModel editShirtVM = new ShirtCreatorViewModel();
                 ShirtCreatorActions shirtCreatorActions = new ShirtCreatorActions();
                 if (uploadVM.SelectedShirt != null)
-                    shirtCreatorActions.ShowShirtCreatorWindow(uploadVM.SelectedShirt);
+                    shirtCreatorActions.ShowWindow(uploadVM.SelectedShirt);
             }
         }
 

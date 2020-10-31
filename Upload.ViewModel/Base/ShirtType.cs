@@ -20,6 +20,10 @@ namespace Upload.ViewModel
         {
          
             this.IsActive = false;
+            MarketPlaces = new ObservableCollection<bool>();
+            Prices = new ObservableCollection<double>();
+            Colors = new ObservableCollection<Color>();
+            FitTypes = new ObservableCollection<bool>();
         }
 
         public object Clone()

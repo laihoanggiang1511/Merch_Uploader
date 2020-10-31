@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -14,12 +15,16 @@ using Upload.DataAccess;
 using Upload.DataAccess.Model;
 using Upload.DataAccess.DTO;
 using Upload.ViewModel;
+using RestSharp.Serialization.Json;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace UploadTemplate
 {
 
     public partial class Ribbon2
     {
+        static Dispatcher MainDispatcher = null; 
         private void Ribbon2_Load(object sender, RibbonUIEventArgs e)
         {
             cbb_Language.Text = "German";
@@ -32,7 +37,7 @@ namespace UploadTemplate
             {
                 startRow = 4;
             }
-            int startCell = 6;
+            int startCell = 4;
 
             for (int i = startCell; i <= startCell + 4; i++)
             {
@@ -42,16 +47,16 @@ namespace UploadTemplate
                     switch (cbb_Language.Text)
                     {
                         case "German":
-                            Globals.Sheet1.Cells[startRow, i + 6] = TranslateAPI.Translate(textToTrans, "de");
+                            Globals.Sheet1.Cells[startRow, i + 5] = TranslateAPI.Translate(textToTrans, "de");
                             break;
                         case "French":
-                            Globals.Sheet1.Cells[startRow, i + 12] = TranslateAPI.Translate(textToTrans, "fr");
+                            Globals.Sheet1.Cells[startRow, i + 10] = TranslateAPI.Translate(textToTrans, "fr");
                             break;
                         case "Italian":
-                            Globals.Sheet1.Cells[startRow, i + 18] = TranslateAPI.Translate(textToTrans, "it");
+                            Globals.Sheet1.Cells[startRow, i + 15] = TranslateAPI.Translate(textToTrans, "it");
                             break;
                         case "Spanish":
-                            Globals.Sheet1.Cells[startRow, i + 24] = TranslateAPI.Translate(textToTrans, "es");
+                            Globals.Sheet1.Cells[startRow, i + 20] = TranslateAPI.Translate(textToTrans, "es");
                             break;
                     }
 
@@ -113,23 +118,55 @@ namespace UploadTemplate
                 startRow = 4;
             }
             ShirtData sData = Actions.MapExcelToShirt(startRow);
-            //string strJson = JsonConvert.SerializeObject(sData);
-            //string strJsonFileName = Path.GetTempFileName();
-            //File.WriteAllText(strJsonFileName, strJson);
+            //sData.ImagePath = string.Empty;
+            JsonSerializerSettings settings = new JsonSerializerSettings();
+            string strJson = JsonConvert.SerializeObject(sData,Formatting.None);
+            string strJsonFileName = Path.GetTempFileName();
+            File.WriteAllText(strJsonFileName, strJson);
 
-            //string excelFileName = Globals.ThisWorkbook.Name;
-            //string argument = string.Format("{0} {1} {2}",
-            //                                strJsonFileName,excelFileName, startRow);
-            //string folder = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            //string excelFile = "Upload.exe";
-            //excelFile = Path.Combine(folder, excelFile);
-            //Process.Start(excelFile,argument);
+            string folder = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            string exeFile = "Upload.exe";
+            exeFile = Path.Combine(folder, exeFile);
 
-            if (Actions.EditShirtCallBack != null)
+            Process proc = new Process();
+            proc.StartInfo.FileName = exeFile;
+            proc.StartInfo.Arguments = strJsonFileName;
+            proc.Start();
+            //Start Listener
+            MainDispatcher = Dispatcher.CurrentDispatcher;
+            ParameterizedThreadStart thrdStart = new ParameterizedThreadStart(EditShirtInvoke);
+            Thread thrd = new Thread(thrdStart);
+            thrd.Start(startRow);
+        }
+
+        public void EditShirtInvoke(object startRow)
+        {
+            try
             {
-                Actions.EditShirtCallBack.Invoke(sData);
+                using (var serverPipe = new NamedPipeServerStream("MerchUploaderPipe", PipeDirection.InOut))
+                {
+                    serverPipe.WaitForConnection();
+                    using (StreamReader sr = new StreamReader(serverPipe))
+                    {
+                        string jsonString = sr.ReadToEnd();
+                        if (!string.IsNullOrEmpty(jsonString))
+                        {
+                            ShirtData sData = JsonConvert.DeserializeObject<ShirtData>(jsonString);
+                            MainDispatcher.Invoke(delegate() { Actions.MapShirtToExcel(sData, (int)startRow); });
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
 
+        }
+
+        private void btn_CheckTM_Click(object sender, RibbonControlEventArgs e)
+        {
+            MessageBox.Show("Comming Soon");
         }
     }
 }

@@ -6,6 +6,7 @@ using Upload.DataAccess;
 using System;
 using System.Drawing;
 using System.IO;
+using System.IO.Pipes;
 using System.Windows.Controls.Primitives;
 using System.Windows;
 using System.Windows.Forms;
@@ -16,32 +17,33 @@ using Upload.DataAccess.Model;
 using System.Text.RegularExpressions;
 using Upload.DataAccess.DTO;
 using System.Collections.ObjectModel;
+using Newtonsoft.Json;
 
 namespace Upload.Actions
 {
     public class ShirtCreatorActions
     {
-        public void ShowMainWindow(string jsonFile, string excelName, string row)
+        public void ShowWindow(string jsonStringPath)
         {
             try
             {
-                ShirtData sData = new JsonDataAccess().ReadShirt(jsonFile);
+                string jsonString = File.ReadAllText(jsonStringPath);
+                File.Delete(jsonStringPath);
+                ShirtData sData = JsonConvert.DeserializeObject<ShirtData>(jsonString);
                 Shirt s = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
-                File.Delete(jsonFile);
                 ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
                 ShirtCreatorViewModel shirtVM = CreateShirtViewModel(s);
                 shirtVM.ExcelMode = true;
                 shirtCreatorWindow.DataContext = shirtVM;
                 shirtCreatorWindow.Show();
 
-                
             }
             catch
             {
                 Utils.ShowErrorMessageBox("Error opening file");
             }
         }
-        public void ShowShirtCreatorWindow(Shirt editShirt = null)
+        public void ShowWindow(Shirt editShirt = null)
         {
             ShirtCreatorView shirtCreatorWindow = new ShirtCreatorView();
             ShirtCreatorViewModel shirtVM = CreateShirtViewModel(editShirt);
@@ -52,31 +54,27 @@ namespace Upload.Actions
         public ShirtCreatorViewModel CreateShirtViewModel(Shirt editShirt = null)
         {
             ShirtCreatorViewModel shirtVM = new ShirtCreatorViewModel();
+            shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
+            shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
+            shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
+            shirtVM.OpenCmd = new RelayCommand(OpenCmdInvoke);
+            shirtVM.ChangeColorCmd = new RelayCommand(ChangeColorCmdInvoke);
+            shirtVM.MouseEnterCmd = new RelayCommand(MouseEnterCmdInvoke);
+            shirtVM.RemoveBackImageCmd = new RelayCommand(RemoveBackImageCmdInvoke);
+            shirtVM.RemoveFrontImageCmd = new RelayCommand(RemoveFrontImageCmdInvoke);
+            shirtVM.ReplaceCmd = new RelayCommand(ReplaceCmdInvoke);
+            shirtVM.SaveAsCmd = new RelayCommand(SaveAsCmdInvoke);
+            shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
+            shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
+            shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
+            shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
+            shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
+            shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
+            shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
             if (editShirt != null)
             {
-                shirtVM.SaveCmd = new RelayCommand(SaveCmdInvoke);
-                shirtVM.ClickFrontImageCmd = new RelayCommand(ClickFrontImageCmdInvoke);
-                shirtVM.ClickBackImageCmd = new RelayCommand(ClickBackImageCmdInvoke);
-                shirtVM.OpenCmd = new RelayCommand(OpenCmdInvoke);
-                shirtVM.ChangeColorCmd = new RelayCommand(ChangeColorCmdInvoke);
-                shirtVM.MouseEnterCmd = new RelayCommand(MouseEnterCmdInvoke);
-                shirtVM.RemoveBackImageCmd = new RelayCommand(RemoveBackImageCmdInvoke);
-                shirtVM.RemoveFrontImageCmd = new RelayCommand(RemoveFrontImageCmdInvoke);
-                shirtVM.ReplaceCmd = new RelayCommand(ReplaceCmdInvoke);
-                shirtVM.SaveAsCmd = new RelayCommand(SaveAsCmdInvoke);
-                shirtVM.ImageEditCmd = new RelayCommand(ImageEditCmdInvoke);
-                shirtVM.DeleteCmd = new RelayCommand(DeleteCmdInvoke);
-                shirtVM.SaveAllCmd = new RelayCommand(SaveAllCmdInvoke);
-                shirtVM.MultiReplaceCmd = new RelayCommand(ExportToExcel);
-                shirtVM.RemoveShirtCmd = new RelayCommand(RemoveShirtCmdInvoke);
-                shirtVM.ImportFromExcelCmd = new RelayCommand(ImportFromExcel);
-                shirtVM.CopyShirtCmd = new RelayCommand(CopyShirtCmdInvoke);
-                if (editShirt != null)
-                {
-                    shirtVM.SelectedShirt = editShirt;
-                    shirtVM.CreateMode = false;
-                }
-
+                shirtVM.SelectedShirt = editShirt;
+                shirtVM.CreateMode = false;
                 if (shirtVM.SelectedShirt.ShirtTypes != null)
                     shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                 if (editShirt == null)
@@ -637,8 +635,19 @@ namespace Upload.Actions
                     ShirtCreatorViewModel shirtCreatorVM = input as ShirtCreatorViewModel;
                     if (shirtCreatorVM != null)
                     {
-                        if(shirtCreatorVM.ExcelMode == true)
+                        if (shirtCreatorVM.ExcelMode == true)
                         {
+                            ShirtData sData = ShirtDTO.MapData(shirtCreatorVM.SelectedShirt, typeof(ShirtData)) as ShirtData;
+                            string strJson = JsonConvert.SerializeObject(sData);
+                            using (var clientPipe = new NamedPipeClientStream("MerchUploaderPipe"))
+                            {
+                                clientPipe.Connect();
+                                using (StreamWriter sWriter = new StreamWriter(clientPipe))
+                                {
+                                    sWriter.Write(strJson);
+                                }
+                            }
+                            Environment.Exit(0);
                         }
                         else
                         if (shirtCreatorVM.SelectedShirt != null && ValidateShirt(shirtCreatorVM.SelectedShirt, ref errorCode))

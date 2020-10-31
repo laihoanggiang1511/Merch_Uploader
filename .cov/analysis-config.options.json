@@ -1,0 +1,38 @@
+{
+  "Default": {
+    "vs.general.version": {
+      "Major": 2019,
+      "Minor": 9,
+      "Revision": 0,
+      "Hotfix": 0
+    }
+  },
+  "Default (migrated)": {
+    "server.host": "Coverity",
+    "server.port": 8080,
+    "server.ssl": false,
+    "server.username": "",
+    "stream": "S3D",
+    "vs.analysis.additional_CovRunDesktop_option": "--parse-warnings-config   parse_warnings.conf ",
+    "vs.analysis.code_base_dir": "${SolutionRoot}",
+    "vs.analysis.file_exclusion": [],
+    "vs.analysis.msCodeAnalysis_encoding": null,
+    "vs.build.custom_working_directory": "",
+    "vs.extend_checkers_dir": "D:\\cov-analysis-win64-2019.09\\binC:\\Users\\hicas\\Desktop\\cov-analysis-win64-2019.09\\bin",
+    "vs.general.active_configuration": true,
+    "vs.general.version": {
+      "Major": 2019,
+      "Minor": 9,
+      "Revision": 0,
+      "Hotfix": 0
+    },
+    "vs.license_path": "D:\\cov-analysis-win64-2019.09\\bin\\license.datC:\\Users\\hicas\\Desktop\\cov-analysis-win64-2019.09\\bin\\license.dat",
+    "vs.streams.remote_streams": [
+      "S3D",
+      "S3D-64"
+    ],
+    "vs.tools_dir": "D:\\cov-analysis-win64-2019.09\\C:\\Users\\hicas\\Desktop\\cov-analysis-win64-2019.09\\",
+    "vs.ui.local_search_paths": [],
+    "vs.ui.remote_strip_paths": []
+  }
+}

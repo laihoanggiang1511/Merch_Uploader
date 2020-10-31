@@ -84,57 +84,61 @@ namespace Upload.DataAccess.DTO
         {
             //try
             //{
-                if (sourceObj != null)
+            if (sourceObj != null)
+            {
+                if (targetType != null)
                 {
-                    if (targetType != null)
+                    if(targetType == typeof(double)||
+                       targetType == typeof(string)||
+                       targetType == typeof(bool)||
+                       targetType == typeof(int))
                     {
-                        object newOb = Activator.CreateInstance(targetType);
-                        if (newOb != null)
+                        return sourceObj;
+                    }
+
+                    object newOb = Activator.CreateInstance(targetType);
+                    if (newOb != null)
+                    {
+                        var props = targetType.GetProperties();
+
+                        foreach (var item in props)
                         {
-                            var props = targetType.GetProperties();
-
-                            foreach (var item in props)
+                            var objProp = sourceObj.GetType().GetProperty(item.Name);
+                            if (objProp != null)
                             {
-                                var objProp = sourceObj.GetType().GetProperty(item.Name);
-                                if (objProp != null)
+                                if (IsCollectionType(item.PropertyType))
                                 {
-                                    if (IsCollectionType(item.PropertyType))
+                                    var destinationType = item.PropertyType.GetGenericArguments()[0];
+                                    //IList<object> objects = objProp.GetValue(sourceObj) as IList<object>;
+                                    dynamic objects = objProp.GetValue(sourceObj);
+                                    if (objects != null && objects.Count > 0)
                                     {
-                                        var destinationType = item.PropertyType.GetGenericArguments()[0];     
-                                        IList<object> objects = objProp.GetValue(sourceObj) as IList<object>;
-                                        if (objects != null && objects.Count > 0)
+                                        IList lstMapResult = item.GetValue(newOb) as IList;
+                                        if (lstMapResult != null)
                                         {
-                                            IList lstMapResult = item.GetValue(newOb) as IList;
-                                            if (lstMapResult != null)
-                                            {
-                                                lstMapResult.Clear();
+                                            lstMapResult.Clear();
 
-                                                for (int i = 0; i < objects.Count; i++)
-                                                {
-                                                    object ob = objects[i];
-                                                    object mapResult = MapData(ob, destinationType);
-                                                    lstMapResult.Add(mapResult);
-                                                }
-                                                item.SetValue(newOb, lstMapResult);
+                                            for (int i = 0; i < objects.Count; i++)
+                                            {
+                                                object ob = objects[i];
+                                                object mapResult = MapData(ob, destinationType);
+                                                lstMapResult.Add(mapResult);
                                             }
+                                            item.SetValue(newOb, lstMapResult);
                                         }
                                     }
-                                    //else if (item.PropertyType.IsClass)
-                                    //{
-                                    //    object val = MapData(objProp.GetValue(sourceObj), item.PropertyType);
-                                    //    item.SetValue(newOb, val);
-                                    //}
-                                    else
-                                    {
-                                        item.SetValue(newOb, objProp.GetValue(sourceObj));
-                                    }
+                                }
+                                else
+                                {
+                                    item.SetValue(newOb, objProp.GetValue(sourceObj));
                                 }
                             }
                         }
-
-                        return newOb;
                     }
+
+                    return newOb;
                 }
+            }
             //}
             //catch (Exception ex)
             //{

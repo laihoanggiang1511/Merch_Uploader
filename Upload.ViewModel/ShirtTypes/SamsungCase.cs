@@ -14,8 +14,8 @@ namespace Upload.ViewModel
         {
             this.TypeName = "SamsungCase";
             this.IsActive = false;
-            this.FitTypes = null;
-            this.Colors = null;
+            this.FitTypes = new ObservableCollection<bool>();
+            this.Colors = new ObservableCollection<Color>();
             this.MarketPlaces = new ObservableCollection<bool> { true };
             this.Prices = new ObservableCollection<double> { 17.99 };
         }

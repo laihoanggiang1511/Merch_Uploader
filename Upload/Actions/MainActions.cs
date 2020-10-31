@@ -130,9 +130,12 @@ namespace Upload.Actions
         private void CreateWindowCmdInvoke(object obj)
         {
             MainWindow mainWin = obj as MainWindow;
-            (new ExcelActions()).StartExcel();
-            //if (mainWin != null)
-            //    mainWin.Hide();
+            //(new ExcelActions()).StartExcel();
+            string folder = Path.GetDirectoryName(this.GetType().Assembly.Location);
+            string excelFile = "UploadTemplate.xltx";
+            excelFile = Path.Combine(folder, excelFile);
+            Process.Start(excelFile);
+            Environment.Exit(0);
         }
 
     }

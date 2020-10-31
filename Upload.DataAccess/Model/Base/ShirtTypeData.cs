@@ -23,6 +23,13 @@ namespace Upload.DataAccess.Model
         [DataMember]
         public string TypeName { get; set; }
 
+        public ShirtTypeData()
+        {
+            MarketPlaces = new List<bool>();
+            Prices = new List<double>();
+            Colors = new List<ColorData>();
+            FitTypes = new List<bool>();
+        }
         //public virtual object Clone()
         //{
         //    dynamic target = new System.Dynamic.ExpandoObject();

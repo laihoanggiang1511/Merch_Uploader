@@ -24,5 +24,23 @@ namespace Upload.GUI
         {
             InitializeComponent();
         }
+
+        private void button_add_folder_Click(object sender, RoutedEventArgs e)
+        {
+            UIElement gridAddFolder = FindName("grid_add_folder") as UIElement;
+            if (gridAddFolder != null)
+            {
+                gridAddFolder.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void button_close_folder_Click(object sender, RoutedEventArgs e)
+        {
+            UIElement gridAddFolder = FindName("grid_add_folder") as UIElement;
+            if (gridAddFolder != null)
+            {
+                gridAddFolder.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 }

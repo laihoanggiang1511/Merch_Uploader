@@ -14,7 +14,7 @@ namespace Upload.ViewModel
             this.TypeName = "LongSleeveTShirt";
             this.IsActive = false;
             this.MarketPlaces = new ObservableCollection<bool> { true, false, false };
-            this.FitTypes = null; //Ko co
+            this.FitTypes = new ObservableCollection<bool>(); //Ko co
             this.Colors = new ObservableCollection<Color>
             {
                 new Color("Black", true),

@@ -23,7 +23,6 @@ namespace Upload.ViewModel
         public ICommand EditShirtCmd { get; set; }
         public ICommand ShowConfigurationCmd { get; set; }
         public ICommand RemoveFolderCmd { get; set; }
-
         public string password;
         public ObservableCollection<Shirt> Shirts { get; set; }
         private Shirt selectedShirt;
@@ -44,34 +43,48 @@ namespace Upload.ViewModel
                         AllowDelete = true;
                         EnableDescription = true;
                         ImagePath = SelectedShirt.ImagePath;
-                       //if (!string.IsNullOrEmpty(selectedShirt.FrontStdPath))
-                       //    ImagePath = selectedShirt.FrontStdPath;
-                       //else if (!string.IsNullOrEmpty(selectedShirt.BackStdPath))
-                       //    ImagePath = selectedShirt.BackStdPath;
-                       //else if (!string.IsNullOrEmpty(selectedShirt.FrontHoodiePath))
-                       //    ImagePath = selectedShirt.FrontHoodiePath;
-                       //else if (!string.IsNullOrEmpty(selectedShirt.BackHoodiePath))
-                       //    ImagePath = selectedShirt.BackHoodiePath;
-                       //else if (!string.IsNullOrEmpty(selectedShirt.PopSocketsGripPath))
-                       //    ImagePath = selectedShirt.PopSocketsGripPath;
+                        Descriptions = string.Empty;
+                        if (selectedShirt.Languages != null && selectedShirt.Languages.Count > 0)
+                        {
+                            Language activeLanguage = selectedShirt.Languages.FirstOrDefault(x => string.IsNullOrEmpty(x.Title) == false);
+                            if (activeLanguage != null)
+                            {
+                                Descriptions += "Brand: " + activeLanguage.BrandName + "\n" + "\n";
+                                Descriptions += "Design Title: " + activeLanguage.Title + "\n" + "\n";
+                                Descriptions += "Feature Bullet 1: " + activeLanguage.FeatureBullet1 + "\n" + "\n";
+                                Descriptions += "Feature Bullet 2: " + activeLanguage.FeatureBullet2 + "\n" + "\n";
+                                Descriptions += "Description: " + activeLanguage.Description;
+                            }
+                        }
+                        
+                        //if (!string.IsNullOrEmpty(selectedShirt.FrontStdPath))
+                        //    ImagePath = selectedShirt.FrontStdPath;
+                        //else if (!string.IsNullOrEmpty(selectedShirt.BackStdPath))
+                        //    ImagePath = selectedShirt.BackStdPath;
+                        //else if (!string.IsNullOrEmpty(selectedShirt.FrontHoodiePath))
+                        //    ImagePath = selectedShirt.FrontHoodiePath;
+                        //else if (!string.IsNullOrEmpty(selectedShirt.BackHoodiePath))
+                        //    ImagePath = selectedShirt.BackHoodiePath;
+                        //else if (!string.IsNullOrEmpty(selectedShirt.PopSocketsGripPath))
+                        //    ImagePath = selectedShirt.PopSocketsGripPath;
 
-                       //Descriptions = string.Empty;
-                       // if (!string.IsNullOrEmpty(SelectedShirt.BrandName))
-                       // {
-                       //     Descriptions += "Brand: " + SelectedShirt.BrandName + "\n" + "\n";
-                       //     Descriptions += "Design Title: " + SelectedShirt.DesignTitle + "\n" + "\n";
-                       //     Descriptions += "Feature Bullet 1: " + SelectedShirt.FeatureBullet1 + "\n" + "\n";
-                       //     Descriptions += "Feature Bullet 2: " + SelectedShirt.FeatureBullet2 + "\n" + "\n";
-                       //     Descriptions += "Description: " + SelectedShirt.Description;
-                       // }
-                       // else if (!string.IsNullOrEmpty(SelectedShirt.BrandNameGerman))
-                       // {
-                       //     Descriptions += "Brand: " + SelectedShirt.BrandNameGerman + "\n" + "\n";
-                       //     Descriptions += "Design Title: " + SelectedShirt.DesignTitleGerman + "\n" + "\n";
-                       //     Descriptions += "Feature Bullet 1: " + SelectedShirt.FeatureBullet1 + "\n" + "\n";
-                       //     Descriptions += "Feature Bullet 2: " + SelectedShirt.FeatureBullet2 + "\n" + "\n";
-                       //     Descriptions += "Description: " + SelectedShirt.DescriptionGerman;
-                       // }
+                        //Descriptions = string.Empty;
+                        // if (!string.IsNullOrEmpty(SelectedShirt.BrandName))
+                        // {
+                        //     Descriptions += "Brand: " + SelectedShirt.BrandName + "\n" + "\n";
+                        //     Descriptions += "Design Title: " + SelectedShirt.DesignTitle + "\n" + "\n";
+                        //     Descriptions += "Feature Bullet 1: " + SelectedShirt.FeatureBullet1 + "\n" + "\n";
+                        //     Descriptions += "Feature Bullet 2: " + SelectedShirt.FeatureBullet2 + "\n" + "\n";
+                        //     Descriptions += "Description: " + SelectedShirt.Description;
+                        // }
+                        // else if (!string.IsNullOrEmpty(SelectedShirt.BrandNameGerman))
+                        // {
+                        //     Descriptions += "Brand: " + SelectedShirt.BrandNameGerman + "\n" + "\n";
+                        //     Descriptions += "Design Title: " + SelectedShirt.DesignTitleGerman + "\n" + "\n";
+                        //     Descriptions += "Feature Bullet 1: " + SelectedShirt.FeatureBullet1 + "\n" + "\n";
+                        //     Descriptions += "Feature Bullet 2: " + SelectedShirt.FeatureBullet2 + "\n" + "\n";
+                        //     Descriptions += "Description: " + SelectedShirt.DescriptionGerman;
+                        // }
                     }
                     else
                     {

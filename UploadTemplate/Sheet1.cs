@@ -22,7 +22,54 @@ namespace UploadTemplate
         private void Sheet1_Shutdown(object sender, System.EventArgs e)
         {
         }
+        private void Sheet1_SelectionChange1(Range Target)
+        {
+            // Static OldRange As Range
+            // If Not OldRange Is Nothing Then
+            string content = Target.Value.ToString();
+            if (Target.Column % 5 == 4)
+            {
+                Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/50" + ")";
+                if (content.Length > 50)
+                    Target.Font.ColorIndex = 3;
+                else
+                    Target.Font.ColorIndex = 1;
+            }
+            if (Target.Column % 5 == 0)
+            {
+                Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/60" + ")";
+                if (content.Length > 60)
+                    Target.Font.ColorIndex = 3;
+                else
+                    Target.Font.ColorIndex = 1;
+            }
+            if (Target.Column % 5 == 1 && Target.Column >= 6)
+            {
+                Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/256" + ")";
+                if (content.Length > 256)
+                    Target.Font.ColorIndex = 3;
+                else
+                    Target.Font.ColorIndex = 1;
+            }
+            if (Target.Column % 5 == 2 && Target.Column >= 7)
+            {
+                Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/256" + ")";
+                if (content.Length > 256)
+                    Target.Font.ColorIndex = 3;
+                else
+                    Target.Font.ColorIndex = 1;
+            }
+            if (Target.Column % 5 == 3 && Target.Column >= 8)
+            {
+                Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/2000" + ")";
+                if (content.Length > 2000 || (content.Length > 0 && content.Length < 70))
+                    Target.Font.ColorIndex = 3;
+                else
+                    Target.Font.ColorIndex = 1;
+            }
 
+
+        }
         #region VSTO Designer generated code
 
         /// <summary>
@@ -33,7 +80,12 @@ namespace UploadTemplate
         {
             this.Startup += new System.EventHandler(Sheet1_Startup);
             this.Shutdown += new System.EventHandler(Sheet1_Shutdown);
+            this.SelectionChange += Sheet1_SelectionChange1;
         }
+
+
+
+
 
         #endregion
 

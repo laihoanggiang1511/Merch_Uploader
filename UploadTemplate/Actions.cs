@@ -12,10 +12,8 @@ using Upload.DataAccess.Model;
 
 namespace UploadTemplate
 {
-    public delegate void EditShirt(object s);
     public class Actions
     {
-        public static EditShirt EditShirtCallBack;
         public static string[] BrowseForFilePath(string filter = "PNG file |*.PNG| All Files |*.*", bool multiselect = false)
         {
             OpenFileDialog openFile = new OpenFileDialog()
@@ -31,24 +29,24 @@ namespace UploadTemplate
         }
         public static bool MapShirtToExcel(ShirtData sData, int row)
         {
+            Range allRow = Globals.Sheet1.Rows[row];
+            allRow.WrapText = true;
+            allRow.RowHeight = 100;
+            allRow.Activate();
             Range rJson = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.JSON];
             Range rName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Name];
             Range rFolder = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Folder];
             Range r = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Folder];
 
-            Range rPrice_US = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Price_US];
-            Range rPrice_UK = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Price_US];
-
             if (sData != null)
             {
-                if (sData.ImagePath != null)
+                if (!string.IsNullOrEmpty(sData.ImagePath))
                 {
                     rName.Value = Path.GetFileName(sData.ImagePath);
                     rFolder.Value = Path.GetDirectoryName(sData.ImagePath);
+                    sData.ImagePath = null;
                 }
                 string stringJSON = JsonConvert.SerializeObject(sData);
-                rJson.WrapText = true;
-                rJson.RowHeight = 100;
                 rJson.Value = stringJSON;
                 for (int i = 0; i < sData.Languages.Count; i++)
                 {
