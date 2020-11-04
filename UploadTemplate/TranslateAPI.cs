@@ -15,7 +15,8 @@ namespace UploadTemplate
             var client = new RestClient(url);
             var request = new RestRequest(Method.POST);
             request.AddHeader("x-rapidapi-host", "microsoft-translator-text.p.rapidapi.com");
-            request.AddHeader("x-rapidapi-key", "1db425c959msh518eb885697b2c9p13d169jsncb68aac4db37");
+            request.AddHeader("x-rapidapi-key", "81db94787fmsh836d3aed410e750p1e2ff9jsn0a668e819ea5");
+            //1db425c959msh518eb885697b2c9p13d169jsncb68aac4db37
             request.AddHeader("content-type", "application/json");
             request.AddHeader("accept", "application/json");
 
