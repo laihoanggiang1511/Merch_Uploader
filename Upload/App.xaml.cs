@@ -32,7 +32,10 @@ namespace Upload
                 {
                     string path = Path.GetTempPath();
                     path = Path.Combine(path, "Upload_Setup.msi");
-
+                    if(File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
                     update.ExecuteUpdate(path);
                 }
             }
@@ -67,7 +70,7 @@ namespace Upload
                 {
                     if (clientPipe.IsConnected == false)
                     {
-                        clientPipe.Connect();
+                        clientPipe.Connect(5000);
                         using (StreamWriter sWriter = new StreamWriter(clientPipe))
                         {
                             sWriter.Write(string.Empty);
