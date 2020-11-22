@@ -221,10 +221,22 @@ namespace Upload.Actions.Chrome
                         {
                             if (s.MarketPlaces[j])
                             {
-                                //"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[1]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[2]/colorcheckbox/span/i"
-                                //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
-                                                        s.Prices[j].ToString());
+                                string[] strPrice = s.Prices[j].ToString().Split('.');
+                                if (strPrice.Length > 0)
+                                {
+                                    //Log.log.Info(strPrice[0]);
+                                    //Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    //                    strPrice[0]);
+                                    //if (strPrice.Length > 1)
+                                    //{
+                                    //    Log.log.Info(strPrice[1]);
+
+                                    //    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    //                        ".");
+                                    //    Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                    //                        strPrice[1]);
+                                    //}
+                                }
 
                             }
                         }
