@@ -43,31 +43,7 @@ namespace Upload.Actions.Chrome
             Log.log.Info(string.Format("--Failed--"));
             return false;
         }
-
-        public static bool PasteToElement(ChromeDriver driver, By by, string input)
-        {
-            try
-            {
-                Log.log.Info(string.Format("--Paste To Element {0}--", by));
-                IWebElement webElement = GetElementWithWait(driver, by);
-                if (webElement != null)
-                {
-                    System.Windows.Clipboard.SetText(input);
-                    webElement.SendKeys(OpenQA.Selenium.Keys.Control + 'a');
-                    Thread.Sleep(1000);
-                    webElement.SendKeys(OpenQA.Selenium.Keys.Control + 'v');
-                    Log.log.Info(string.Format("--Success--"));
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.log.Fatal(ex);
-            }
-            Log.log.Info(string.Format("--Failed--"));
-            return false;
-        }
-        public static bool SendKeysElement(ChromeDriver driver, By by, string input, bool clear = false)
+        public static bool SendKeysElement(ChromeDriver driver, By by, string input)
         {
             try
             {
@@ -75,8 +51,7 @@ namespace Upload.Actions.Chrome
                 IWebElement webElement = GetElementWithWait(driver, by);
                 if (webElement != null)
                 {
-                    if(clear)      
-                        webElement.Clear();
+                    webElement.Clear();
                     Thread.Sleep(1000);
                     webElement.SendKeys(input);
                     Log.log.Info(string.Format("--Success--"));

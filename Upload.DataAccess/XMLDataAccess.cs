@@ -42,11 +42,6 @@ namespace Upload.DataAccess
                 //if (!string.IsNullOrEmpty(popSocketsGripPath))
                 //    mShirt.PopSocketsGripPath = Path.GetDirectoryName(xmlFilePath) + "\\" + popSocketsGripPath;
 
-                mShirt.Languages.Add(new LanguageData());
-                mShirt.Languages.Add(new LanguageData());
-                mShirt.Languages.Add(new LanguageData());
-                mShirt.Languages.Add(new LanguageData());
-                mShirt.Languages.Add(new LanguageData());
 
                 mShirt.Languages[0].BrandName = DataHelper.GetXElementValue(xDoc, RootNode + "/BrandName");
                 mShirt.Languages[0].Title = DataHelper.GetXElementValue(xDoc, RootNode + "/DesignTitle");
@@ -70,7 +65,7 @@ namespace Upload.DataAccess
                 }
                 return mShirt;
             }
-            catch (Exception ex){ }
+            catch { }
             return null;
         }
 
