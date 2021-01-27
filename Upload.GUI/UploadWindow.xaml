@@ -74,7 +74,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
-                    <ComboBox FontSize="10" IsEditable="False" Text="{Binding SelectedPath}" ItemsSource="{Binding UserFolders}" Height="25" Margin="5" Grid.Column="0"/>
+                    <ComboBox FontSize="10" IsEditable="False" SelectedItem="{Binding SelectedPath}" ItemsSource="{Binding UserFolders}" Height="25" Margin="5" Grid.Column="0"/>
                     <StackPanel Orientation="Horizontal" Grid.Column ="1">
                         <Button Grid.Column="1" Name="button_add_folder" Margin="5,10" Height="25" Width="25" Padding="0" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="10" 
                             Style="{DynamicResource MaterialDesignFlatButton}"
@@ -102,13 +102,13 @@
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="Enter a new name:" Margin="5" Grid.Row ="1" Grid.Column="0" VerticalAlignment="Center" 
                            ToolTip ="Choose a folder to save your cookies for automatically logging in next time"/>
-                    <TextBox Grid.Column="1" Margin="5" Text="{Binding SelectedPath}" HorizontalAlignment="Stretch"/>
+                    <TextBox Grid.Column="1" Margin="5" Text="{Binding AddFolderName}" HorizontalAlignment="Stretch"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <Button  Content="Add" Padding="0" FontSize="10" 
                             Height="25" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40"
                             Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}"
                             ToolTip="Add new folder"/>
-                    <Button Name="button_close_folder" Margin="5" Content="Cancel" Padding="0" FontSize="10" 
+                    <Button Name="button_close_folder" Margin="5" Content="Close" Padding="0" FontSize="10" 
                             Height="25" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40"
                             Background="Crimson" BorderBrush="Crimson"
                             ToolTip="Cancel" Click="button_close_folder_Click"/>

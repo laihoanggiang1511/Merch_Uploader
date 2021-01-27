@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Upload.ViewModel;
+using OpenQA.Selenium.Interactions;
+using System.Reflection;
 
 namespace Upload.Actions.Chrome
 {
@@ -58,24 +60,16 @@ namespace Upload.Actions.Chrome
             }
             return false;
         }
-        public bool Upload(Shirt shirt)
+        public bool Upload(UploadWindowViewModel uploadVM, Shirt shirt)
         {
             try
             {
-                if (driver != null && shirt != null)
+                if (uploadVM != null && driver != null && shirt != null)
                 {
                     Helper.LogInCallBack = new LogIn(Log_In);
                     Log.log.Info($"-----------Start Upload-------------");
 
                     driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-
-                    while (Helper.GetElementWithWait(driver, By.Id("select-marketplace-button"), 20) == null)
-                    {
-                        driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                    }
-                    // Upload .png files
-                    if (!UploadFilePNG(shirt))
-                        return false;
 
                     //Set descriptions
                     Log.log.Info("---Descriptions---");
@@ -105,37 +99,30 @@ namespace Upload.Actions.Chrome
                     if (!SelectProduct(shirt))
                         return false;
 
-                    //Input detail
-                    InputDetail(shirt);
+                    while (Helper.GetElementWithWait(driver, By.Id("select-marketplace-button"), 5) == null)
+                    {
+                        driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                    }
+                    // Upload .png files
+                    if (!UploadFilePNG(shirt))
+                        return false;
 
-                    ////Set Other languages Description
-                    //if (shirt.ShirtTypes.FirstOrDefault(x => (x.MarketPlaces.Length > 2 && x.MarketPlaces[2] == true)) != null)
-                    //{
-                    //    string germanXPath = "/html/body/div[1]/div/app-root/div/ng-component/div/div/editor/product-text/ngb-accordion/div[2]/div[2]/div/product-text-editor/div/div/";
-                    //    //Helper.ClickElement(driver, By.Id("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/product-text/div/ul/li[2]/a"));
-                    //    if (!string.IsNullOrEmpty(shirt.BrandNameGerman))
-                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[3]/input"), shirt.BrandNameGerman);
-                    //    if (!string.IsNullOrEmpty(shirt.DesignTitleGerman))
-                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[1]/div[2]/input"), shirt.DesignTitleGerman);
-                    //    if (!string.IsNullOrEmpty(shirt.FeatureBullet1German))
-                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[2]/input"), shirt.FeatureBullet1German);
-                    //    if (!string.IsNullOrEmpty(shirt.FeatureBullet2German))
-                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[3]/input"), shirt.FeatureBullet2German);
-                    //    if (!string.IsNullOrEmpty(shirt.DescriptionGerman))
-                    //        Helper.SendKeysElement(driver, By.XPath(germanXPath + "div[2]/div[4]/textarea"), shirt.DescriptionGerman);
-                    //}
+                    //Input detail
+                    InputDetail(uploadVM, shirt);
 
                     // Submit
                     Log.log.Info("---Summit---");
                     if (Helper.GetElementWithWait(driver, By.Id("submit-button"), 15) == null)
                         return false;
                     Helper.ClickElement(driver, By.Id("submit-button"));
-                    Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button[2]"));
-                    System.Threading.Thread.Sleep(3000);
+                    System.Threading.Thread.Sleep(300);
+                    Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/button[2]"));
+                    System.Threading.Thread.Sleep(1000);
                     Log.log.Info("-----------End Upload-----------");
                     return true;
                 }
-                else return false;
+                else
+                    return false;
             }
             catch (Exception ex)
             {
@@ -145,7 +132,7 @@ namespace Upload.Actions.Chrome
             }
         }
 
-        private bool InputDetail(Shirt shirt)
+        private bool InputDetail(UploadWindowViewModel uploadVM, Shirt shirt)
         {
             try
             {
@@ -221,10 +208,18 @@ namespace Upload.Actions.Chrome
                         {
                             if (s.MarketPlaces[j])
                             {
-                                //"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[1]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[2]/colorcheckbox/span/i"
-                                //Utils.ClickElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j+1}]/div/div/div[2]/div[1]/div[1]/input"));
-                                Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
-                                                        s.Prices[j].ToString());
+                                By by = By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input");
+                                string price = s.Prices[j].ToString();
+                                IWebElement element = Helper.GetElementWithWait(driver, by);
+                                element.SendKeys("1");
+                                Clipboard.SetText(s.Prices[j].ToString());
+                                OpenQA.Selenium.Interactions.Actions action = new OpenQA.Selenium.Interactions.Actions(driver);
+                                action.MoveToElement(element).Perform();
+                                action.DoubleClick().Perform();
+                                element.SendKeys(OpenQA.Selenium.Keys.Control + 'v');
+                                //Helper.Paste();
+                                //Helper.SendKeysElement(driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                                //                        s.Prices[j].ToString());
 
                             }
                         }
@@ -422,17 +417,14 @@ namespace Upload.Actions.Chrome
         {
             try
             {
+
                 Log.log.Info("---Open Chrome---");
                 Cursor.Current = Cursors.WaitCursor;
-                if (driver == null)
-                {
-                    driver = StartChromeWithOptions(userFolderPath);
-                }
-                else
+                if (driver != null)
                 {
                     QuitDriver();
-                    driver = StartChromeWithOptions(userFolderPath);
                 }
+                driver = StartChromeWithOptions(userFolderPath);
             }
             catch (Exception ex)
             {
@@ -444,21 +436,34 @@ namespace Upload.Actions.Chrome
         public ChromeDriver StartChromeWithOptions(string userFolderPath)
         {
             ChromeDriver cDriver = null;
-            if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+
+            string storedVariable = System.Environment.GetEnvironmentVariable("PATH");
+            try
             {
-                ChromeOptions chrOption = new ChromeOptions();
-                chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                chromeDriverService.HideCommandPromptWindow = true;
-                cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                System.Environment.SetEnvironmentVariable("PATH", executingFolder);
+
+                if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+                {
+                    ChromeOptions chrOption = new ChromeOptions();
+                    chrOption.AddArguments("user-data-dir=" + userFolderPath);
+                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    chromeDriverService.HideCommandPromptWindow = true;
+                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                }
+                else
+                {
+                    ChromeOptions chrOption = new ChromeOptions();
+                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    chromeDriverService.HideCommandPromptWindow = true;
+                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ChromeOptions chrOption = new ChromeOptions();
-                var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                chromeDriverService.HideCommandPromptWindow = true;
-                cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                MessageBox.Show(ex.Message);
             }
+            System.Environment.SetEnvironmentVariable("PATH", storedVariable);
             return cDriver;
         }
     }

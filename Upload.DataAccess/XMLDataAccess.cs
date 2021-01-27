@@ -29,20 +29,15 @@ namespace Upload.DataAccess
                 string frontStdPath = DataHelper.GetXElementValue(xDoc, RootNode + "/FrontStdPath");
                 if (!string.IsNullOrEmpty(frontStdPath))
                     mShirt.ImagePath = Path.GetDirectoryName(xmlFilePath) + "\\" + frontStdPath;
-                //string backStdPath = DataHelper.GetXElementValue(xDoc, RootNode + "/BackStdPath");
-                //if (!string.IsNullOrEmpty(backStdPath))
-                //    mShirt.BackStdPath = Path.GetDirectoryName(xmlFilePath) + "\\" + backStdPath;
-                //string frontHoodiePath = DataHelper.GetXElementValue(xDoc, RootNode + "/FrontHoodiePath");
-                //if (!string.IsNullOrEmpty(frontHoodiePath))
-                //    mShirt.FrontHoodiePath = Path.GetDirectoryName(xmlFilePath) + "\\" + frontHoodiePath;
-                //string backHoodiePath = DataHelper.GetXElementValue(xDoc, RootNode + "/BackHoodiePath");
-                //if (!string.IsNullOrEmpty(backHoodiePath))
-                //    mShirt.BackHoodiePath = Path.GetDirectoryName(xmlFilePath) + "\\" + backHoodiePath;
-                //string popSocketsGripPath = DataHelper.GetXElementValue(xDoc, RootNode + "/PopsocketsGripPath");
-                //if (!string.IsNullOrEmpty(popSocketsGripPath))
-                //    mShirt.PopSocketsGripPath = Path.GetDirectoryName(xmlFilePath) + "\\" + popSocketsGripPath;
 
-
+                mShirt.Languages = new List<LanguageData>()
+                {
+                    new LanguageData (0,"English"), //English
+                    new LanguageData(1, "German"),
+                    new LanguageData(2, "French"),
+                    new LanguageData(3, "Italian"),
+                    new LanguageData (4, "Spanish"),
+                };
                 mShirt.Languages[0].BrandName = DataHelper.GetXElementValue(xDoc, RootNode + "/BrandName");
                 mShirt.Languages[0].Title = DataHelper.GetXElementValue(xDoc, RootNode + "/DesignTitle");
                 mShirt.Languages[0].FeatureBullet1 = DataHelper.GetXElementValue(xDoc, RootNode + "/FeatureBullet1");
@@ -65,7 +60,8 @@ namespace Upload.DataAccess
                 }
                 return mShirt;
             }
-            catch { }
+            catch  (Exception ex)
+            { }
             return null;
         }
 

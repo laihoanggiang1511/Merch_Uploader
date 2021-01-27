@@ -23,6 +23,7 @@ namespace Upload.ViewModel
         public ICommand EditShirtCmd { get; set; }
         public ICommand ShowConfigurationCmd { get; set; }
         public ICommand RemoveFolderCmd { get; set; }
+
         public string password;
         public ObservableCollection<Shirt> Shirts { get; set; }
         private Shirt selectedShirt;
@@ -56,7 +57,7 @@ namespace Upload.ViewModel
                                 Descriptions += "Description: " + activeLanguage.Description;
                             }
                         }
-                        
+
                         //if (!string.IsNullOrEmpty(selectedShirt.FrontStdPath))
                         //    ImagePath = selectedShirt.FrontStdPath;
                         //else if (!string.IsNullOrEmpty(selectedShirt.BackStdPath))
@@ -200,6 +201,21 @@ namespace Upload.ViewModel
                 }
             }
         }
+
+        private string addFolderName;
+        public string AddFolderName
+        {
+            get { return addFolderName; }
+            set
+            {
+                if (addFolderName != value)
+                {
+                    addFolderName = value;
+                    RaisePropertyChanged("AddFolderName");
+                }
+            }
+        }
+
 
         private string selectedPath;
         public string SelectedPath

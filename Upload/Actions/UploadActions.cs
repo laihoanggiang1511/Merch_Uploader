@@ -56,7 +56,6 @@ namespace Upload.Actions
             uploadWindow.Show();
         }
 
-
         private void RemoveFolderCmdInvoke(object obj)
         {
             if (obj is UploadWindowViewModel uploadVM)
@@ -180,19 +179,20 @@ namespace Upload.Actions
         {
             if (obj is UploadWindowViewModel uploadVM)
             {
-                if (!string.IsNullOrEmpty(uploadVM.UserFolderPath))
+                if (!string.IsNullOrEmpty(uploadVM.AddFolderName))
                 {
                     char[] invalidChars = Path.GetInvalidPathChars();
-                    if (!invalidChars.ToList().Any(x => uploadVM.UserFolderPath.Contains(x) == true))
+                    if (!invalidChars.ToList().Any(x => uploadVM.AddFolderName.Contains(x) == true))
                     {
                         string dataFolder = GetDataDirectory();
-                        string folderPath = Path.Combine(dataFolder, uploadVM.UserFolderPath);
+                        string folderPath = Path.Combine(dataFolder, uploadVM.AddFolderName);
                         if (!Directory.Exists(folderPath))
                         {
                             Directory.CreateDirectory(folderPath);
                             uploadVM.UserFolders = GetUserFolders();
                             uploadVM.RaisePropertyChanged("UserFolders");
-                            uploadVM.UserFolderPath = folderPath;
+                            //uploadVM.UserFolderPath = folderPath;
+                            uploadVM.SelectedPath = uploadVM.UserFolders.Select(x=>x = uploadVM.AddFolderName).FirstOrDefault();
                         }
                         else
                         {
@@ -273,6 +273,7 @@ namespace Upload.Actions
                         return;
                     }
                     Thread thread = new Thread(UploadShirt);
+                    thread.SetApartmentState(ApartmentState.STA);
                     thread.Start(mainVM);
                     mainVM.IsUploading = true;
 
@@ -326,7 +327,7 @@ namespace Upload.Actions
                                 for (int i = 0; i < mainVM.Shirts.Count; i++)
                                 {
                                     mainVM.SelectedShirt = mainVM.Shirts[i];
-                                    if (!upload.Upload(mainVM.Shirts[i]))
+                                    if (!upload.Upload(mainVM, mainVM.Shirts[i]))
                                         failShirts.Add(mainVM.Shirts[i]);
                                 }
                                 UploadMerch.QuitDriver();

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
 using System.Threading;
@@ -21,7 +22,7 @@ namespace Upload.Actions.Chrome
     public class Helper
     {
         public static LogIn LogInCallBack;
-        
+
 
         public static bool ClickElement(ChromeDriver driver, By by)
         {
@@ -139,6 +140,61 @@ namespace Upload.Actions.Chrome
             }
             else
                 return false;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+        public static void SendString(string strToSend)
+        {
+            System.Windows.Forms.Keys[] keys = GetKeyByString(strToSend);
+            foreach (System.Windows.Forms.Keys key in keys)
+            {
+                PressKey(key, false);
+                Thread.Sleep(100);
+                PressKey(key, true);
+                Thread.Sleep(100);
+            }
+        }
+        public static void Paste()
+        {
+            PressKey(System.Windows.Forms.Keys.Control, false);
+            Thread.Sleep(100);
+            PressKey(System.Windows.Forms.Keys.V, false);
+            Thread.Sleep(200);
+            PressKey(System.Windows.Forms.Keys.V, true);
+            PressKey(System.Windows.Forms.Keys.Control, true);
+
+        }
+        public static void PressKey(System.Windows.Forms.Keys key, bool up)
+        {
+            const int KEYEVENTF_EXTENDEDKEY = 0x1;
+            const int KEYEVENTF_KEYUP = 0x2;
+            if (up)
+            {
+                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, (UIntPtr)0);
+            }
+            else
+            {
+                keybd_event((byte)key, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+            }
+        }
+        public static System.Windows.Forms.Keys[] GetKeyByString(string chrInput)
+        {
+            List<System.Windows.Forms.Keys> result = new List<System.Windows.Forms.Keys>();
+            char[] chrArray = chrInput.ToCharArray();
+            foreach (char chr in chrArray)
+            {
+                if (chr == '.')
+                {
+                    result.Add(System.Windows.Forms.Keys.OemPeriod);
+                }
+                else
+                {
+                    result.Add((System.Windows.Forms.Keys)chr);
+                }
+            }
+            return result.ToArray();
         }
     }
 
