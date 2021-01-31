@@ -154,7 +154,7 @@ namespace Upload.Actions
                     UploadMerch.QuitDriver();
                 }
             }
-            catch
+            catch 
             {
             }
             finally

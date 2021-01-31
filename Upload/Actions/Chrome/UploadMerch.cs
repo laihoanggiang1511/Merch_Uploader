@@ -341,43 +341,7 @@ namespace Upload.Actions.Chrome
                                 break;
                             }
                     }
-                    //if (!string.IsNullOrEmpty(shirt.FrontStdPath))
-                    //{
-                    //    Log.log.Info("-STANDARD_TSHIRT-FRONT-");
-                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
-                    //    webElement.SendKeys(shirt.FrontStdPath);
-                    //}
-                    //if (!string.IsNullOrEmpty(shirt.FrontHoodiePath))
-                    //{
-                    //    Log.log.Info("-STANDARD_PULLOVER_HOODIE-FRONT-");
-                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
-                    //    webElement.SendKeys(shirt.FrontHoodiePath);
-                    //}
-                    //if (!string.IsNullOrEmpty(shirt.PopSocketsGripPath))
-                    //{
-                    //    Log.log.Info("-POP_SOCKET-FRONT-");
-                    //    IWebElement webElement = driver.FindElement(By.Id("POP_SOCKET-FRONT"));
-                    //    webElement.SendKeys(shirt.PopSocketsGripPath);
-                    //}
-                    //if (!string.IsNullOrEmpty(shirt.BackStdPath))
-                    //{
-                    //    Log.log.Info("-STANDARD_TSHIRT-BACK-");
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
-                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
-                    //    webElement.SendKeys(shirt.BackStdPath);
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
-
-                    //}
-                    //if (!string.IsNullOrEmpty(shirt.BackHoodiePath))
-                    //{
-                    //    Log.log.Info("-STANDARD_PULLOVER_HOODIE-BACK-");
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
-                    //    IWebElement webElement = driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
-                    //    webElement.SendKeys(shirt.BackStdPath);
-                    //    Helper.ClickElement(driver, By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
-                    //}
+                
                     Log.log.Info("---End UploadFilePNG---");
                     return true;
                 }
@@ -392,24 +356,24 @@ namespace Upload.Actions.Chrome
         }
         public static void QuitDriver()
         {
-            try
-            {
-                Log.log.Info("---Quit Driver---");
-                if (driver != null)
-                    driver.Close();
-                driver = null;
-            }
-            catch (Exception ex)
-            {
-                Log.log.Fatal(ex);
-            }
-            finally
-            {
+            //try
+            //{
+            //    Log.log.Info("---Quit Driver---");
+            //    if (driver != null)
+            //        driver.Close();
+            //    driver = null;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.log.Fatal(ex);
+            //}
+            //finally
+            //{
                 if (driver != null)
                 {
                     driver.Quit();
                 }
-            }
+            //}
 
         }
 
