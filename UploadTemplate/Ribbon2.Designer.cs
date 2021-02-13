@@ -47,15 +47,22 @@
             this.cbb_Language = this.Factory.CreateRibbonComboBox();
             this.btn_Translate = this.Factory.CreateRibbonButton();
             this.btn_CheckTM = this.Factory.CreateRibbonButton();
+            this.Dictionary = this.Factory.CreateRibbonGroup();
+            this.cbb_Dictionary = this.Factory.CreateRibbonComboBox();
+            this.buttonGroup1 = this.Factory.CreateRibbonButtonGroup();
+            this.btn_EditDict = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
+            this.Dictionary.SuspendLayout();
+            this.buttonGroup1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tab1
             // 
             this.tab1.Groups.Add(this.group1);
             this.tab1.Groups.Add(this.group2);
+            this.tab1.Groups.Add(this.Dictionary);
             this.tab1.Label = "MERCH UPLOADER";
             this.tab1.Name = "tab1";
             // 
@@ -130,6 +137,32 @@
             this.btn_CheckTM.ShowImage = true;
             this.btn_CheckTM.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_CheckTM_Click);
             // 
+            // Dictionary
+            // 
+            this.Dictionary.Items.Add(this.cbb_Dictionary);
+            this.Dictionary.Items.Add(this.buttonGroup1);
+            this.Dictionary.Label = "Dictionary";
+            this.Dictionary.Name = "Dictionary";
+            // 
+            // cbb_Dictionary
+            // 
+            this.cbb_Dictionary.Label = "Dictionary: ";
+            this.cbb_Dictionary.Name = "cbb_Dictionary";
+            this.cbb_Dictionary.Text = null;
+            // 
+            // buttonGroup1
+            // 
+            this.buttonGroup1.Items.Add(this.btn_EditDict);
+            this.buttonGroup1.Name = "buttonGroup1";
+            // 
+            // btn_EditDict
+            // 
+            this.btn_EditDict.Image = global::UploadTemplate.Properties.Resources.sketch;
+            this.btn_EditDict.Label = "Edit Dictionary";
+            this.btn_EditDict.Name = "btn_EditDict";
+            this.btn_EditDict.ShowImage = true;
+            this.btn_EditDict.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_EditDict_Click);
+            // 
             // Ribbon2
             // 
             this.Name = "Ribbon2";
@@ -142,6 +175,10 @@
             this.group1.PerformLayout();
             this.group2.ResumeLayout(false);
             this.group2.PerformLayout();
+            this.Dictionary.ResumeLayout(false);
+            this.Dictionary.PerformLayout();
+            this.buttonGroup1.ResumeLayout(false);
+            this.buttonGroup1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -156,6 +193,10 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_SaveFile;
         internal Microsoft.Office.Tools.Ribbon.RibbonComboBox cbb_Language;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_CheckTM;
+        internal Microsoft.Office.Tools.Ribbon.RibbonGroup Dictionary;
+        internal Microsoft.Office.Tools.Ribbon.RibbonComboBox cbb_Dictionary;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButtonGroup buttonGroup1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_EditDict;
     }
 
     partial class ThisRibbonCollection

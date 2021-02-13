@@ -168,5 +168,10 @@ namespace UploadTemplate
         {
             MessageBox.Show("Comming Soon");
         }
+
+        private void btn_EditDict_Click(object sender, RibbonControlEventArgs e)
+        {
+            new Dictionary().Activate();
+        }
     }
 }
