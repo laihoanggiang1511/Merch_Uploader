@@ -96,17 +96,17 @@
                         <Image Source="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type Window}},
                                     Path=DataContext.FrontImagePath}"
                                     Height="250" Width="210"  Stretch="UniformToFill"/>
-                        <Button Width="210" Height="250"
+                        <!--<Button Width="210" Height="250"
                             Command="{Binding RelativeSource={RelativeSource FindAncestor, 
                                         AncestorType={x:Type Window}},
                                         Path=DataContext.ClickFrontImageCmd}"
                             CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
                                         AncestorType={x:Type Window}},
                                         Path=DataContext}"
-                            Style="{DynamicResource MaterialDesignFlatButton}"/>
+                            Style="{DynamicResource MaterialDesignFlatButton}"/>-->
                     </Grid>
                 </Grid>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Collapsed">
                     <Button ToolTip="Browse For Image"
                         Width="40" Height="40" Margin="5" Background="Transparent" BorderThickness="0"
                         Command="{Binding RelativeSource={RelativeSource AncestorType=Window},Path=DataContext.ClickFrontImageCmd}"
@@ -125,7 +125,7 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Column="1">
+            <StackPanel Grid.Column="1" Visibility="Collapsed">
                 <TextBlock Text="BACK" FontSize="16" FontWeight="DemiBold" Foreground="Blue" HorizontalAlignment="Center"/>
                 <Grid Grid.Column="0">
                     <Image Width="485" Height="505"

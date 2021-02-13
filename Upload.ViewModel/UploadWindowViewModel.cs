@@ -23,6 +23,7 @@ namespace Upload.ViewModel
         public ICommand EditShirtCmd { get; set; }
         public ICommand ShowConfigurationCmd { get; set; }
         public ICommand RemoveFolderCmd { get; set; }
+        public ICommand FolderChangeCmd { get; set; }
 
         public string password;
         public ObservableCollection<Shirt> Shirts { get; set; }
@@ -197,6 +198,7 @@ namespace Upload.ViewModel
                     {
                         SelectedPath = string.Empty;
                     }
+
                     RaisePropertyChanged("UserFolderPath");
                 }
             }
@@ -233,6 +235,10 @@ namespace Upload.ViewModel
                     else
                     {
                         userFolderPath = string.Empty;
+                    }
+                    if (FolderChangeCmd != null)
+                    {
+                        FolderChangeCmd.Execute(this);
                     }
                     RaisePropertyChanged("SelectedPath");
                 }

@@ -123,7 +123,7 @@
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
                     <PasswordBox Grid.Column="0" x:Name="password" Margin="5" HorizontalAlignment="Stretch"
-                             ToolTip="Your password will be encrypted and safe"/>
+                             ToolTip="Your password will be encrypted"/>
                     <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Manual Log In" Padding="0" FontSize="10" Height="25" VerticalAlignment="Center"
                             ToolTip="Manual log in for first time or in case Merch requires Authentication"/>
                 </Grid>

@@ -50,7 +50,7 @@ namespace Common.Update
                     url += $"/{ProductId}";
                 }
                 var client = new RestClient(url);
-                client.Timeout = 5000;
+                client.Timeout = 3000;
                 var request = new RestRequest(Method.GET);
 
                 request.AddHeader("content-type", "application/json");

@@ -252,9 +252,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Publish|AnyCPU'">
     <OutputPath>bin\Publish\</OutputPath>
-    <DefineConstants>VSTO40;TRACE</DefineConstants>
+    <DefineConstants>TRACE;VSTO40</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>7.3</LangVersion>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>

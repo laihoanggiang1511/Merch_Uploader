@@ -31,10 +31,18 @@
     <MinimumRequiredVersion>1.0.1.0</MinimumRequiredVersion>
     <AutorunEnabled>true</AutorunEnabled>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.6.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>True</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>None</InheritWinAppVersionFrom>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -61,7 +69,7 @@
     <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Nike-Shirt-9.ico</ApplicationIcon>
+    <ApplicationIcon>app.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
@@ -139,6 +147,15 @@
     <LangVersion>7.3</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>ExtendedCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <ShouldCreateLogs>True</ShouldCreateLogs>
+    <AdvancedSettingsExpanded>False</AdvancedSettingsExpanded>
+    <UpdateAssemblyVersion>False</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <UpdatePackageVersion>False</UpdatePackageVersion>
+    <AssemblyInfoVersionType>SettingsVersion</AssemblyInfoVersionType>
+    <InheritWinAppVersionFrom>AssemblyVersion</InheritWinAppVersionFrom>
+    <AssemblyVersionSettings>None.None.None.None</AssemblyVersionSettings>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Publish|x86'">
     <OutputPath>bin\x86\Publish\</OutputPath>
@@ -245,7 +262,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Nike-Shirt-9.ico" />
+    <Resource Include="app.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -295,4 +314,13 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\MaterialDesignThemes.3.1.3\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.3.1.3\build\MaterialDesignThemes.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>if $(ConfigurationName) == Publish (
+C:\ConfuserEx\Confuser.CLI C:\ConfuserEx\Projects\MerchUploader.crproj
+copy $(TargetDir)Confused $(TargetDir)
+del $(TargetDir)*.pdb 
+C:\"Program Files (x86)"\"Windows Kits"\10\bin\10.0.18362.0\x86\signtool.exe sign /v /a /fd SHA256 /tr http://rfc3161timestamp.globalsign.com/advanced /td SHA256 $(TargetPath)
+)
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

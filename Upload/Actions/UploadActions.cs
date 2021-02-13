@@ -23,15 +23,17 @@ using Microsoft.Office.Interop.Excel;
 using Upload.Actions.Chrome;
 using Upload.DataAccess.Model;
 using Upload.DataAccess.DTO;
+using Common;
 
 namespace Upload.Actions
 {
     public class UploadActions
     {
+        UploadWindow uploadWindow = null;
 
         public void ShowWindow()
         {
-            UploadWindow uploadWindow = new UploadWindow();
+            uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
             UploadWindowViewModel mainVM = new UploadWindowViewModel
             {
@@ -45,15 +47,59 @@ namespace Upload.Actions
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
                 ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
                 RemoveFolderCmd = new RelayCommand(RemoveFolderCmdInvoke),
-                Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true),
+                FolderChangeCmd = new RelayCommand(FolderChangeCmdInvoke),
             };
             mainVM.UserFolders = GetUserFolders();
             mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => Properties.Settings.Default.UserFolderPath.EndsWith(x));
-            mainVM.Email = Common.Crypt.Decrypt(Properties.Settings.Default.Email, true);
-
-            SetPassWord(uploadWindow, Common.Crypt.Decrypt(Properties.Settings.Default.Password, true));
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
+        }
+
+        private void SaveEmailPassword(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(uploadVM.UserFolderPath))
+                        return;
+                    string dataFileName = Path.Combine(uploadVM.UserFolderPath, "MerchUploadData.json");
+                    if (File.Exists(dataFileName))
+                    {
+                        File.Delete(dataFileName);
+                    }
+                    string email = Common.Crypt.Encrypt(uploadVM.Email, true);
+                    string password = Common.Crypt.Encrypt(GetPassword(uploadWindow), true);
+                    string[] content = new string[] { email, password };
+                    File.WriteAllLines(dataFileName, content);
+                }
+                catch (Exception ex)
+                {
+                    Common.Log.log.Fatal(ex);
+                }
+            }
+
+        }
+
+        private void FolderChangeCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel uploadVM)
+            {
+                if (string.IsNullOrEmpty(uploadVM.UserFolderPath))
+                    return;
+                uploadVM.Email = string.Empty;
+                SetPassWord(uploadWindow, string.Empty);
+                string dataFileName = Path.Combine(uploadVM.UserFolderPath, "MerchUploadData.json");
+                if (File.Exists(dataFileName))
+                {
+                    string[] data = File.ReadAllLines(dataFileName);
+                    if (data != null && data.Length == 2)
+                    {
+                        uploadVM.Email = Common.Crypt.Decrypt(data[0], true);
+                        SetPassWord(uploadWindow, Common.Crypt.Decrypt(data[1], true));
+                    }
+                }
+            }
         }
 
         private void RemoveFolderCmdInvoke(object obj)
@@ -142,19 +188,20 @@ namespace Upload.Actions
                 if (wind != null)
                 {
                     UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
-                    //Save Setting
-                    Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
-                    Properties.Settings.Default.Email = Common.Crypt.Encrypt(uploadVM.Email, true);
-                    PasswordBox passwordBox = wind.FindName("password") as PasswordBox;
-                    if (passwordBox != null)
-                    {
-                        Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
-                    }
-                    Properties.Settings.Default.Save();
+                    SaveEmailPassword(uploadVM);
+                    ////Save Setting
+                    //Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
+                    //Properties.Settings.Default.Email = Common.Crypt.Encrypt(uploadVM.Email, true);
+                    //PasswordBox passwordBox = wind.FindName("password") as PasswordBox;
+                    //if (passwordBox != null)
+                    //{
+                    //    Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
+                    //}
+                    //Properties.Settings.Default.Save();
                     UploadMerch.QuitDriver();
                 }
             }
-            catch 
+            catch
             {
             }
             finally
@@ -192,7 +239,7 @@ namespace Upload.Actions
                             uploadVM.UserFolders = GetUserFolders();
                             uploadVM.RaisePropertyChanged("UserFolders");
                             //uploadVM.UserFolderPath = folderPath;
-                            uploadVM.SelectedPath = uploadVM.UserFolders.Select(x=>x = uploadVM.AddFolderName).FirstOrDefault();
+                            uploadVM.SelectedPath = uploadVM.UserFolders.Select(x => x = uploadVM.AddFolderName).FirstOrDefault();
                         }
                         else
                         {
@@ -245,14 +292,14 @@ namespace Upload.Actions
                     upload.OpenChrome(uploadVM.UserFolderPath);
                     UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
                     upload.Log_In();
-                    if(UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
+                    if (UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
                     {
                         Helper.ShowInfoMessageBox("Log in Sucess!");
                         uploadVM.IsUploading = false;
                     }
                 }
                 catch
-                { 
+                {
                 }
             }
 
