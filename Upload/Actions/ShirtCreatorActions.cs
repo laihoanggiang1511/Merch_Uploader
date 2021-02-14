@@ -128,13 +128,14 @@ namespace Upload.Actions
             {
                 if (obj is ShirtCreatorViewModel shirtVM)
                 {
-                    Dictionary<Shirt, ShirtStatus> dictError = new Dictionary<Shirt, ShirtStatus>();
-                    foreach (Shirt shirt in shirtVM.Shirts)
+                    Dictionary<int, ShirtStatus> dictError = new Dictionary<int, ShirtStatus>();
+                    for (int i=0;i<shirtVM.Shirts.Count;i++)
                     {
+                        Shirt _shirt = shirtVM.Shirts[i];
                         ShirtStatus errorCode = 0;
                         if (!string.IsNullOrEmpty(shirt.ImagePath))
                         {
-                            if (ValidateShirt(shirt, ref errorCode))
+                            if (ValidateShirt(_shirt, ref errorCode))
                             {
                                 JsonDataAccess dataAccess = new JsonDataAccess();
                                 ShirtData sData = ShirtDTO.MapData(shirt, typeof(ShirtData)) as ShirtData;
@@ -142,7 +143,7 @@ namespace Upload.Actions
                             }
                             else
                             {
-                                dictError.Add(shirt, errorCode);
+                                dictError.Add(i, errorCode);
                             }
                         }
                     }
@@ -683,16 +684,16 @@ namespace Upload.Actions
                     result += "No image selected!";
                     break;
                 case ShirtStatus.BrandNameFail:
-                    result += "Brand must be 3-50 characters, please check again";
+                    result += "Brand must be 3-50 characters";
                     break;
                 case ShirtStatus.TitleFail:
-                    result += "Design Title must be 3-60 characters, please check again";
+                    result += "Design Title must be 3-60 characters";
                     break;
                 case ShirtStatus.FeatureBulletFail:
-                    result += "Feature Bullet must be 256 characters or fewer, please check again";
+                    result += "Feature Bullet must be 256 characters or fewer";
                     break;
                 case ShirtStatus.DescriptionFail:
-                    result += "Description must be 75-2000 characters, please check again";
+                    result += "Description must be 75-2000 characters";
                     break;
                 case ShirtStatus.ColorFail:
                     result += "Please select at least 1 or at most 10 colors ";
@@ -714,6 +715,13 @@ namespace Upload.Actions
                     }
                     else
                     {
+                        MessageBoxResult result = System.Windows.MessageBox.Show($"The image must be {width}x{height}px\nDo you want to resize this image?",
+                            "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);
+                        if (result == MessageBoxResult.Yes ||
+                            result == MessageBoxResult.OK)
+                        {
+                            ImageEditCmdInvoke(path);
+                        }
                         System.Windows.MessageBox.Show("Wrong Image Dimension!");
                         //MessageBoxResult result = System.Windows.MessageBox.Show("Wrong Image Dimension! \nDo you want to resize this image?",
                         //    "Error opening image", MessageBoxButton.YesNoCancel, MessageBoxImage.Error);

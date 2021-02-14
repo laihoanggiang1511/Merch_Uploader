@@ -74,7 +74,7 @@ namespace Upload
             return result;
         }
 
-        public static string[] BrowseForFilePath(string filter = "PNG file |*.PNG| All Files |*.*", bool multiselect = false)
+        public static string[] BrowseForFilePath(string filter = "PNG, JPG file |*.PNG;*.JPG| All Files |*.*", bool multiselect = false)
         {
             OpenFileDialog openFile = new OpenFileDialog
             {
