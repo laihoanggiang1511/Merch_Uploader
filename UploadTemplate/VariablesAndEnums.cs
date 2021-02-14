@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace UploadTemplate
 {
+
+    public class GlobalVariables 
+    {
+        public static Dictionary<string, string> replaceDict = new Dictionary<string, string>();
+    }
     internal enum ColumnDefinitions
     {
         Name = 1,

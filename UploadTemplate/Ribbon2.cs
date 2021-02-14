@@ -168,5 +168,26 @@ namespace UploadTemplate
         {
             MessageBox.Show("Comming Soon");
         }
+
+        private void btn_EditDict_Click(object sender, RibbonControlEventArgs e)
+        {
+            //MainDispatcher = Dispatcher.CurrentDispatcher;
+            //MainDispatcher.Invoke(delegate () { Actions.MapShirtToExcel(sData, (int)startRow); });
+
+            DictionaryView dictView = new DictionaryView();
+            dictView.ShowDialog();
+        }
+
+        private void btn_UseDictionary_Click(object sender, RibbonControlEventArgs e)
+        {
+            Range cell = Globals.Sheet1.Application.ActiveCell;
+            string key = this.cbb_Dictionary.Text;
+            string value = string.Empty;
+            if (!string.IsNullOrEmpty(key) &&
+                GlobalVariables.replaceDict.TryGetValue(key, out value))
+            {
+                Globals.Sheet1.Application.ActiveCell.Value = value;
+            }
+        }
     }
 }

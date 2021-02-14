@@ -43,6 +43,8 @@ namespace UploadTemplate
                 Environment.Exit(0);
             }
 #endif
+            //Load dictionary
+            DictionaryActions.ReloadDictionary();
         }
 
         private void ThisWorkbook_Shutdown(object sender, System.EventArgs e)

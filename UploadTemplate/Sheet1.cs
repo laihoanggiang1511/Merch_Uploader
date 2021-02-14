@@ -18,6 +18,7 @@ namespace UploadTemplate
         private void Sheet1_Startup(object sender, System.EventArgs e)
         {
             Cells[1, 1].Select();
+            //Load Dictionary
         }
 
         private void Sheet1_Shutdown(object sender, System.EventArgs e)
