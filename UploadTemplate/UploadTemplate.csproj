@@ -143,12 +143,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColumnDefinitions.cs" />
+    <Compile Include="VariablesAndEnums.cs" />
     <Compile Include="Actions.cs" />
-    <Compile Include="Dictionary.xaml.cs">
-      <DependentUpon>Dictionary.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DictionaryActions.cs" />
+    <Compile Include="DictionaryView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DictionaryView.Designer.cs">
+      <DependentUpon>DictionaryView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -175,6 +178,9 @@
     <Compile Include="ThisWorkbook.Designer.cs">
       <DependentUpon>ThisWorkbook.Designer.xml</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DictionaryView.resx">
+      <DependentUpon>DictionaryView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -237,12 +243,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icons\trademark.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Dictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
