@@ -20,12 +20,9 @@ namespace Upload.Actions.Chrome
         private string password = string.Empty;
         public UploadMerch(string password, string email)
         {
-            if (!string.IsNullOrEmpty(password))
-                this.password = password;
-            if (!string.IsNullOrEmpty(email))
-                this.email = email;
+            this.password = password;
+            this.email = email;
         }
-
         public bool Log_In()
         {
             // Log In 
@@ -60,11 +57,11 @@ namespace Upload.Actions.Chrome
             }
             return false;
         }
-        public bool Upload(UploadWindowViewModel uploadVM, Shirt shirt)
+        public bool Upload(Shirt shirt)
         {
             try
             {
-                if (uploadVM != null && driver != null && shirt != null)
+                if (driver != null && shirt != null)
                 {
                     Helper.LogInCallBack = new LogIn(Log_In);
                     Log.log.Info($"-----------Start Upload-------------");
@@ -108,7 +105,7 @@ namespace Upload.Actions.Chrome
                         return false;
 
                     //Input detail
-                    InputDetail(uploadVM, shirt);
+                    InputDetail(shirt);
 
                     // Submit
                     Log.log.Info("---Summit---");
@@ -132,7 +129,7 @@ namespace Upload.Actions.Chrome
             }
         }
 
-        private bool InputDetail(UploadWindowViewModel uploadVM, Shirt shirt)
+        private bool InputDetail(Shirt shirt)
         {
             try
             {
@@ -341,7 +338,7 @@ namespace Upload.Actions.Chrome
                                 break;
                             }
                     }
-                
+
                     Log.log.Info("---End UploadFilePNG---");
                     return true;
                 }
@@ -369,10 +366,10 @@ namespace Upload.Actions.Chrome
             //}
             //finally
             //{
-                if (driver != null)
-                {
-                    driver.Quit();
-                }
+            if (driver != null)
+            {
+                driver.Quit();
+            }
             //}
 
         }

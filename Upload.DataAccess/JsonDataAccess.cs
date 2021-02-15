@@ -56,36 +56,7 @@ namespace Upload.DataAccess
                 ShirtData result = JsonConvert.DeserializeObject<ShirtData>(json);
                 result.ImagePath = Path.Combine(Path.GetDirectoryName(filePath), result.ImagePath);
                 return result;
-                //Shirt s = new Shirt();
-                //string temp = Between(data, "STANDARD_TSHIRT-prices-US: ", ",");
-                //if (!double.TryParse(Regex.Replace(temp, " ", ""), out double price))
-                //{
-                //    price = 19.99;
-                //}
-                //s.StandardTShirt.Prices[0] = price;
-
-                ////PNG File Name
-                //temp = Between(data, "\"FRONT\": \"", "\"");
-                //s.FrontStdPath = Path.GetDirectoryName(jsonFilePath) + "\\" + temp;
-
-                ////Fit Types
-                //temp = Between(data, "\"STANDARD_TSHIRT\": {", "]");
-                //s.StandardTShirt.FitTypes[0] = temp.Contains("\"men\"");
-                //s.StandardTShirt.FitTypes[1] = temp.Contains("\"women\"");
-                //s.StandardTShirt.FitTypes[2] = temp.Contains("\"youth\"");
-
-                ////Price
-                //string strPrice_US = Between(data, "\"prices-US\":", ",");
-                //if (double.TryParse(strPrice_US, out double price_US))
-                //    s.StandardTShirt.Prices[0] = price_US;
-
-                ////BrandName
-                //s.BrandName = Between(data, "\"brandName\": \"", "\"");
-                //s.DesignTitle = Between(data, "\"designTitle\": \"", "\"");
-                //s.FeatureBullet1 = Between(data, "\"featureBullet1\": \"", "\"");
-                //s.FeatureBullet2 = Between(data, "\"featureBullet2\": \"", "\"");
-                //s.Description = Between(data, "\"description\": \"", "\"");
-                //return s;
+               
             }
             catch
             {

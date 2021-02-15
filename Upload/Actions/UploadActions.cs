@@ -48,6 +48,8 @@ namespace Upload.Actions
                 ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
                 RemoveFolderCmd = new RelayCommand(RemoveFolderCmdInvoke),
                 FolderChangeCmd = new RelayCommand(FolderChangeCmdInvoke),
+                BrowseUploadFolderCmd = new RelayCommand(BrowseUploadFolderCmdInvoke),
+                StartAutoUploadCmd = new RelayCommand(AutoUploadCmdInvoke),
             };
             mainVM.UserFolders = GetUserFolders();
             mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => Properties.Settings.Default.UserFolderPath.EndsWith(x));
@@ -55,6 +57,22 @@ namespace Upload.Actions
             uploadWindow.Show();
         }
 
+        private void BrowseUploadFolderCmdInvoke(object obj)
+        {
+            if (obj is UploadWindowViewModel mainVM)
+            {
+                using (FolderBrowserDialog folderDialog = new FolderBrowserDialog())
+                {
+
+                    folderDialog.ShowNewFolderButton = true;
+                    folderDialog.Description = "Browse for Image Folder";
+                    if (folderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        mainVM.UploadFolder = folderDialog.SelectedPath;
+                    }
+                }
+            }
+        }
         private void SaveEmailPassword(object obj)
         {
             if (obj is UploadWindowViewModel uploadVM)
@@ -189,15 +207,9 @@ namespace Upload.Actions
                 {
                     UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
                     SaveEmailPassword(uploadVM);
-                    ////Save Setting
-                    //Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
-                    //Properties.Settings.Default.Email = Common.Crypt.Encrypt(uploadVM.Email, true);
-                    //PasswordBox passwordBox = wind.FindName("password") as PasswordBox;
-                    //if (passwordBox != null)
-                    //{
-                    //    Properties.Settings.Default.Password = Common.Crypt.Encrypt(passwordBox.Password, true);
-                    //}
-                    //Properties.Settings.Default.Save();
+                    //Save Setting
+                    Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
+                    Properties.Settings.Default.Save();
                     UploadMerch.QuitDriver();
                 }
             }
@@ -374,7 +386,7 @@ namespace Upload.Actions
                                 for (int i = 0; i < mainVM.Shirts.Count; i++)
                                 {
                                     mainVM.SelectedShirt = mainVM.Shirts[i];
-                                    if (!upload.Upload(mainVM, mainVM.Shirts[i]))
+                                    if (!upload.Upload(mainVM.Shirts[i]))
                                         failShirts.Add(mainVM.Shirts[i]);
                                 }
                                 UploadMerch.QuitDriver();
@@ -422,6 +434,46 @@ namespace Upload.Actions
                 lstShirts.ForEach(x => mainVM.Shirts.Add(x));
             }
         }
+
+        private void AutoUploadCmdInvoke(object obj)
+        {
+            UploadWindow mainWindow = obj as UploadWindow;
+            if (mainWindow != null)
+            {
+                UploadWindowViewModel mainVM = mainWindow.DataContext as UploadWindowViewModel;
+                mainVM.password = GetPassword(mainWindow);
+                if (mainVM.IsUploading == false)
+                {
+                    mainVM.IsUploading = true;
+                    if (mainVM != null)
+                    {
+                        Thread thread = new Thread(x =>
+                        {
+                            AutoUpload autoUpload = new AutoUpload(mainVM);
+                            autoUpload.WriteLog = WriteAutoUploadLog;
+                            autoUpload.StartWatching(mainVM.UploadFolder);
+                        });
+                        thread.SetApartmentState(ApartmentState.STA);
+                        thread.Start();
+                    }
+                }
+                else
+                {
+                    Utils.ShowErrorMessageBox("Already Running!");
+                }
+            }
+        }
+
+        private void WriteAutoUploadLog(UploadWindowViewModel mainVM, string log)
+        {
+            if (mainVM.AutoUploadLog.Length > 1000000)
+            {
+                mainVM.AutoUploadLog = string.Empty;
+            }
+            mainVM.AutoUploadLog += log;
+            mainVM.AutoUploadLog += "\n";
+        }
+
         private string GetPassword(UploadWindow uploadWind)
         {
             try

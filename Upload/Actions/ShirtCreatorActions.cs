@@ -131,11 +131,11 @@ namespace Upload.Actions
                     Dictionary<int, ShirtStatus> dictError = new Dictionary<int, ShirtStatus>();
                     for (int i=0;i<shirtVM.Shirts.Count;i++)
                     {
-                        Shirt _shirt = shirtVM.Shirts[i];
+                        Shirt shirt = shirtVM.Shirts[i];
                         ShirtStatus errorCode = 0;
                         if (!string.IsNullOrEmpty(shirt.ImagePath))
                         {
-                            if (ValidateShirt(_shirt, ref errorCode))
+                            if (ValidateShirt(shirt, ref errorCode))
                             {
                                 JsonDataAccess dataAccess = new JsonDataAccess();
                                 ShirtData sData = ShirtDTO.MapData(shirt, typeof(ShirtData)) as ShirtData;
@@ -152,7 +152,7 @@ namespace Upload.Actions
                         string errorMessage = "Following shirt(s) are invalid:\n";
                         foreach (var error in dictError)
                         {
-                            errorMessage += error.Key.ImagePath + ": " + GetErrorMessage(error.Value) + "\n";
+                            errorMessage += error.Key + ": " + GetErrorMessage(error.Value) + "\n";
                         }
                         Utils.ShowErrorMessageBox(errorMessage);
                     }

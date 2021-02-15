@@ -227,6 +227,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Actions\AutoUpload.cs" />
     <Compile Include="Actions\Chrome\Helper.cs" />
     <Compile Include="Actions\Chrome\UploadMerch.cs" />
     <Compile Include="Actions\ExcelActions.cs" />

@@ -94,7 +94,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Name="grid_add_folder" Grid.Row="1" Grid.Column="1" Visibility="Collapsed">
-                    
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
@@ -104,11 +104,11 @@
                            ToolTip ="Choose a folder to save your cookies for automatically logging in next time"/>
                     <TextBox Grid.Column="1" Margin="5" Text="{Binding AddFolderName}" HorizontalAlignment="Stretch"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal">
-                    <Button  Content="Add" Padding="0" FontSize="10" 
+                        <Button  Content="Add" Padding="0" FontSize="10" 
                             Height="25" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40"
                             Command="{Binding ChooseFolderCmd}" CommandParameter="{Binding}"
                             ToolTip="Add new folder"/>
-                    <Button Name="button_close_folder" Margin="5" Content="Close" Padding="0" FontSize="10" 
+                        <Button Name="button_close_folder" Margin="5" Content="Close" Padding="0" FontSize="10" 
                             Height="25" VerticalAlignment="Center" HorizontalAlignment="Left" Width="40"
                             Background="Crimson" BorderBrush="Crimson"
                             ToolTip="Cancel" Click="button_close_folder_Click"/>
@@ -129,23 +129,33 @@
                 </Grid>
             </Grid>
         </GroupBox>
-        <GroupBox Header="Upload" Grid.Row="1" Grid.ColumnSpan="3" BorderThickness="0" Padding="5">
+        <GroupBox Name="UploadGroupBox" Header="Upload" Grid.Row="1" Grid.ColumnSpan="3" BorderThickness="0" Padding="5"
+                  Visibility="{Binding AutoUploadModeEnable, Converter={StaticResource ReverseBoolToVis}, ConverterParameter=1}">
             <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="41*"/>
+                    <ColumnDefinition Width="226*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Grid>
+                <Grid Grid.ColumnSpan="2" Margin="0,0,0.4,0.2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Width="100" Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
                         <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
-                        <Button Command="{Binding EditShirtCmd}" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>
+                        <!--<Button Command="{Binding EditShirtCmd}" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>-->
                         <Button Command="{Binding DeleteCmd}" Background="Crimson" BorderBrush="Crimson" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}"  Margin="5" Content="Remove"  Height="25" VerticalAlignment="Center" FontSize="12"/>
                         <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
                         <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
+                        <TextBlock HorizontalAlignment="Center" Margin="10">
+                            <Hyperlink Command="{Binding AutoModeEnableCmd}" CommandParameter="{Binding}">
+                                Auto Upload
+                            </Hyperlink>
+                        </TextBlock>
 
                         <!--<Button Command="{Binding AbortCmd}" Margin="10" Content="Abort" Visibility="Collapsed"/>
             <Button Command="{Binding SaveXmlCmd}" CommandParameter="{Binding}" Margin="5" Content="Save xml" Visibility="Collapsed"/>-->
@@ -164,7 +174,7 @@
                         </ListView.ItemTemplate>
                     </ListView>
                 </Grid>
-                <Grid Grid.Row="1" Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}">
+                <Grid Visibility="{Binding EnableDescription, Converter={StaticResource BoolToVisibility}}" Grid.ColumnSpan="2" Margin="0,143,0.4,-0.4" Grid.RowSpan="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
@@ -175,6 +185,42 @@
                                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                         <TextBlock MaxWidth="{Binding ElementName=lstShirt,Path=Width}" Grid.Column="1" Text="{Binding Descriptions}" 
                         TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </GroupBox>
+        <GroupBox Name="AutoScanGroupBox" Header="Auto Upload File In Folder" Grid.Row="1" Grid.ColumnSpan="3" BorderThickness="0" Padding="5" 
+                  Visibility="{Binding AutoUploadModeEnable, Converter={StaticResource ReverseBoolToVis}, ConverterParameter=0}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Width="100" Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
+                    <Button Command="{Binding BrowseUploadFolderCmd}" CommandParameter="{Binding}"  Margin="5,10" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
+                    <Button Command="{Binding StartAutoUploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Start" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
+                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0"  VerticalAlignment="Top" HorizontalAlignment="Right">
+                        <StackPanel Orientation="Horizontal" Height="30" Margin="5">
+                            <TextBlock Width="120" Text="Folder To Watch:" Margin="5,0" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding UploadFolder}" BorderThickness="1" Width="200" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="5" Height="30">
+                            <TextBlock Width="120" Text="Daily Upload Limit:" Margin="5,0" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding DailyUploadLimit}" BorderThickness="1" Width="200" />
+                        </StackPanel>
+                    </StackPanel>
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
+                        <TextBox Text="{Binding AutoUploadLog}" VerticalAlignment="Bottom" Height="Auto"
+                                TextWrapping="NoWrap" IsReadOnly="True" BorderThickness="0" Margin="5"
+                                ScrollViewer.CanContentScroll="True"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </ScrollViewer>
                 </Grid>
             </Grid>

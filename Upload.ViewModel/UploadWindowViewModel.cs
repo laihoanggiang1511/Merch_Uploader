@@ -24,6 +24,9 @@ namespace Upload.ViewModel
         public ICommand ShowConfigurationCmd { get; set; }
         public ICommand RemoveFolderCmd { get; set; }
         public ICommand FolderChangeCmd { get; set; }
+        public ICommand AutoModeEnableCmd { get; set; }
+        public ICommand BrowseUploadFolderCmd { get; set; }
+        public ICommand StartAutoUploadCmd { get; set; }
 
         public string password;
         public ObservableCollection<Shirt> Shirts { get; set; }
@@ -291,10 +294,66 @@ namespace Upload.ViewModel
                 }
             }
         }
+        private int dailyUploadLimit = 50;
+        public int DailyUploadLimit
+        {
+            get { return dailyUploadLimit; }
+            set
+            {
+                if (dailyUploadLimit != value)
+                {
+                    dailyUploadLimit = value;
+                    RaisePropertyChanged("DailyUploadLimit");
+                }
+            }
+        }
 
+        private string uploadFolder;
+        public string UploadFolder
+        {
+            get { return uploadFolder; }
+            set
+            {
+                if (uploadFolder != value)
+                {
+                    uploadFolder = value;
+                    RaisePropertyChanged("UploadFolder");
+                }
+            }
+        }
+
+        private bool autoUploadModeEnable = false;
+        public bool AutoUploadModeEnable
+        {
+            get { return autoUploadModeEnable; }
+            set
+            {
+                if (autoUploadModeEnable != value)
+                {
+                    autoUploadModeEnable = value;
+                    RaisePropertyChanged("AutoUploadModeEnable");
+                }
+            }
+        }
+
+        private string autoUploadLog = String.Empty;
+        public string AutoUploadLog
+        {
+            get { return autoUploadLog; }
+            set
+            {
+                if (autoUploadLog != value)
+                {
+                    autoUploadLog = value;
+                    RaisePropertyChanged("AutoUploadLog");
+                }
+            }
+        }
         public UploadWindowViewModel()
         {
             Shirts = new ObservableCollection<Shirt>();
+            AutoModeEnableCmd = new RelayCommand(x => { (x as UploadWindowViewModel).AutoUploadModeEnable = true; });
+
         }
     }
 }

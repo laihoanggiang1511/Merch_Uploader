@@ -40,18 +40,18 @@
             Microsoft.Office.Tools.Ribbon.RibbonDropDownItem ribbonDropDownItemImpl4 = this.Factory.CreateRibbonDropDownItem();
             this.tab1 = this.Factory.CreateRibbonTab();
             this.group1 = this.Factory.CreateRibbonGroup();
-            this.group2 = this.Factory.CreateRibbonGroup();
-            this.cbb_Language = this.Factory.CreateRibbonComboBox();
-            this.Dictionary = this.Factory.CreateRibbonGroup();
-            this.cbb_Dictionary = this.Factory.CreateRibbonComboBox();
             this.btn_Browse = this.Factory.CreateRibbonButton();
             this.btn_Edit = this.Factory.CreateRibbonButton();
             this.btn_SaveFile = this.Factory.CreateRibbonButton();
+            this.group2 = this.Factory.CreateRibbonGroup();
+            this.cbb_Language = this.Factory.CreateRibbonComboBox();
             this.btn_Translate = this.Factory.CreateRibbonButton();
             this.btn_CheckTM = this.Factory.CreateRibbonButton();
-            this.btn_UseDictionary = this.Factory.CreateRibbonButton();
-            this.btn_EditDict = this.Factory.CreateRibbonButton();
+            this.Dictionary = this.Factory.CreateRibbonGroup();
+            this.cbb_Dictionary = this.Factory.CreateRibbonComboBox();
             this.buttonGroup2 = this.Factory.CreateRibbonButtonGroup();
+            this.btn_EditDict = this.Factory.CreateRibbonButton();
+            this.btn_UseDictionary = this.Factory.CreateRibbonButton();
             this.tab1.SuspendLayout();
             this.group1.SuspendLayout();
             this.group2.SuspendLayout();
@@ -74,41 +74,6 @@
             this.group1.Items.Add(this.btn_SaveFile);
             this.group1.Label = "File";
             this.group1.Name = "group1";
-            // 
-            // group2
-            // 
-            this.group2.Items.Add(this.cbb_Language);
-            this.group2.Items.Add(this.btn_Translate);
-            this.group2.Items.Add(this.btn_CheckTM);
-            this.group2.Label = "Language";
-            this.group2.Name = "group2";
-            // 
-            // cbb_Language
-            // 
-            ribbonDropDownItemImpl1.Label = "German";
-            ribbonDropDownItemImpl2.Label = "French";
-            ribbonDropDownItemImpl3.Label = "Italian";
-            ribbonDropDownItemImpl4.Label = "Spanish";
-            this.cbb_Language.Items.Add(ribbonDropDownItemImpl1);
-            this.cbb_Language.Items.Add(ribbonDropDownItemImpl2);
-            this.cbb_Language.Items.Add(ribbonDropDownItemImpl3);
-            this.cbb_Language.Items.Add(ribbonDropDownItemImpl4);
-            this.cbb_Language.Label = "To";
-            this.cbb_Language.Name = "cbb_Language";
-            this.cbb_Language.Text = null;
-            // 
-            // Dictionary
-            // 
-            this.Dictionary.Items.Add(this.cbb_Dictionary);
-            this.Dictionary.Items.Add(this.buttonGroup2);
-            this.Dictionary.Label = "Quick Replace";
-            this.Dictionary.Name = "Dictionary";
-            // 
-            // cbb_Dictionary
-            // 
-            this.cbb_Dictionary.Label = "Dictionary:";
-            this.cbb_Dictionary.Name = "cbb_Dictionary";
-            this.cbb_Dictionary.Text = null;
             // 
             // btn_Browse
             // 
@@ -135,6 +100,28 @@
             this.btn_SaveFile.ShowImage = true;
             this.btn_SaveFile.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_SaveFile_Click);
             // 
+            // group2
+            // 
+            this.group2.Items.Add(this.cbb_Language);
+            this.group2.Items.Add(this.btn_Translate);
+            this.group2.Items.Add(this.btn_CheckTM);
+            this.group2.Label = "Language";
+            this.group2.Name = "group2";
+            // 
+            // cbb_Language
+            // 
+            ribbonDropDownItemImpl1.Label = "German";
+            ribbonDropDownItemImpl2.Label = "French";
+            ribbonDropDownItemImpl3.Label = "Italian";
+            ribbonDropDownItemImpl4.Label = "Spanish";
+            this.cbb_Language.Items.Add(ribbonDropDownItemImpl1);
+            this.cbb_Language.Items.Add(ribbonDropDownItemImpl2);
+            this.cbb_Language.Items.Add(ribbonDropDownItemImpl3);
+            this.cbb_Language.Items.Add(ribbonDropDownItemImpl4);
+            this.cbb_Language.Label = "To";
+            this.cbb_Language.Name = "cbb_Language";
+            this.cbb_Language.Text = null;
+            // 
             // btn_Translate
             // 
             this.btn_Translate.Image = global::UploadTemplate.Properties.Resources.translate;
@@ -151,13 +138,24 @@
             this.btn_CheckTM.ShowImage = true;
             this.btn_CheckTM.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_CheckTM_Click);
             // 
-            // btn_UseDictionary
+            // Dictionary
             // 
-            this.btn_UseDictionary.Image = global::UploadTemplate.Properties.Resources.translate;
-            this.btn_UseDictionary.Label = "Use";
-            this.btn_UseDictionary.Name = "btn_UseDictionary";
-            this.btn_UseDictionary.ShowImage = true;
-            this.btn_UseDictionary.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_UseDictionary_Click);
+            this.Dictionary.Items.Add(this.cbb_Dictionary);
+            this.Dictionary.Items.Add(this.buttonGroup2);
+            this.Dictionary.Label = "Quick Replace";
+            this.Dictionary.Name = "Dictionary";
+            // 
+            // cbb_Dictionary
+            // 
+            this.cbb_Dictionary.Label = "Dictionary:";
+            this.cbb_Dictionary.Name = "cbb_Dictionary";
+            this.cbb_Dictionary.Text = null;
+            // 
+            // buttonGroup2
+            // 
+            this.buttonGroup2.Items.Add(this.btn_EditDict);
+            this.buttonGroup2.Items.Add(this.btn_UseDictionary);
+            this.buttonGroup2.Name = "buttonGroup2";
             // 
             // btn_EditDict
             // 
@@ -167,11 +165,13 @@
             this.btn_EditDict.ShowImage = true;
             this.btn_EditDict.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_EditDict_Click);
             // 
-            // buttonGroup2
+            // btn_UseDictionary
             // 
-            this.buttonGroup2.Items.Add(this.btn_EditDict);
-            this.buttonGroup2.Items.Add(this.btn_UseDictionary);
-            this.buttonGroup2.Name = "buttonGroup2";
+            this.btn_UseDictionary.Image = global::UploadTemplate.Properties.Resources.translate;
+            this.btn_UseDictionary.Label = "Use";
+            this.btn_UseDictionary.Name = "btn_UseDictionary";
+            this.btn_UseDictionary.ShowImage = true;
+            this.btn_UseDictionary.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_UseDictionary_Click);
             // 
             // Ribbon2
             // 
