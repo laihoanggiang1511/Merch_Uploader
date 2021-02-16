@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using Upload.Actions;
 
@@ -20,26 +21,8 @@ namespace Upload
             base.OnStartup(e);
 
             //Check for update
-            var localVersion = Assembly.GetExecutingAssembly().GetName().Version;
-
-            UpdateHelper update = new UpdateHelper(1000, localVersion);
-            
-            update.ConnectUpdateServer();
-            if (update.IsThereNewUpdate())
-            {
-                if(MessageBox.Show("There is a new update. Do you want to download it?", "Update",
-                    MessageBoxButton.YesNo,MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    string path = Path.GetTempPath();
-                    path = Path.Combine(path, "Upload_Setup.msi");
-                    if(File.Exists(path))
-                    {
-                        File.Delete(path);
-                    }
-                    update.ExecuteUpdate(path);
-                }
-            }
-
+            Thread thread = new Thread(x => MainActions.CheckForUpdate());
+            thread.Start();
 
             //Setup log
             string logPath = @"Upload\MerchUploadLog.txt";
@@ -50,7 +33,7 @@ namespace Upload
             string productId = "d26ecd19-9ba5-4372-b509-7041becc28d1";
             CryptlexLicenseManager.SetLicenseData(productData, productId, 1);
 
-
+            //Run
             if (e.Args != null && e.Args.Length > 0)
             {
                 new ShirtCreatorActions().ShowWindow(e.Args[0]);

@@ -20,12 +20,13 @@ namespace Common.Update
 
         public Version LocalVersion { get; set; }
 
-        const string updateServerURL = "http://104.161.36.170//api/update";
+         string updateServerURL = "http://192.168.0.1/api/update";
 
         int ProductId { get; set; }
 
-        public UpdateHelper(int productId, Version localVersion)
+        public UpdateHelper(string uploadServerURL, int productId, Version localVersion)
         {
+            updateServerURL = uploadServerURL;
             ProductId = productId;
             //Version version = null;
             //Version.TryParse(localVersion, out version);

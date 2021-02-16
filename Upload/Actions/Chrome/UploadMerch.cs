@@ -109,12 +109,13 @@ namespace Upload.Actions.Chrome
 
                     // Submit
                     Log.log.Info("---Summit---");
-                    if (Helper.GetElementWithWait(driver, By.Id("submit-button"), 15) == null)
-                        return false;
                     Helper.ClickElement(driver, By.Id("submit-button"));
-                    System.Threading.Thread.Sleep(300);
-                    Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/button[2]"));
                     System.Threading.Thread.Sleep(1000);
+                    if(!Helper.ClickElement(driver, By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/button[2]")))
+                    {
+                        return false;
+                    }
+                    System.Threading.Thread.Sleep(500);
                     Log.log.Info("-----------End Upload-----------");
                     return true;
                 }

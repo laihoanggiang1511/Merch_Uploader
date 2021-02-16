@@ -24,7 +24,8 @@ namespace Upload
             {
                 var lATimezone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
                 var localTimezone = TimeZoneInfo.Local;
-                return TimeZoneInfo.ConvertTime(dateTime, localTimezone, lATimezone);
+                DateTime laTime = TimeZoneInfo.ConvertTime(dateTime, localTimezone, lATimezone);
+                return laTime;
             }
             catch
             {

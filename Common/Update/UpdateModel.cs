@@ -13,5 +13,8 @@ namespace Common.Update
         public string IsProductValid { get; set; }
         public string Descriptions { get; set; }
         public int ProductId { get; set; }
+        public string ChangeLog { get; set; }
+        public string NewUpdateServerURL { get; set; }
+
     }
 }

@@ -102,7 +102,7 @@ namespace Upload.Actions.Chrome
             return false;
         }
 
-        public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 3)
+        public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 5)
         {
             try
             {
