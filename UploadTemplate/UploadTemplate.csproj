@@ -143,13 +143,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CheckTrademarkAPI.cs" />
+    <Compile Include="Forms\TrademarkView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TrademarkView.Designer.cs">
+      <DependentUpon>TrademarkView.cs</DependentUpon>
+    </Compile>
     <Compile Include="VariablesAndEnums.cs" />
     <Compile Include="Actions.cs" />
     <Compile Include="DictionaryActions.cs" />
-    <Compile Include="DictionaryView.cs">
+    <Compile Include="Forms\DictionaryView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DictionaryView.Designer.cs">
+    <Compile Include="Forms\DictionaryView.Designer.cs">
       <DependentUpon>DictionaryView.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -178,7 +185,7 @@
     <Compile Include="ThisWorkbook.Designer.cs">
       <DependentUpon>ThisWorkbook.Designer.xml</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="DictionaryView.resx">
+    <EmbeddedResource Include="Forms\DictionaryView.resx">
       <DependentUpon>DictionaryView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -189,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Ribbon2.resx">
       <DependentUpon>Ribbon2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TrademarkView.resx">
+      <DependentUpon>TrademarkView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

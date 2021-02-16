@@ -18,6 +18,19 @@ namespace Upload
 {
     public class Utils
     {
+        public static DateTime ConvertToLATime(DateTime dateTime)
+        {
+            try
+            {
+                var lATimezone = TimeZoneInfo.FindSystemTimeZoneById("Pacific Standard Time");
+                var localTimezone = TimeZoneInfo.Local;
+                return TimeZoneInfo.ConvertTime(dateTime, localTimezone, lATimezone);
+            }
+            catch
+            {
+                return dateTime;
+            }
+        }
         public static void ShowErrorMessageBox(string message)
         {
             MessageBox.Show(message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);

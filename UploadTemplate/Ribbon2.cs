@@ -24,7 +24,7 @@ namespace UploadTemplate
 
     public partial class Ribbon2
     {
-        static Dispatcher MainDispatcher = null; 
+        static Dispatcher MainDispatcher = null;
         private void Ribbon2_Load(object sender, RibbonUIEventArgs e)
         {
             cbb_Language.Text = "German";
@@ -120,7 +120,7 @@ namespace UploadTemplate
             ShirtData sData = Actions.MapExcelToShirt(startRow);
             //sData.ImagePath = string.Empty;
             JsonSerializerSettings settings = new JsonSerializerSettings();
-            string strJson = JsonConvert.SerializeObject(sData,Formatting.None);
+            string strJson = JsonConvert.SerializeObject(sData, Formatting.None);
             string strJsonFileName = Path.GetTempFileName();
             File.WriteAllText(strJsonFileName, strJson);
 
@@ -152,7 +152,7 @@ namespace UploadTemplate
                         if (!string.IsNullOrEmpty(jsonString))
                         {
                             ShirtData sData = JsonConvert.DeserializeObject<ShirtData>(jsonString);
-                            MainDispatcher.Invoke(delegate() { Actions.MapShirtToExcel(sData, (int)startRow); });
+                            MainDispatcher.Invoke(delegate () { Actions.MapShirtToExcel(sData, (int)startRow); });
                         }
                     }
                 }
@@ -166,14 +166,27 @@ namespace UploadTemplate
 
         private void btn_CheckTM_Click(object sender, RibbonControlEventArgs e)
         {
-            MessageBox.Show("Comming Soon");
+            Range activeCell = Globals.Sheet1.Application.ActiveCell;
+            if (activeCell != null && !string.IsNullOrEmpty(activeCell.Value))
+            {
+                string[] splitString = activeCell.Value.Split('.');
+                List<List<string>> listTM = new List<List<string>>();
+                foreach (string sentence in splitString)
+                {
+                    var trademarks = CheckTrademarkAPI.CheckTrademark(sentence);
+                    if (trademarks != null)
+                    {
+                        listTM.AddRange(trademarks);
+                    }
+                }
+                TrademarkView tmView = new TrademarkView(listTM);
+                tmView.ShowDialog();
+
+            }
         }
 
         private void btn_EditDict_Click(object sender, RibbonControlEventArgs e)
         {
-            //MainDispatcher = Dispatcher.CurrentDispatcher;
-            //MainDispatcher.Invoke(delegate () { Actions.MapShirtToExcel(sData, (int)startRow); });
-
             DictionaryView dictView = new DictionaryView();
             dictView.ShowDialog();
         }
@@ -181,12 +194,15 @@ namespace UploadTemplate
         private void btn_UseDictionary_Click(object sender, RibbonControlEventArgs e)
         {
             Range cell = Globals.Sheet1.Application.ActiveCell;
-            string key = this.cbb_Dictionary.Text;
-            string value = string.Empty;
-            if (!string.IsNullOrEmpty(key) &&
-                GlobalVariables.replaceDict.TryGetValue(key, out value))
+            if (cell != null)
             {
-                Globals.Sheet1.Application.ActiveCell.Value = value;
+                string key = this.cbb_Dictionary.Text;
+                string value = string.Empty;
+                if (!string.IsNullOrEmpty(key) &&
+                    GlobalVariables.replaceDict.TryGetValue(key, out value))
+                {
+                    Globals.Sheet1.Application.ActiveCell.Value = value;
+                }
             }
         }
     }

@@ -442,11 +442,16 @@ namespace Upload.Actions
             {
                 UploadWindowViewModel mainVM = mainWindow.DataContext as UploadWindowViewModel;
                 mainVM.password = GetPassword(mainWindow);
-                if (mainVM.IsUploading == false)
+                if (mainVM != null)
                 {
-                    mainVM.IsUploading = true;
-                    if (mainVM != null)
+                    if (mainVM.IsUploading == false)
                     {
+                        mainVM.IsUploading = true;
+                        if (!Directory.Exists(mainVM.UploadFolder))
+                        {
+                            Utils.ShowErrorMessageBox("Upload Folder does not exist!");
+                            return;           
+                        }
                         Thread thread = new Thread(x =>
                         {
                             AutoUpload autoUpload = new AutoUpload(mainVM);
@@ -457,6 +462,7 @@ namespace Upload.Actions
                         thread.Start();
                     }
                 }
+
                 else
                 {
                     Utils.ShowErrorMessageBox("Already Running!");

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using Upload.Actions.Chrome;
 using Upload.DataAccess;
 using Upload.DataAccess.DTO;
@@ -24,7 +25,7 @@ namespace Upload.Actions
         readonly int dailyUploadLimit;
         DateTime startTime;
         int countUploadToday;
-        public Action<UploadWindowViewModel,string> WriteLog;
+        public Action<UploadWindowViewModel, string> WriteLog;
         UploadWindowViewModel uploadVM;
 
         public AutoUpload(UploadWindowViewModel uploadVM)
@@ -38,7 +39,7 @@ namespace Upload.Actions
         }
         public void StartWatching(string folderToWatch)
         {
-            startTime = System.DateTime.Now.Date;
+            startTime = Utils.ConvertToLATime(System.DateTime.Now).Date;
             Thread thread = new Thread(new ThreadStart(OnStartUpload));
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
@@ -65,7 +66,7 @@ namespace Upload.Actions
                 {
                     WriteLog.Invoke(uploadVM, $"Watching {folderToWatch}");
                     Thread.Sleep(60000);
-                }                
+                }
             }
         }
 
@@ -87,11 +88,8 @@ namespace Upload.Actions
             }
             if (shirt != null)
             {
-                if (shirtQueue.Select(x => x.Key == e.FullPath).Count() == 0)
-                {
-                    WriteLog.Invoke(uploadVM, $"File {e.FullPath} added to queue");
-                    shirtQueue.Add(new KeyValuePair<string, Shirt>(e.FullPath, shirt));
-                }
+                WriteLog.Invoke(uploadVM, $"File added: {e.FullPath} ");
+                shirtQueue.Add(new KeyValuePair<string, Shirt>(e.FullPath, shirt));
             }
         }
 
@@ -99,8 +97,8 @@ namespace Upload.Actions
         {
             while (true)
             {
-                Thread.Sleep(1000);
-                DateTime today = System.DateTime.Now.Date;
+                Thread.Sleep(10000);
+                DateTime today = Utils.ConvertToLATime(System.DateTime.Now).Date;
                 if (!today.Equals(startTime))
                 {
                     countUploadToday = 0;
@@ -135,9 +133,11 @@ namespace Upload.Actions
                     }
 
                     UploadMerch.QuitDriver();
+                    //Copy to success or fail folder
+                    string dateFolder = Utils.ConvertToLATime(DateTime.Now).ToString("yyyy-MM-dd");
                     if (uploadSuccess == true)
                     {
-                        string successDir = Path.Combine(dir, "Success");
+                        string successDir = Path.Combine(dir, "Success", dateFolder);
                         CutFile(Path.GetFileName(jsonFullFileName), dir, successDir);
                         CutFile(Path.GetFileName(shirt.ImagePath), dir, successDir);
                         countUploadToday++;
@@ -147,7 +147,7 @@ namespace Upload.Actions
                     else
                     {
                         WriteLog.Invoke(uploadVM, $"Upload Fail: {jsonFileName}");
-                        string failDir = Path.Combine(dir, "Fail");
+                        string failDir = Path.Combine(dir, "Fail", dateFolder);
                         CutFile(Path.GetFileName(jsonFullFileName), dir, failDir);
                         CutFile(Path.GetFileName(shirt.ImagePath), dir, failDir);
                     }
