@@ -470,11 +470,10 @@ namespace Upload.Actions
                         thread.SetApartmentState(ApartmentState.STA);
                         thread.Start();
                     }
-                }
-
-                else
-                {
-                    Utils.ShowErrorMessageBox("Already Running!");
+                    else
+                    {
+                        Utils.ShowErrorMessageBox("Already Running!");
+                    }
                 }
             }
         }

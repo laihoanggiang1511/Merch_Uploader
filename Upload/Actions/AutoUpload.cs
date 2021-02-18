@@ -39,6 +39,8 @@ namespace Upload.Actions
         }
         public void StartWatching(string folderToWatch)
         {
+            WriteLog.Invoke(uploadVM, $"Waiting for files in folder: {folderToWatch}");
+
             //Scan for firstTime
             string[] filesInDir = Directory.GetFiles(folderToWatch, "*.*", SearchOption.TopDirectoryOnly);
             foreach (string file in filesInDir)
@@ -69,7 +71,6 @@ namespace Upload.Actions
                 watcher.Created += OnFileChanged;
                 // Begin watching.
                 watcher.EnableRaisingEvents = true;
-                WriteLog.Invoke(uploadVM, $"Watching {folderToWatch}");
                 while (true)
                 {
                     Thread.Sleep(100000);
