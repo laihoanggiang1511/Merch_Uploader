@@ -34,6 +34,7 @@
             this.btn_Save = new System.Windows.Forms.Button();
             this.btn_Cancel = new System.Windows.Forms.Button();
             this.grid_Dict = new System.Windows.Forms.DataGridView();
+            this.btn_OpenDict = new System.Windows.Forms.Button();
             this.Column_Key = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column_Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.grid_Dict)).BeginInit();
@@ -96,15 +97,25 @@
             this.grid_Dict.Size = new System.Drawing.Size(541, 171);
             this.grid_Dict.TabIndex = 5;
             // 
+            // btn_OpenDict
+            // 
+            this.btn_OpenDict.Location = new System.Drawing.Point(144, 201);
+            this.btn_OpenDict.Name = "btn_OpenDict";
+            this.btn_OpenDict.Size = new System.Drawing.Size(92, 40);
+            this.btn_OpenDict.TabIndex = 6;
+            this.btn_OpenDict.Text = "Open File";
+            this.btn_OpenDict.UseVisualStyleBackColor = true;
+            this.btn_OpenDict.Click += new System.EventHandler(this.btn_OpenDict_Click);
+            // 
             // Column_Key
             // 
-            this.Column_Key.HeaderText = "Key";
+            this.Column_Key.HeaderText = "Replace";
             this.Column_Key.MinimumWidth = 6;
             this.Column_Key.Name = "Column_Key";
             // 
             // Column_Value
             // 
-            this.Column_Value.HeaderText = "Value";
+            this.Column_Value.HeaderText = "With";
             this.Column_Value.MinimumWidth = 6;
             this.Column_Value.Name = "Column_Value";
             // 
@@ -113,6 +124,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(551, 253);
+            this.Controls.Add(this.btn_OpenDict);
             this.Controls.Add(this.grid_Dict);
             this.Controls.Add(this.btn_Cancel);
             this.Controls.Add(this.btn_Save);
@@ -133,6 +145,7 @@
         private System.Windows.Forms.Button btn_Save;
         private System.Windows.Forms.Button btn_Cancel;
         private System.Windows.Forms.DataGridView grid_Dict;
+        private System.Windows.Forms.Button btn_OpenDict;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Key;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column_Value;
     }

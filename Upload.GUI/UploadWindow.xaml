@@ -150,7 +150,7 @@
                         <!--<Button Command="{Binding EditShirtCmd}" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>-->
                         <Button Command="{Binding DeleteCmd}" Background="Crimson" BorderBrush="Crimson" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}"  Margin="5" Content="Remove"  Height="25" VerticalAlignment="Center" FontSize="12"/>
                         <Button Command="{Binding UploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Upload" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
-                        <ProgressBar  Height="4" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
+                        <ProgressBar  Height="15" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
                         <TextBlock HorizontalAlignment="Center" Margin="10">
                             <Hyperlink Command="{Binding AutoModeEnableCmd}" CommandParameter="{Binding}">
                                 Auto Scan Folder
@@ -199,6 +199,7 @@
                 <StackPanel Width="100" Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
                     <Button Command="{Binding BrowseUploadFolderCmd}" CommandParameter="{Binding}"  Margin="5,10" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
                     <Button Command="{Binding StartAutoUploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Start" Style="{StaticResource MaterialDesignRaisedAccentButton}" Height="25" FontSize="12"/>
+                    <ProgressBar  Height="15" IsIndeterminate="true" Margin="5" Visibility="{Binding IsUploading,Converter={StaticResource BoolToVisibility}}" IsEnabled="{Binding IsUploading}" Foreground="YellowGreen"/>
                 </StackPanel>
                 <Grid>
                     <Grid.RowDefinitions>

@@ -39,6 +39,13 @@ namespace Upload.Actions
         }
         public void StartWatching(string folderToWatch)
         {
+            //Scan for firstTime
+            string[] filesInDir = Directory.GetFiles(folderToWatch, "*.*", SearchOption.TopDirectoryOnly);
+            foreach (string file in filesInDir)
+            {
+                AddToQueue(file);
+            }
+
             startTime = Utils.ConvertToLATime(System.DateTime.Now).Date;
             Thread thread = new Thread(new ThreadStart(OnStartUpload));
             thread.SetApartmentState(ApartmentState.STA);
@@ -62,10 +69,10 @@ namespace Upload.Actions
                 watcher.Created += OnFileChanged;
                 // Begin watching.
                 watcher.EnableRaisingEvents = true;
+                WriteLog.Invoke(uploadVM, $"Watching {folderToWatch}");
                 while (true)
                 {
-                    WriteLog.Invoke(uploadVM, $"Watching {folderToWatch}");
-                    Thread.Sleep(60000);
+                    Thread.Sleep(100000);
                 }
             }
         }
@@ -73,6 +80,11 @@ namespace Upload.Actions
         private void OnFileChanged(object sender, FileSystemEventArgs e)
         {
             string filePath = e.FullPath;
+            AddToQueue(filePath);
+        }
+
+        private void AddToQueue(string filePath)
+        {
             Shirt shirt = null;
             if (Path.GetExtension(filePath).ToLower() == ".json")
             {
@@ -88,8 +100,8 @@ namespace Upload.Actions
             }
             if (shirt != null)
             {
-                WriteLog.Invoke(uploadVM, $"File added: {e.FullPath} ");
-                shirtQueue.Add(new KeyValuePair<string, Shirt>(e.FullPath, shirt));
+                WriteLog.Invoke(uploadVM, $"File added: {filePath} ");
+                shirtQueue.Add(new KeyValuePair<string, Shirt>(filePath, shirt));
             }
         }
 
@@ -111,62 +123,75 @@ namespace Upload.Actions
         {
             foreach (var pair in shirtQueue.GetConsumingEnumerable(CancellationToken.None))
             {
-                while (countUploadToday >= dailyUploadLimit)
+                try
                 {
-                    //block upload
-                    Thread.Sleep(10000);
-                }
-                Shirt shirt = pair.Value;
-                string jsonFullFileName = pair.Key;
-                string dir = Path.GetDirectoryName(jsonFullFileName);
-                string jsonFileName = Path.GetFileName(jsonFullFileName);
-                WriteLog.Invoke(uploadVM, $"Uploading {jsonFileName}");
-                UploadMerch upload = new UploadMerch(password, email);
-                upload.OpenChrome(userFolderPath);
-                if (UploadMerch.driver != null)
-                {
-                    UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                    bool uploadSuccess = upload.Log_In();
-                    if (uploadSuccess)
+                    while (countUploadToday >= dailyUploadLimit)
                     {
-                        uploadSuccess = upload.Upload(shirt);
+                        //block upload
+                        Thread.Sleep(10000);
                     }
+                    Shirt shirt = pair.Value;
+                    string jsonFullFileName = pair.Key;
+                    string dir = Path.GetDirectoryName(jsonFullFileName);
+                    string jsonFileName = Path.GetFileName(jsonFullFileName);
+                    WriteLog.Invoke(uploadVM, $"Uploading {jsonFileName}");
+                    UploadMerch upload = new UploadMerch(password, email);
+                    upload.OpenChrome(userFolderPath);
+                    if (UploadMerch.driver != null)
+                    {
+                        UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                        bool uploadSuccess = upload.Log_In();
+                        if (uploadSuccess)
+                        {
+                            uploadSuccess = upload.Upload(shirt);
+                        }
 
-                    UploadMerch.QuitDriver();
-                    //Copy to success or fail folder
-                    string dateFolder = Utils.ConvertToLATime(DateTime.Now).ToString("yyyy-MM-dd");
-                    if (uploadSuccess == true)
-                    {
-                        string successDir = Path.Combine(dir, "Success", dateFolder);
-                        CutFile(Path.GetFileName(jsonFullFileName), dir, successDir);
-                        CutFile(Path.GetFileName(shirt.ImagePath), dir, successDir);
-                        countUploadToday++;
-                        WriteLog.Invoke(uploadVM, $"Upload Success {jsonFileName}");
-                        WriteLog.Invoke(uploadVM, $"Uploaded today: {countUploadToday}");
+                        UploadMerch.QuitDriver();
+                        //Copy to success or fail folder
+                        string dateFolder = Utils.ConvertToLATime(DateTime.Now).ToString("yyyy-MM-dd");
+                        if (uploadSuccess == true)
+                        {
+                            string successDir = Path.Combine(dir, "Success", dateFolder);
+                            CutFile(Path.GetFileName(jsonFullFileName), dir, successDir);
+                            CutFile(Path.GetFileName(shirt.ImagePath), dir, successDir);
+                            countUploadToday++;
+                            WriteLog.Invoke(uploadVM, $"Upload Success {jsonFileName}");
+                            WriteLog.Invoke(uploadVM, $"Uploaded today: {countUploadToday}");
+                        }
+                        else
+                        {
+                            WriteLog.Invoke(uploadVM, $"Upload Fail: {jsonFileName}");
+                            string failDir = Path.Combine(dir, "Fail", dateFolder);
+                            CutFile(Path.GetFileName(jsonFullFileName), dir, failDir);
+                            CutFile(Path.GetFileName(shirt.ImagePath), dir, failDir);
+                        }
                     }
-                    else
-                    {
-                        WriteLog.Invoke(uploadVM, $"Upload Fail: {jsonFileName}");
-                        string failDir = Path.Combine(dir, "Fail", dateFolder);
-                        CutFile(Path.GetFileName(jsonFullFileName), dir, failDir);
-                        CutFile(Path.GetFileName(shirt.ImagePath), dir, failDir);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    WriteLog.Invoke(uploadVM, ex.Message);
                 }
             }
         }
         private void CutFile(string fileName, string sourceFolder, string destinationFolder)
         {
-
-            if (!Directory.Exists(destinationFolder))
+            try
             {
-                Directory.CreateDirectory(destinationFolder);
+                if (!Directory.Exists(destinationFolder))
+                {
+                    Directory.CreateDirectory(destinationFolder);
+                }
+                string source = Path.Combine(sourceFolder, fileName);
+                string destination = Path.Combine(destinationFolder, fileName);
+                if (File.Exists(source))
+                {
+                    File.Copy(source, destination, true);
+                    File.Delete(source);
+                }
             }
-            string source = Path.Combine(sourceFolder, fileName);
-            string destination = Path.Combine(destinationFolder, fileName);
-            if (File.Exists(source))
+            catch (Exception ex)
             {
-                File.Copy(source, destination, true);
-                File.Delete(source);
+                WriteLog.Invoke(uploadVM, ex.Message);
             }
         }
     }

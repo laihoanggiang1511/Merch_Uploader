@@ -200,6 +200,9 @@
     <EmbeddedResource Include="Forms\TrademarkView.resx">
       <DependentUpon>TrademarkView.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ThisWorkbook.resx">
+      <DependentUpon>ThisWorkbook.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -253,6 +256,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Icons\trademark.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Icons\json.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

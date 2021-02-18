@@ -205,5 +205,34 @@ namespace UploadTemplate
                 }
             }
         }
+
+        private void btn_BrowseJSON_Click(object sender, RibbonControlEventArgs e)
+        {
+            int startRow = Globals.Sheet1.Application.ActiveCell.Row;
+            if (startRow < 4)
+            {
+                startRow = 4;
+            }
+            string[] filePaths = Actions.BrowseForFilePath("Data File |*.JSON;*.xml| All Files |*.*", true);
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                string filePath = filePaths[i];
+                ShirtData shirtData = null;
+                if (Path.GetExtension(filePath).ToLower() == ".json")
+                {
+                    JsonDataAccess jsonData = new JsonDataAccess();
+                    shirtData = jsonData.ReadShirt(filePath);
+                }
+                else if (Path.GetExtension(filePath).ToLower() == ".xml")
+                {
+                    XMLDataAccess xmlData = new XMLDataAccess();
+                    shirtData = xmlData.ReadShirt(filePath);
+                }
+                if (shirtData != null)
+                {
+                    Actions.MapShirtToExcel(shirtData, startRow + i);
+                }
+            } 
+        }
     }
 }

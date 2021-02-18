@@ -47,7 +47,7 @@ namespace Upload.Actions
                 EditShirtCmd = new RelayCommand(EditShirtCmdInvoke),
                 ShowConfigurationCmd = new RelayCommand(ShowConfigurationCmdInvoke),
                 RemoveFolderCmd = new RelayCommand(RemoveFolderCmdInvoke),
-                FolderChangeCmd = new RelayCommand(FolderChangeCmdInvoke),
+                FolderChangeCmd = new RelayCommand(LoadProperties),
                 BrowseUploadFolderCmd = new RelayCommand(BrowseUploadFolderCmdInvoke),
                 StartAutoUploadCmd = new RelayCommand(AutoUploadCmdInvoke),
             };
@@ -73,7 +73,7 @@ namespace Upload.Actions
                 }
             }
         }
-        private void SaveEmailPassword(object obj)
+        private void SaveProperties(object obj)
         {
             if (obj is UploadWindowViewModel uploadVM)
             {
@@ -88,7 +88,10 @@ namespace Upload.Actions
                     }
                     string email = Common.Crypt.Encrypt(uploadVM.Email, true);
                     string password = Common.Crypt.Encrypt(GetPassword(uploadWindow), true);
-                    string[] content = new string[] { email, password };
+                    string uploadFolder = uploadVM.UploadFolder;
+                    string dailyUploadLimit = uploadVM.DailyUploadLimit.ToString();
+
+                    string[] content = new string[] { email, password, uploadFolder, dailyUploadLimit };
                     File.WriteAllLines(dataFileName, content);
                 }
                 catch (Exception ex)
@@ -99,7 +102,7 @@ namespace Upload.Actions
 
         }
 
-        private void FolderChangeCmdInvoke(object obj)
+        private void LoadProperties(object obj)
         {
             if (obj is UploadWindowViewModel uploadVM)
             {
@@ -111,10 +114,16 @@ namespace Upload.Actions
                 if (File.Exists(dataFileName))
                 {
                     string[] data = File.ReadAllLines(dataFileName);
-                    if (data != null && data.Length == 2)
+                    if (data != null && data.Length == 4)
                     {
                         uploadVM.Email = Common.Crypt.Decrypt(data[0], true);
                         SetPassWord(uploadWindow, Common.Crypt.Decrypt(data[1], true));
+                        uploadVM.UploadFolder = data[2];
+                        int dailyUploadLimit;
+                        if (int.TryParse(data[3], out dailyUploadLimit))
+                        {
+                            uploadVM.DailyUploadLimit = dailyUploadLimit;
+                        }
                     }
                 }
             }
@@ -206,7 +215,7 @@ namespace Upload.Actions
                 if (wind != null)
                 {
                     UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
-                    SaveEmailPassword(uploadVM);
+                    SaveProperties(uploadVM);
                     //Save Setting
                     Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
                     Properties.Settings.Default.Save();
@@ -450,7 +459,7 @@ namespace Upload.Actions
                         if (!Directory.Exists(mainVM.UploadFolder))
                         {
                             Utils.ShowErrorMessageBox("Upload Folder does not exist!");
-                            return;           
+                            return;
                         }
                         Thread thread = new Thread(x =>
                         {
@@ -476,8 +485,7 @@ namespace Upload.Actions
             {
                 mainVM.AutoUploadLog = string.Empty;
             }
-            mainVM.AutoUploadLog += log;
-            mainVM.AutoUploadLog += "\n";
+            mainVM.AutoUploadLog += System.DateTime.Now.ToString("yyyy-MMM-dd-HH:mm:ss") + ": " + log + "\n";
         }
 
         private string GetPassword(UploadWindow uploadWind)

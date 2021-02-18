@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +50,10 @@ namespace UploadTemplate
                     {
                         GlobalVariables.replaceDict.Add(key, value);
                     }
+                    else
+                    {
+                        MessageBox.Show("2 keys is duplicate, the second item will be ignored!");
+                    }
                 }
             }
             DictionaryActions.SaveDictionary(GlobalVariables.replaceDict);
@@ -67,6 +73,20 @@ namespace UploadTemplate
                 row.Cells.Add(cellKey);
                 row.Cells.Add(cellValue);
                 grid_Dict.Rows.Add(row);
+            }
+        }
+
+        private void btn_OpenDict_Click(object sender, EventArgs e)
+        {
+            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string dictPath = Path.Combine(appFolder, DictionaryActions.dictFile);
+            if (File.Exists(dictPath))
+            {
+                Process.Start(@"notepad.exe", dictPath);
+            }
+            else
+            {
+                MessageBox.Show("File not created!");
             }
         }
     }

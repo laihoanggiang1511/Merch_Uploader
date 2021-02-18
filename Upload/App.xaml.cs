@@ -19,7 +19,6 @@ namespace Upload
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
             //Check for update
             Thread thread = new Thread(x => MainActions.CheckForUpdate());
             thread.Start();

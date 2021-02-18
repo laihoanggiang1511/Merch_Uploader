@@ -25,13 +25,17 @@ namespace UploadTemplate
         public static readonly string dictFile = "Upload\\Dictionary.json";
         public static Dictionary<string, string> ReadDictionary()
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            Dictionary<string, string> result = null;
             string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             string dictPath = Path.Combine(appFolder, dictFile);
             if (File.Exists(dictPath))
             {
                 string jsonDict = File.ReadAllText(dictPath);
                 result = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonDict);
+            }
+            if(result == null)
+            {
+                result = new Dictionary<string, string>();
             }
             return result;
         }

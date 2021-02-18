@@ -47,6 +47,7 @@
             this.buttonGroup2 = this.Factory.CreateRibbonButtonGroup();
             this.btn_Browse = this.Factory.CreateRibbonButton();
             this.btn_Edit = this.Factory.CreateRibbonButton();
+            this.btn_BrowseJSON = this.Factory.CreateRibbonButton();
             this.btn_SaveFile = this.Factory.CreateRibbonButton();
             this.btn_Translate = this.Factory.CreateRibbonButton();
             this.btn_CheckTM = this.Factory.CreateRibbonButton();
@@ -71,6 +72,7 @@
             // 
             this.group1.Items.Add(this.btn_Browse);
             this.group1.Items.Add(this.btn_Edit);
+            this.group1.Items.Add(this.btn_BrowseJSON);
             this.group1.Items.Add(this.btn_SaveFile);
             this.group1.Label = "File";
             this.group1.Name = "group1";
@@ -101,6 +103,7 @@
             // 
             this.Dictionary.Items.Add(this.cbb_Dictionary);
             this.Dictionary.Items.Add(this.buttonGroup2);
+            this.Dictionary.Items.Add(this.btn_EditDict);
             this.Dictionary.Label = "Quick Template";
             this.Dictionary.Name = "Dictionary";
             // 
@@ -112,14 +115,13 @@
             // 
             // buttonGroup2
             // 
-            this.buttonGroup2.Items.Add(this.btn_EditDict);
             this.buttonGroup2.Items.Add(this.btn_UseDictionary);
             this.buttonGroup2.Name = "buttonGroup2";
             // 
             // btn_Browse
             // 
             this.btn_Browse.Image = global::UploadTemplate.Properties.Resources.browse;
-            this.btn_Browse.Label = "Browse Image...";
+            this.btn_Browse.Label = "Browse Image";
             this.btn_Browse.Name = "btn_Browse";
             this.btn_Browse.ShowImage = true;
             this.btn_Browse.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.Btn_Browse_Click);
@@ -127,10 +129,18 @@
             // btn_Edit
             // 
             this.btn_Edit.Image = global::UploadTemplate.Properties.Resources.sketch;
-            this.btn_Edit.Label = "Edit Template";
+            this.btn_Edit.Label = "Edit Shirt";
             this.btn_Edit.Name = "btn_Edit";
             this.btn_Edit.ShowImage = true;
             this.btn_Edit.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_Edit_Click);
+            // 
+            // btn_BrowseJSON
+            // 
+            this.btn_BrowseJSON.Image = global::UploadTemplate.Properties.Resources.json;
+            this.btn_BrowseJSON.Label = "Browse JSON";
+            this.btn_BrowseJSON.Name = "btn_BrowseJSON";
+            this.btn_BrowseJSON.ShowImage = true;
+            this.btn_BrowseJSON.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_BrowseJSON_Click);
             // 
             // btn_SaveFile
             // 
@@ -160,7 +170,7 @@
             // btn_EditDict
             // 
             this.btn_EditDict.Image = global::UploadTemplate.Properties.Resources.sketch;
-            this.btn_EditDict.Label = "Edit";
+            this.btn_EditDict.Label = "Edit Template";
             this.btn_EditDict.Name = "btn_EditDict";
             this.btn_EditDict.ShowImage = true;
             this.btn_EditDict.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.btn_EditDict_Click);
@@ -208,6 +218,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_EditDict;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_UseDictionary;
         internal Microsoft.Office.Tools.Ribbon.RibbonButtonGroup buttonGroup2;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton btn_BrowseJSON;
     }
 
     partial class ThisRibbonCollection
