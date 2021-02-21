@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public enum ImageType
     {

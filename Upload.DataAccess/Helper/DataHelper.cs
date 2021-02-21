@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 
-namespace Upload.DataAccess.Helper
+namespace EzUpload.DataAccess.Helper
 {
     public class DataHelper
     {

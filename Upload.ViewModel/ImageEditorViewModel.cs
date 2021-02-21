@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using Common.MVVMCore;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public class ImageEditorViewModel : ViewModelBase
     {

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Upload.DataAccess.Helper;
+using EzUpload.DataAccess.Helper;
 using System.Xml;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 
-namespace Upload.DataAccess
+namespace EzUpload.DataAccess
 {
     public class XMLDataAccess
     {

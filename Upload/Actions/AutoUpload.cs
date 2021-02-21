@@ -7,13 +7,13 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Upload.Actions.Chrome;
-using Upload.DataAccess;
-using Upload.DataAccess.DTO;
-using Upload.DataAccess.Model;
-using Upload.ViewModel;
+using EzUpload.Actions.Chrome;
+using EzUpload.DataAccess;
+using EzUpload.DataAccess.DTO;
+using EzUpload.DataAccess.Model;
+using EzUpload.ViewModel;
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class AutoUpload
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 
 
-namespace Upload.DataAccess
+namespace EzUpload.DataAccess
 {
     public interface IDataAccess
     {

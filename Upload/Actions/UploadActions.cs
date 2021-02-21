@@ -8,9 +8,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Upload.DataAccess;
-using Upload.GUI;
-using Upload.ViewModel;
+using EzUpload.DataAccess;
+using EzUpload.GUI;
+using EzUpload.ViewModel;
 using Common.MVVMCore;
 using System.Windows.Forms;
 using OpenQA.Selenium;
@@ -20,12 +20,12 @@ using OpenQA.Selenium.Internal;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Windows.Controls.Primitives;
 using Microsoft.Office.Interop.Excel;
-using Upload.Actions.Chrome;
-using Upload.DataAccess.Model;
-using Upload.DataAccess.DTO;
+using EzUpload.Actions.Chrome;
+using EzUpload.DataAccess.Model;
+using EzUpload.DataAccess.DTO;
 using Common;
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class UploadActions
     {
@@ -35,7 +35,9 @@ namespace Upload.Actions
         {
             uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
-            UploadWindowViewModel mainVM = new UploadWindowViewModel
+            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            dataFolder += $"\\{Constants.PRODUCT_NAME}\\UserFolders";
+            UploadWindowViewModel mainVM = new UploadWindowViewModel (dataFolder)
             {
                 BrowseCmd = new RelayCommand(BrowseCmdInvoke),
                 OpenChromeCmd = new RelayCommand(OpenChromeCmdInvoke),
@@ -52,7 +54,7 @@ namespace Upload.Actions
                 StartAutoUploadCmd = new RelayCommand(AutoUploadCmdInvoke),
             };
             mainVM.UserFolders = GetUserFolders();
-            mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => Properties.Settings.Default.UserFolderPath.EndsWith(x));
+            mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => EzUpload.Properties.Settings.Default.UserFolderPath.EndsWith(x));
             uploadWindow.DataContext = mainVM;
             uploadWindow.Show();
         }
@@ -154,7 +156,7 @@ namespace Upload.Actions
         public string GetDataDirectory()
         {
             string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            dataFolder += "\\Upload\\UserFolders";
+            dataFolder += $"\\{Constants.PRODUCT_NAME}\\UserFolders";
             return dataFolder;
         }
 
@@ -217,8 +219,8 @@ namespace Upload.Actions
                     UploadWindowViewModel uploadVM = wind.DataContext as UploadWindowViewModel;
                     SaveProperties(uploadVM);
                     //Save Setting
-                    Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
-                    Properties.Settings.Default.Save();
+                    EzUpload.Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
+                    EzUpload.Properties.Settings.Default.Save();
                     UploadMerch.QuitDriver();
                 }
             }

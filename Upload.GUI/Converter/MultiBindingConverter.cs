@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace Upload.GUI.Converter
+namespace EzUpload.GUI.Converter
 {
     class MultiBindingConverter : IMultiValueConverter
     {

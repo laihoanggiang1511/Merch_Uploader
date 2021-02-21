@@ -26,7 +26,7 @@ namespace Common.LicenseManager
                 PurchaseCmd = new RelayCommand(PurchaseCmdInvoke),
                 CreateTrialKeyCmd = new RelayCommand(CreateTrialKeyCmdInvoke),
             };
-            activationFormVM.SerialNumber = Crypt.Decrypt(RegistryIO.GetValueAtKey(@"EzTools\Merch Uploader", "LicenseKey") as string,true);
+            activationFormVM.SerialNumber = LicenseManager.ReadLicenseKeyFromRegistry();
 
             ActivationForm activationFrm = new ActivationForm();
             activationFrm.DataContext = activationFormVM;
@@ -35,31 +35,11 @@ namespace Common.LicenseManager
             activationFrm.Show();
         }
 
-        //public void ShowActivationForm()
-        //{
-        //    string errorMessage = string.Empty;
-        //    ActivationFormViewModel activationFormVM = new ActivationFormViewModel
-        //    {
-        //        ActivateCmd = new RelayCommand(ActivateCmdInvoke),
-        //        DeactivateCmd = new RelayCommand(DeactivateCmdInvoke),
-        //        BackToActivationCmd = new RelayCommand(BackToActivationCmdInvoke),
-        //        BuyCmd = new RelayCommand(BuyCmdInvoke),
-        //        PurchaseCmd = new RelayCommand(PurchaseCmdInvoke),
-        //        CreateTrialKeyCmd = new RelayCommand(CreateTrialKeyCmdInvoke),
-        //        SerialNumber = LicenseManager.LoadLicense(),
-        //    };
-
-        //    ActivationForm activationFrm = new ActivationForm();
-        //    activationFrm.DataContext = activationFormVM;
-        //    activationFrm.Closed += CloseActivationForm;
-        //    activationFrm.Show();
-        //}
-
         private void CreateTrialKeyCmdInvoke(object obj)
         {
             if (obj is ActivationFormViewModel activateVM)
             {
-                if (CryptlexLicenseManager.CreateTrialKey())
+                if (LicenseManager.CreateTrialKey())
                 {
                     UpdateLicenseInfo(activateVM);
                     //activateVM.ActivateCmd.Execute(activateVM);
@@ -68,14 +48,12 @@ namespace Common.LicenseManager
         }
         private void UpdateLicenseInfo(ActivationFormViewModel activeVM)
         {
-            //activeVM.SerialNumber = Crypt.Decrypt(RegistryIO.GetValueAtKey(@"Merch Uploader", "LicenseKey") as string, false);
-
             if (LexActivator.IsLicenseGenuine() == LexStatusCodes.LA_OK)
             {
                 activeVM.Status = "Activated!";
                 activeVM.StatusColor = new SolidColorBrush(Colors.Green);
-                activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
-                DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
+                activeVM.DayLeft = LicenseManager.GetDayLeft();
+                DateTime expiryDate = LicenseManager.GetExpiryDate();
                 activeVM.ExpiryDate = string.Format("{0: MMMM/dd/yyyy}", expiryDate);
             }
             else if (LexActivator.IsTrialGenuine() == LexStatusCodes.LA_OK)
@@ -83,8 +61,8 @@ namespace Common.LicenseManager
                 activeVM.Status = "Trial Activated!";
                 activeVM.SerialNumber = string.Empty;
                 activeVM.StatusColor = new SolidColorBrush(Colors.Green);
-                activeVM.DayLeft = CryptlexLicenseManager.GetDayLeft();
-                DateTime expiryDate = CryptlexLicenseManager.GetExpiryDate();
+                activeVM.DayLeft = LicenseManager.GetDayLeft();
+                DateTime expiryDate = LicenseManager.GetExpiryDate();
                 activeVM.ExpiryDate = string.Format("{0: MMMM/dd/yyyy}", expiryDate);
             }
             else
@@ -99,11 +77,7 @@ namespace Common.LicenseManager
 
         private void PurchaseCmdInvoke(object obj)
         {
-            //if (obj is string purchaseURL)
-            //{
-            //    System.Diagnostics.Process.Start(purchaseURL);
-            //}
-            System.Diagnostics.Process.Start("https://merch-tools.dpdcart.com");
+            //System.Diagnostics.Process.Start("https://www.facebook.com/profile.php?id=100048979920714");
         }
 
         private void BackToActivationCmdInvoke(object obj)
@@ -123,25 +97,8 @@ namespace Common.LicenseManager
                 activateVM.PurchaseFormEnable = Visibility.Visible;
             }
         }
-
-        //public void CloseActivationForm(object sender, EventArgs e)
-        //{
-        //    ShowMainWindow.Invoke();
-        //}
         private void DeactivateCmdInvoke(object obj)
         {
-            //ActivationFormViewModel activeVM = obj as ActivationFormViewModel;
-            //if (activeVM != null)
-            //{
-            //    string key = activeVM.SerialNumber;
-            //    if (LicenseManager.DeactivateKey(PRODUCT_ID, key))
-            //    {
-            //        Utils.Utils.ShowInfoMessageBox($"Successfully deactive license key {key}", "Deactivation");
-            //        //activeVM.SerialNumber = string.Empty;
-            //        //KeyInfo = null;
-            //        activeVM.LicenseKeyInfo = null;
-            //    }
-            //}
         }
 
         public void ActivateCmdInvoke(object obj)
@@ -154,13 +111,14 @@ namespace Common.LicenseManager
                     LexActivator.SetLicenseKey(activeVM.SerialNumber);
                     if (LexActivator.IsLicenseGenuine() != LexStatusCodes.LA_OK)
                     {
-                        if (!CryptlexLicenseManager.ActivateKey(activeVM.SerialNumber))
+                        if (!LicenseManager.ActivateKey(activeVM.SerialNumber))
                         {
                             return;
                         }
                     }
                     Utils.ShowInfoMessageBox("Activated!");
-                    RegistryIO.SaveValueToKey(@"EzTools\Merch Uploader", "LicenseKey", Crypt.Encrypt(activeVM.SerialNumber, true));
+
+                    LicenseManager.WriteLicenseKeyToRegistry(activeVM.SerialNumber);
                     UpdateLicenseInfo(activeVM);
                 }
             }

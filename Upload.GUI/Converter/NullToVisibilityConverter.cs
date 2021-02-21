@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
-using Upload.ViewModel;
+using EzUpload.ViewModel;
 
-namespace Upload.GUI.Converter
+namespace EzUpload.GUI.Converter
 {
     public class NullToVisibilityConverter : IValueConverter
     {
@@ -35,6 +35,7 @@ namespace Upload.GUI.Converter
         {
             try
             {
+
                 int nParam = int.Parse(parameter.ToString());
                 if (nParam == 0)
                 {

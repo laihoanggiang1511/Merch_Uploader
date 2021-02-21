@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Upload.DataAccess.DTO
+namespace EzUpload.DataAccess.DTO
 {
     public class ShirtDTO
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Upload.GUI.Properties {
+namespace EzUpload.GUI.Properties {
     using System;
     
     

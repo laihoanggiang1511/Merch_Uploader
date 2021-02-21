@@ -9,10 +9,12 @@ using System.Windows.Input;
 using Common.MVVMCore;
 using System.IO;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public class UploadWindowViewModel : ViewModelBase
     {
+        private string _userFolderDirectory { get; }
+
         public ICommand OpenChromeCmd { get; set; }
         public ICommand BrowseCmd { get; set; }
         public ICommand UploadCmd { get; set; }
@@ -233,7 +235,7 @@ namespace Upload.ViewModel
                     selectedPath = value;
                     if (!string.IsNullOrEmpty(selectedPath))
                     {
-                        userFolderPath = Path.Combine(GetDataDirectory(), selectedPath);
+                        userFolderPath = Path.Combine(_userFolderDirectory, selectedPath);
                     }
                     else
                     {
@@ -246,12 +248,6 @@ namespace Upload.ViewModel
                     RaisePropertyChanged("SelectedPath");
                 }
             }
-        }
-        public string GetDataDirectory()
-        {
-            string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            dataFolder += "\\Upload\\UserFolders";
-            return dataFolder;
         }
 
         private ObservableCollection<string> userFolders = new ObservableCollection<string>();
@@ -349,11 +345,11 @@ namespace Upload.ViewModel
                 }
             }
         }
-        public UploadWindowViewModel()
+        public UploadWindowViewModel(string dataFolder)
         {
             Shirts = new ObservableCollection<Shirt>();
             AutoModeEnableCmd = new RelayCommand(x => { (x as UploadWindowViewModel).AutoUploadModeEnable = true; });
-
+            _userFolderDirectory = dataFolder;
         }
     }
 }

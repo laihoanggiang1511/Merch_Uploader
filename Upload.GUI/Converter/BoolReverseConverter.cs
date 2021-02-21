@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Upload.GUI.Converter
+namespace EzUpload.GUI.Converter
 {
 
     public class BoolReverseConverter : IValueConverter

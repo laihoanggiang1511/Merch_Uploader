@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Upload.ViewModel;
+using EzUpload.ViewModel;
 using OpenQA.Selenium.Interactions;
 using System.Reflection;
 
-namespace Upload.Actions.Chrome
+namespace EzUpload.Actions.Chrome
 {
     public class UploadMerch
     {

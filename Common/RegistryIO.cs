@@ -15,6 +15,10 @@ namespace Common
             {
                 string strSubkey = string.Format(@"Software\{0}", subkey);
                 RegistryKey rKey = Registry.CurrentUser.OpenSubKey(strSubkey);
+                if (rKey == null)
+                {
+                    rKey = Registry.LocalMachine.OpenSubKey(strSubkey);
+                }
                 if (rKey != null)
                 {
                     return rKey.GetValue(name);
@@ -29,12 +33,13 @@ namespace Common
 
         }
 
-        public static void SaveValueToKey(string subkey, string name, object Value)
+        public static void SaveValueToKey(string subkey, string name, object Value, bool localMachine = false)
         {
             try
             {
-                string strSubkey = string.Format(@"Software\{0}", subkey);
-                RegistryKey rKey = Registry.CurrentUser.OpenSubKey(strSubkey,true);
+                RegistryKey keyLocation = localMachine ? Registry.LocalMachine : Registry.CurrentUser;
+                string strSubkey = string.Format(@"Software\{0}", subkey);      
+                RegistryKey rKey = keyLocation.OpenSubKey(strSubkey,true);
                 if (rKey != null)
                 {
                     rKey.SetValue(name, Value);
@@ -42,7 +47,7 @@ namespace Common
                 }
                 else
                 {
-                    rKey = Registry.CurrentUser.CreateSubKey(strSubkey);
+                    rKey = keyLocation.CreateSubKey(strSubkey);
                     rKey.SetValue(name, Value);
                 }
             }

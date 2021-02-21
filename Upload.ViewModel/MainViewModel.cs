@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Common.MVVMCore;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public class MainViewModel: ViewModelBase
     {

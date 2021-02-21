@@ -7,11 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Upload.GUI;
-using Upload.ViewModel;
+using EzUpload.GUI;
+using EzUpload.ViewModel;
 using Common.MVVMCore;
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class ImageEditorActions
     {

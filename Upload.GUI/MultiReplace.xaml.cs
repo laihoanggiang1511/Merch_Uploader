@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Upload.GUI
+namespace EzUpload.GUI
 {
     /// <summary>
     /// Interaction logic for MultiReplace.xaml

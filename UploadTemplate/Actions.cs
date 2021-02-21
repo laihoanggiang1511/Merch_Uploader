@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 
 namespace UploadTemplate
 {

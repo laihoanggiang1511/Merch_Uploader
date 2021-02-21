@@ -22,7 +22,7 @@ namespace UploadTemplate
                 Globals.Ribbons.Ribbon2.cbb_Dictionary.Items.Add(item);
             }
         }
-        public static readonly string dictFile = "Upload\\Dictionary.json";
+        public static readonly string dictFile = $"{GlobalVariables.PRODUCT_NAME}\\Dictionary.json";
         public static Dictionary<string, string> ReadDictionary()
         {
             Dictionary<string, string> result = null;

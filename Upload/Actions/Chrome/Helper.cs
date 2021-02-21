@@ -16,7 +16,7 @@ using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 
-namespace Upload.Actions.Chrome
+namespace EzUpload.Actions.Chrome
 {
     public delegate bool LogIn();
     public class Helper

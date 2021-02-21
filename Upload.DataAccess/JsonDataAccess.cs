@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 
-namespace Upload.DataAccess
+namespace EzUpload.DataAccess
 {
     public class JsonDataAccess : IDataAccess
     {

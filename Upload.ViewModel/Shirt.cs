@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public class Shirt : ICloneable
     {

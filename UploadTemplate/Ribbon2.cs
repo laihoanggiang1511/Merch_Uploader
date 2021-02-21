@@ -11,10 +11,10 @@ using Microsoft.Office.Interop.Excel;
 using Microsoft.Office.Tools.Ribbon;
 using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
-using Upload.DataAccess;
-using Upload.DataAccess.Model;
-using Upload.DataAccess.DTO;
-using Upload.ViewModel;
+using EzUpload.DataAccess;
+using EzUpload.DataAccess.Model;
+using EzUpload.DataAccess.DTO;
+using EzUpload.ViewModel;
 using RestSharp.Serialization.Json;
 using System.Threading;
 using System.Windows.Threading;
@@ -125,7 +125,7 @@ namespace UploadTemplate
             File.WriteAllText(strJsonFileName, strJson);
 
             string folder = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exeFile = "Upload.exe";
+            string exeFile = GlobalVariables.PRODUCT_NAME + ".exe";
             exeFile = Path.Combine(folder, exeFile);
 
             Process proc = new Process();

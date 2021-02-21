@@ -7,9 +7,9 @@ using System.IO.Pipes;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using Upload.Actions;
+using EzUpload.Actions;
 
-namespace Upload
+namespace EzUpload
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -19,19 +19,35 @@ namespace Upload
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            //Check for update
-            Thread thread = new Thread(x => MainActions.CheckForUpdate());
-            thread.Start();
-
+            ////Check for update
+            //Thread thread = new Thread(x => MainActions.CheckForUpdate());
+            //thread.Start();
+#if DEBUG
+            MessageBox.Show("AAA");
+#endif
             //Setup log
-            string logPath = @"Upload\MerchUploadLog.txt";
-            Common.Log.SetUpLog("MerchUploadLog.txt", logPath);
+            string logPath = Constants.PRODUCT_NAME + "\\" + @"EzUploadLog.txt";
+            Common.Log.SetUpLog("EzUploadLog.txt", logPath);
 
             //Setup License
-            string productData = "RDI1NTc1OTIzMzhCRUVERUFCQkIyMzNFRTIwQTFFODA=.TDwstW7iNSV7Glp0cfbefpY1A1vuVnalijoG2HVIlSiJLDv6D/5K7dBts+Sm+GRFF+PU3okSn6u+/uyDL1hveBrF45PXU2fzQp675VWqRaD9vzama8hnsHUEyZNru3RAxpx5SkAqIzlLmQSEPG33RHJZ80flEuN4Y+hmzIfK4prFHyL7EnLrBCLEajyHX1UvyhH/XHr/toRCiNr/0RrUS/XZILiFMoFF4pIHBMkJCD/Mc78kUsIV1ODkjBzZL8+Xw6wp7Gk6d730e+S7PPcwNXYggsAjwArNWa7qkGX5vVZ2pZdbUnp9H6JLHaPGuA38enDoIvBfdbKDAfU5qHA/O2NejWZoD5MOW1MK7TnjX3CY9jLRCnu74bxxWCTfRCeKskrdvKulpVPyAn68xVHqa4ycxj/jmvohZpC4lCPq9DabB9ZBR41T8+ckT+gucZLyP7/I2ZDLkEXIu0xFk2lIVXwqEW2dRrdsoTY7yfRiIYKN/ip0gj34WiK9N/VhbKomqSG382R3/VyyQ2VDspQujLZXDnYsuKDkCKCm38GU10mdoyV4mfZCPVpZRyQUWtgFVIotuNtY0R8QxbByFHvqhBHErAXxGVnK8axDRtqhD8/lyufypgFnPiclIqkqU4b12YxclixPOcMCuIsjCx9zQMkjTwEudl5RzwhMtBWeTnofPolV6hWCHNL6wThMdPmFq4IGfgXDgVz9HewsANa+E6OYGYpdflrho6tnVL6rJAY=";
-            string productId = "d26ecd19-9ba5-4372-b509-7041becc28d1";
-            CryptlexLicenseManager.SetLicenseData(productData, productId, 1);
+            string subkey = $@"{Constants.PRODUCT_MANUFACTURER}\{Constants.PRODUCT_NAME}";
+            LicenseManager.SetLicenseData(subkey, "LicenseKey", Constants.PRODUCT_DATA, Constants.PRODUCT_ID, 1);
 
+            //Check for update
+            string updateFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            updateFolder += $"\\{Constants.PRODUCT_NAME}\\Updates";
+            if (!Directory.Exists(updateFolder))
+            {
+                Directory.CreateDirectory(updateFolder);
+            }
+            UpdateHelper updateHelper = new UpdateHelper(updateFolder);
+            string localVersion = RegistryIO.GetValueAtKey(subkey, "Version") as string;
+            if (string.IsNullOrEmpty(localVersion))
+            {
+                localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+            updateHelper.CheckForUpdate(localVersion);
+            
             //Run
             if (e.Args != null && e.Args.Length > 0)
             {
@@ -42,6 +58,7 @@ namespace Upload
                 Actions.MainActions actions = new Actions.MainActions();
                 actions.ShowMainWindow();
             }
+            
         }
         protected override void OnExit(ExitEventArgs e)
         {

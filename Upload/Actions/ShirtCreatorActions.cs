@@ -1,8 +1,8 @@
-﻿using Upload.GUI;
-using Upload.ViewModel;
+﻿using EzUpload.GUI;
+using EzUpload.ViewModel;
 using Common.MVVMCore;
 using System.Linq;
-using Upload.DataAccess;
+using EzUpload.DataAccess;
 using System;
 using System.Drawing;
 using System.IO;
@@ -13,13 +13,13 @@ using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Office.Interop.Excel;
-using Upload.DataAccess.Model;
+using EzUpload.DataAccess.Model;
 using System.Text.RegularExpressions;
-using Upload.DataAccess.DTO;
+using EzUpload.DataAccess.DTO;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class ShirtCreatorActions
     {

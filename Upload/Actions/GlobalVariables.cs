@@ -1,7 +1,7 @@
 ﻿using Microsoft.Office.Interop.Excel;
 
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class GlobalVariables
     {

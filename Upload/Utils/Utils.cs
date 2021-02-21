@@ -7,14 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows;
-using Upload.DataAccess;
+using EzUpload.DataAccess;
 
 using MessageBox = System.Windows.MessageBox;
-using Upload.ViewModel;
-using Upload.DataAccess.Model;
-using Upload.DataAccess.DTO;
+using EzUpload.ViewModel;
+using EzUpload.DataAccess.Model;
+using EzUpload.DataAccess.DTO;
 
-namespace Upload
+namespace EzUpload
 {
     public class Utils
     {

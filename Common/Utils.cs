@@ -19,7 +19,7 @@ namespace Common
         }
         public static void ShowInfoMessageBox(string message, string caption = null)
         {
-            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(message, caption, MessageBoxButton.OK, MessageBoxImage.Information);
         }
         public static bool ShowWarningMessageBox(string message, string caption = null)
         {

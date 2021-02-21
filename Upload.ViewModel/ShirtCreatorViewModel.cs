@@ -13,7 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
 
-namespace Upload.ViewModel
+namespace EzUpload.ViewModel
 {
     public class ShirtCreatorViewModel : ViewModelBase
     {

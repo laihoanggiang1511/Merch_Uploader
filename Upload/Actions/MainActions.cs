@@ -8,11 +8,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Windows;
-using Upload.GUI;
-using Upload.ViewModel;
+using EzUpload.GUI;
+using EzUpload.ViewModel;
 using UploadTemplate;
 
-namespace Upload.Actions
+namespace EzUpload.Actions
 {
     public class MainActions
     {
@@ -34,12 +34,12 @@ namespace Upload.Actions
 
                 };
                 mainWindow.DataContext = mainVM;
-                if (CryptlexLicenseManager.IsLicenseOK() == true)
+                if (LicenseManager.IsLicenseOK() == true)
                 {
                     mainVM.EnableCreate = true;
                     mainVM.EnableUpload = true;
                     //Allow Create
-                    string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
+                    string metaData = LicenseManager.GetLicenseMetadata("create");
                     if (bool.TryParse(metaData, out bool enableCreate))
                     {
                         if (enableCreate)
@@ -52,7 +52,7 @@ namespace Upload.Actions
                     {
                         mainVM.EnableCreate = true;
                     }
-                    mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", CryptlexLicenseManager.GetDayLeft());
+                    mainVM.LicenseStatus = string.Format("{0} day(s) left in your subscription", LicenseManager.GetDayLeft());
                 }
                 else
                 {
@@ -78,41 +78,6 @@ namespace Upload.Actions
         private void LicenseWindowCmdInvoke(object obj)
         {
             MainWindow mainWnd = obj as MainWindow;
-
-            #region Purchase Options
-            //List<PurchaseOption> purchaseOptions = new List<PurchaseOption>();
-            //PurchaseOption option1 = new PurchaseOption("https://app.cryptolens.io/Form/P/ZDk6rOc3/477")
-            //{                                            
-            //    Header2 = "1 Month",
-            //    Feature1 = " \n ",
-            //    Feature2 = "~$15/device/mo",
-            //    Price = 15,
-            //    NumberOfDevices = 1,
-            //    TextColor = new SolidColorBrush(Colors.Black),
-            //};
-            //purchaseOptions.Add(option1);
-            //PurchaseOption option2 = new PurchaseOption("https://app.cryptolens.io/Form/P/ZpmfgKoy/487")
-            //{
-            //    Header2 = "6 Months",
-            //    Feature1 = "+1 month\n(total 7 months)",
-            //    Feature2 = "~$6.5/device/mo",
-            //    Price = 90,
-            //    NumberOfDevices = 2,
-            //    TextColor = new SolidColorBrush(Colors.Blue),
-            //};
-            //purchaseOptions.Add(option2);
-            //PurchaseOption option3 = new PurchaseOption("https://app.cryptolens.io/Form/P/NWcQ0hfT/488")
-            //{
-            //    Header2 = "1 Year",
-            //    Feature1 = "+2 months\n(total 14 months)",
-            //    Feature2 = "~$5.5/device/mo",
-            //    Price = 150,
-            //    NumberOfDevices = 2,
-            //    TextColor = new SolidColorBrush(Colors.Red),
-            //};
-            //purchaseOptions.Add(option3);
-            #endregion
-
             ActivationActions activateActions = new ActivationActions();
             activateActions.ShowMainWindow = new System.Action(ShowMainWindow);
             activateActions.ShowActivationForm();
@@ -140,44 +105,44 @@ namespace Upload.Actions
             Process.Start(excelFile);
             Environment.Exit(0);
         }
-        public static void CheckForUpdate()
-        {
-            //Check for update from 2 server
-            var localVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        //public static void CheckForUpdate()
+        //{
+        //    //Check for update from 2 server
+        //    var localVersion = Assembly.GetExecutingAssembly().GetName().Version;
 
-            string serverURLs = RegistryIO.GetValueAtKey(@"EzTools\Merch Uploader", "UpdateServerURL") as string;
-            UpdateHelper updateHelper = null;
-            if (string.IsNullOrEmpty(serverURLs))
-            {
-                serverURLs = "http://52.152.168.133/api/update";
-            }
-            string[] URLs = serverURLs.Split(',');
-            foreach (string URL in URLs)
-            {
-                if (!string.IsNullOrEmpty(URL))
-                {
-                    updateHelper = new UpdateHelper(URL, 1000, localVersion);
-                    if (updateHelper.ConnectUpdateServer() && updateHelper.UpdateModel !=null)
-                    {
-                        RegistryIO.SaveValueToKey(@"EzTools\Merch Uploader", "UpdateServerURL", updateHelper.UpdateModel.NewUpdateServerURL);
-                        break;
-                    }
-                }
-            }
-            if (updateHelper != null && updateHelper.IsThereNewUpdate())
-            {
-                if (MessageBox.Show("There is a new update. Do you want to download it?", "Update",
-                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    string path = Path.GetTempPath();
-                    path = Path.Combine(path, "Upload_Setup.msi");
-                    if (File.Exists(path))
-                    {
-                        File.Delete(path);
-                    }
-                    updateHelper.ExecuteUpdate(path);
-                }
-            }
-        }
+        //    string serverURLs = RegistryIO.GetValueAtKey(@"EzTools\Merch Uploader", "UpdateServerURL") as string;
+        //    UpdateHelper updateHelper = null;
+        //    if (string.IsNullOrEmpty(serverURLs))
+        //    {
+        //        serverURLs = "http://52.152.168.133/api/update";
+        //    }
+        //    string[] URLs = serverURLs.Split(',');
+        //    foreach (string URL in URLs)
+        //    {
+        //        if (!string.IsNullOrEmpty(URL))
+        //        {
+        //            updateHelper = new UpdateHelper(URL, 1000, localVersion);
+        //            if (updateHelper.ConnectUpdateServer() && updateHelper.UpdateModel != null)
+        //            {
+        //                RegistryIO.SaveValueToKey(@"EzTools\Merch Uploader", "UpdateServerURL", updateHelper.UpdateModel.NewUpdateServerURL);
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    if (updateHelper != null && updateHelper.IsThereNewUpdate())
+        //    {
+        //        if (MessageBox.Show("There is a new update. Do you want to download it?", "Update",
+        //            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+        //        {
+        //            string path = Path.GetTempPath();
+        //            path = Path.Combine(path, "Upload_Setup.msi");
+        //            if (File.Exists(path))
+        //            {
+        //                File.Delete(path);
+        //            }
+        //            updateHelper.ExecuteUpdate(path);
+        //        }
+        //    }
+        //}
     }
 }
