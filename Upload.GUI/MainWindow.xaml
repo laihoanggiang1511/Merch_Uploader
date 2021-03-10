@@ -13,7 +13,7 @@
          TextOptions.TextRenderingMode="Auto"
          Background="{DynamicResource MaterialDesignPaper}"
          FontFamily="{DynamicResource MaterialDesignFont}"
-         WindowStartupLocation="CenterScreen">
+         WindowStartupLocation="CenterScreen" HorizontalAlignment="Right" Topmost="True">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Margin" Value="10,0,10,0"/>

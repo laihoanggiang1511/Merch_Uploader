@@ -21,12 +21,12 @@ namespace UploadTemplate
 #if !DEBUG
             //Setup License
             string subkey = $@"{GlobalVariables.PRODUCT_MANUFACTURER}\{GlobalVariables.PRODUCT_NAME}";
-            CryptlexLicenseManager.SetLicenseData(subkey, "LicenseKey", GlobalVariables.PRODUCT_DATA, GlobalVariables.PRODUCT_ID, 1);
+            LicenseManager.SetLicenseData(subkey, "LicenseKey", GlobalVariables.PRODUCT_DATA, GlobalVariables.PRODUCT_ID, 1);
             bool allowOpen = false;
-            if (CryptlexLicenseManager.IsLicenseOK() == true)
+            if (LicenseManager.IsLicenseOK() == true)
             {
                 //Allow Create
-                string metaData = CryptlexLicenseManager.GetLicenseMetadata("create");
+                string metaData = LicenseManager.GetLicenseMetadata("create");
                 if (bool.TryParse(metaData, out bool enableCreate))
                 {
                     if (enableCreate)

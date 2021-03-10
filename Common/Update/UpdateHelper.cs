@@ -24,12 +24,14 @@ namespace Common.Update
     {
         DownloadProgress _downloadWindow = null;
         bool _downloadResult = false;
+        string _fileDir = string.Empty;
         string _filePath = string.Empty;
+        public bool _completeCheckUpload = false;
 
-        public UpdateHelper(string pathToDownloadFile)
+        public UpdateHelper(string downloadDirectory)
         {
-            _filePath = pathToDownloadFile;
-        }         
+            _fileDir = downloadDirectory;
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -44,30 +46,44 @@ namespace Common.Update
         {
             if (status == LexStatusCodes.LA_RELEASE_UPDATE_AVAILABLE)
             {
-                UpdateModel updateModel = GetUpdateInfo();
-                if (updateModel != null)
+                try
                 {
-                    string message = "An update is available, Do you want to download?\n\n";
-                    message += "Change logs: \n";
-                    message += updateModel.Notes;
-                    if (MessageBox.Show(message, "Update available",
-                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    UpdateModel updateModel = GetUpdateInfo();
+                    if (updateModel != null)
                     {
-                        UploadFile fileModel = updateModel.Files.FirstOrDefault(x => x.Extension.ToLower() == ".msi" || x.Extension.ToLower() == ".exe");
-                        if (fileModel != null)
+                        string message = "An update is available, Do you want to download?\n\n";
+                        message += "Change logs: \n";
+                        message += updateModel.Notes;
+                        if (MessageBox.Show(message, "Update available",
+                            MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
-                            _filePath = Path.Combine(_filePath, fileModel.Name);
-                            if (File.Exists(_filePath))
+                            UploadFile fileModel = updateModel.Files.FirstOrDefault(x => x.Extension.ToLower() == ".png" || x.Extension.ToLower() == ".exe");
+                            if (fileModel != null)
                             {
-                                File.Delete(_filePath);
+                                _filePath = Path.Combine(_fileDir, fileModel.Name);
+                                if (File.Exists(_filePath))
+                                {
+                                    string localMD5 = Utils.GetMD5File(_filePath);
+                                    if (localMD5.ToUpper() == fileModel.Checksum.ToUpper())
+                                    {
+                                        DoItWhenDownloadComplete();
+                                    }
+                                    else
+                                    {
+                                        File.Delete(_filePath);
+                                    }
+                                }
+                                Thread.CurrentThread.SetApartmentState(ApartmentState.STA);
+                                DownloadUpdate(fileModel.URL);
                             }
-                            Thread thread = new Thread(x => DownloadUpdate(_filePath, fileModel.URL));
-                            thread.SetApartmentState(ApartmentState.STA);
-                            thread.Start();
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                }
             }
+            _completeCheckUpload = true; 
         }
 
         public UpdateModel GetUpdateInfo()
@@ -101,37 +117,40 @@ namespace Common.Update
         /// </summary>
         /// <param name="filePath">temp file to store download</param>
         /// <returns></returns>
-        public bool DownloadUpdate(string filePath, string url)
+        public void DownloadUpdate(string url)
         {
             try
             {
-                if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(filePath))
+                if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(_filePath))
                 {
                     using (var client = new WebClient())
                     {
                         _downloadWindow = new DownloadProgress();
-                        this._filePath = filePath;
                         client.DownloadProgressChanged += Client_DownloadProgressChanged;
                         client.DownloadFileCompleted += Client_DownloadFileCompleted; ;
-                        client.DownloadFileAsync(new System.Uri(url), filePath);
+                        client.DownloadFileAsync(new System.Uri(url), _filePath);
                         _downloadWindow.ShowDialog();
 
                         while (!_downloadResult)
                         {
                             System.Windows.Forms.Application.DoEvents();
                         }
-
-                        return true;
-
                     }
                 }
             }
             catch (Exception ex)
-            { }
-            return false;
+            {
+                Utils.ShowErrorMessageBox("Download fail: " + ex.Message);
+                _completeCheckUpload = true;
+            }
         }
 
         private void Client_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            DoItWhenDownloadComplete();
+        }
+
+        private void DoItWhenDownloadComplete()
         {
             _downloadResult = true;
             Process.Start(_filePath);
@@ -140,7 +159,7 @@ namespace Common.Update
 
         private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
-            _downloadWindow.Dispatcher.Invoke(delegate() 
+            _downloadWindow.Dispatcher.Invoke(delegate ()
             {
                 var proggressBar = _downloadWindow.FindName("DownloadProgressBar") as ProgressBar;
                 if (proggressBar != null)

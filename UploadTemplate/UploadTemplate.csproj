@@ -214,7 +214,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="UploadTemplate.xltx" />
-    <None Include="UploadTemplate_TemporaryKey.pfx" />
+    <None Include="UploadTemplate_1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ThisWorkbook.Designer.xml">
@@ -268,19 +268,19 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>UploadTemplate_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>UploadTemplate_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>99176008758DE1E5BEAF023DE0646396CF6C9B56</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6C833492AA046A89530EA3ACB27E9A84A49F0473</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Publish|AnyCPU'">
-    <OutputPath>bin\Publish\</OutputPath>
+    <OutputPath>..\Upload\bin\Publish\</OutputPath>
     <DefineConstants>TRACE;VSTO40</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>none</DebugType>
@@ -301,6 +301,10 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!--
     To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

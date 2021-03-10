@@ -46,8 +46,13 @@ namespace EzUpload
             {
                 localVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
+            System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
             updateHelper.CheckForUpdate(localVersion);
-            
+            while(!updateHelper._completeCheckUpload)
+            {
+            }
+            System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
+
             //Run
             if (e.Args != null && e.Args.Length > 0)
             {

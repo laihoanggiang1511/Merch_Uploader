@@ -77,7 +77,7 @@ namespace Common.LicenseManager
 
         private void PurchaseCmdInvoke(object obj)
         {
-            //System.Diagnostics.Process.Start("https://www.facebook.com/profile.php?id=100048979920714");
+            System.Diagnostics.Process.Start("https://www.facebook.com/profile.php?id=100048979920714");
         }
 
         private void BackToActivationCmdInvoke(object obj)
