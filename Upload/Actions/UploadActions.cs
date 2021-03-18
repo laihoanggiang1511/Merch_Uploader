@@ -31,7 +31,7 @@ namespace EzUpload.Actions
     {
         UploadWindow uploadWindow = null;
 
-        public void ShowWindow()
+        public void ShowWindow(UploadPlatform uploadPlatform = UploadPlatform.Merch)
         {
             uploadWindow = new UploadWindow();
             uploadWindow.Closed += this.OnExit;
@@ -53,6 +53,7 @@ namespace EzUpload.Actions
                 BrowseUploadFolderCmd = new RelayCommand(BrowseUploadFolderCmdInvoke),
                 StartAutoUploadCmd = new RelayCommand(AutoUploadCmdInvoke),
             };
+            mainVM.UploadPlatform = uploadPlatform;
             mainVM.UserFolders = GetUserFolders();
             mainVM.SelectedPath = mainVM.UserFolders.FirstOrDefault(x => EzUpload.Properties.Settings.Default.UserFolderPath.EndsWith(x));
             uploadWindow.DataContext = mainVM;

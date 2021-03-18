@@ -13,6 +13,7 @@ namespace EzUpload.ViewModel
 {
     public class UploadWindowViewModel : ViewModelBase
     {
+        public UploadPlatform UploadPlatform { get; set; }
         private string _userFolderDirectory { get; }
 
         public ICommand OpenChromeCmd { get; set; }

@@ -11,6 +11,9 @@ using System.Windows;
 using EzUpload.GUI;
 using EzUpload.ViewModel;
 using UploadTemplate;
+using OpenQA.Selenium.Chrome;
+using EzUpload.Actions.Chrome;
+using OpenQA.Selenium;
 
 namespace EzUpload.Actions
 {
@@ -30,6 +33,7 @@ namespace EzUpload.Actions
                     CreateWindowCmd = new RelayCommand(CreateWindowCmdInvoke),
                     UploadWindowCmd = new RelayCommand(UploadCmdInvoke),
                     LicenseWindowCmd = new RelayCommand(LicenseWindowCmdInvoke),
+                    RunTeePublicUploadCmd = new RelayCommand(RunTeePublicUploadCmdInvoke) ,
                     HelpCmd = new RelayCommand(HelpCmdInvoke),
 
                 };
@@ -68,6 +72,26 @@ namespace EzUpload.Actions
             {
                 Environment.Exit(0);
             }
+        }
+
+        private void RunTeePublicUploadCmdInvoke(object obj)
+        {
+            MainWindow mainWin = obj as MainWindow;
+            (new UploadActions()).ShowWindow();
+            if (mainWin != null)
+                mainWin.Close();
+
+
+            ChromeDriver driver = Helper.StartChromeWithOptions("E:\\Cookies");
+            driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
+            IWebElement element1 = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[1]/div[2]/div[1]/div[1]"));
+            //element1.Click();
+            IWebElement element = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[3]/div/div[2]/div[3]/div/form/div[1]/div[2]/input"));
+            element = Helper.GetElementWithWait(driver, By.Name("file"));
+
+
+
+            element.SendKeys(@"C:\Users\laiho\Desktop\TEST\1st.PNG");
         }
 
         private void HelpCmdInvoke(object obj)

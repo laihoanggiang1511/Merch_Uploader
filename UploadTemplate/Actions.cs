@@ -36,7 +36,7 @@ namespace UploadTemplate
             Range rJson = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.JSON];
             Range rName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Name];
             Range rFolder = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Folder];
-            Range r = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Folder];
+            Range rTags = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Tags];
 
             if (sData != null)
             {
@@ -48,6 +48,7 @@ namespace UploadTemplate
                 }
                 string stringJSON = JsonConvert.SerializeObject(sData);
                 rJson.Value = stringJSON;
+                rTags.Value = sData.Tags;
                 for (int i = 0; i < sData.Languages.Count; i++)
                 {
                     Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 5 * i].Value2 = sData.Languages[i].BrandName;
@@ -69,12 +70,14 @@ namespace UploadTemplate
                 Range rJson = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.JSON];
                 Range rName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Name];
                 Range rFolder = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Folder];
+                Range rTags = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Tags];
 
                 string jsonData = rJson.Value as string;
                 if (!string.IsNullOrEmpty(jsonData))
                 {
                     ShirtData sData = JsonConvert.DeserializeObject<ShirtData>(jsonData);
                     sData.ImagePath = Path.Combine(rFolder.Value, rName.Value);
+                    sData.Tags = rTags.Value;
                     for (int i = 0; i < sData.Languages.Count; i++)
                     {
                         sData.Languages[i].BrandName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 5 * i].Value;

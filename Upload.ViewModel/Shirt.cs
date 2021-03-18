@@ -11,28 +11,7 @@ namespace EzUpload.ViewModel
 {
     public class Shirt : ICloneable
     {
-        //public string FrontStdPath { get; set; }
-        //public string BackStdPath { get; set; }
-
-        //public string FrontHoodiePath { get; set; }
-        //public string BackHoodiePath { get; set; }
-        //public string PopSocketsGripPath { get; set; }
-
-        //public string[] PNGPaths
-        //{
-        //    get
-        //    {
-        //        string[] paths = new string[]
-        //        {
-        //            this.FrontStdPath,
-        //            this.BackStdPath,
-        //            this.FrontHoodiePath,
-        //            this.BackHoodiePath,
-        //            this.PopSocketsGripPath,
-        //        };
-        //        return paths;
-        //    }
-        //}
+        public string Tags { get; set; }
         public string ImagePath { get; set; }
         public int ImageType { get; set; }
 
@@ -42,11 +21,6 @@ namespace EzUpload.ViewModel
 
         public Shirt()
         {
-            //this.FrontStdPath = string.Empty;
-            //this.BackStdPath = string.Empty;
-            //this.FrontHoodiePath = string.Empty;
-            //this.BackHoodiePath = string.Empty;
-            //this.PopSocketsGripPath = string.Empty;
             this.ImageType = 0;
             Languages = new ObservableCollection<Language>()
             {

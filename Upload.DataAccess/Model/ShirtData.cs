@@ -12,6 +12,9 @@ namespace EzUpload.DataAccess.Model
     public class ShirtData
     {
         [DataMember]
+        public string Tags { get; set; }
+
+        [DataMember]
         public string ImagePath { get; set; }
         [DataMember]
         public int ImageType { get; set; }

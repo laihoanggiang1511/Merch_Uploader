@@ -239,7 +239,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Actions\ShirtCreatorActions.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -271,6 +270,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{26477f18-9842-469d-ac6f-899635e82614}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Upload.Common\Upload.Common.csproj">
+      <Project>{aab3edd2-00c8-474e-b933-7f7904264a58}</Project>
+      <Name>Upload.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Upload.DataAccess\Upload.DataAccess.csproj">
       <Project>{684cbfe5-abb8-4630-bb48-2523e2d9fbeb}</Project>

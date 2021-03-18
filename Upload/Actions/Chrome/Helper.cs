@@ -6,7 +6,9 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Policy;
 using System.Text;
@@ -23,7 +25,39 @@ namespace EzUpload.Actions.Chrome
     {
         public static LogIn LogInCallBack;
 
+        public static ChromeDriver StartChromeWithOptions(string userFolderPath)
+        {
+            ChromeDriver cDriver = null;
 
+            string storedVariable = System.Environment.GetEnvironmentVariable("PATH");
+            try
+            {
+                string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                System.Environment.SetEnvironmentVariable("PATH", executingFolder);
+
+                if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+                {
+                    ChromeOptions chrOption = new ChromeOptions();
+                    chrOption.AddArguments("user-data-dir=" + userFolderPath);
+                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    chromeDriverService.HideCommandPromptWindow = false;
+                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                }
+                else
+                {
+                    ChromeOptions chrOption = new ChromeOptions();
+                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                    chromeDriverService.HideCommandPromptWindow = false;
+                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            System.Environment.SetEnvironmentVariable("PATH", storedVariable);
+            return cDriver;
+        }
         public static bool ClickElement(ChromeDriver driver, By by)
         {
             try

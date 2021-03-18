@@ -386,7 +386,7 @@ namespace EzUpload.Actions.Chrome
                 {
                     QuitDriver();
                 }
-                driver = StartChromeWithOptions(userFolderPath);
+                driver = Helper.StartChromeWithOptions(userFolderPath);
             }
             catch (Exception ex)
             {
@@ -395,38 +395,6 @@ namespace EzUpload.Actions.Chrome
             }
         }
 
-        public ChromeDriver StartChromeWithOptions(string userFolderPath)
-        {
-            ChromeDriver cDriver = null;
-
-            string storedVariable = System.Environment.GetEnvironmentVariable("PATH");
-            try
-            {
-                string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                System.Environment.SetEnvironmentVariable("PATH", executingFolder);
-
-                if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
-                {
-                    ChromeOptions chrOption = new ChromeOptions();
-                    chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = true;
-                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
-                }
-                else
-                {
-                    ChromeOptions chrOption = new ChromeOptions();
-                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = true;
-                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            System.Environment.SetEnvironmentVariable("PATH", storedVariable);
-            return cDriver;
-        }
+        
     }
 }

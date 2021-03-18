@@ -125,7 +125,7 @@ namespace UploadTemplate
             File.WriteAllText(strJsonFileName, strJson);
 
             string folder = Path.GetDirectoryName(new Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            string exeFile = GlobalVariables.PRODUCT_NAME + ".exe";
+            string exeFile = EzUpload.Constants.PRODUCT_NAME + ".exe";
             exeFile = Path.Combine(folder, exeFile);
 
             Process proc = new Process();
@@ -233,6 +233,15 @@ namespace UploadTemplate
                     Actions.MapShirtToExcel(shirtData, startRow + i);
                 }
             } 
+        }
+
+        private void btn_GenerateTag_Click(object sender, RibbonControlEventArgs e)
+        {
+            int row = Globals.Sheet1.Application.ActiveCell.Row;
+            int column = Globals.Sheet1.Application.ActiveCell.Column;
+            string seedingKey = Globals.Sheet1.Application.ActiveCell.Value;
+            string result = TagGenerator.GenerateTag(seedingKey);
+            Globals.Sheet1.Cells[row, column + 1] = result;
         }
     }
 }

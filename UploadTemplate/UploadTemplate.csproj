@@ -88,8 +88,10 @@
       <HintPath>..\packages\RestSharp.106.11.7\lib\net452\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -143,6 +145,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TagGenerator.cs" />
     <Compile Include="CheckTrademarkAPI.cs" />
     <Compile Include="Forms\TrademarkView.cs">
       <SubType>Form</SubType>
@@ -230,6 +233,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{26477F18-9842-469D-AC6F-899635E82614}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Upload.Common\Upload.Common.csproj">
+      <Project>{aab3edd2-00c8-474e-b933-7f7904264a58}</Project>
+      <Name>Upload.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Upload.DataAccess\Upload.DataAccess.csproj">
       <Project>{684cbfe5-abb8-4630-bb48-2523e2d9fbeb}</Project>
