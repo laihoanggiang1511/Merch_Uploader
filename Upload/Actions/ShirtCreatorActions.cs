@@ -749,17 +749,17 @@ namespace EzUpload.Actions
                 if (shirt == null)
                     return false;
 
-                if (shirt.ShirtTypes == null)
-                {
-                    shirtError = ShirtStatus.NoShirtType;
-                    return false;
-                }
-                else
-                if (shirt.ShirtTypes.Where(x => x.IsActive).Count() == 0)
-                {
-                    shirtError = ShirtStatus.NoShirtType;
-                    return false;
-                }
+                //if (shirt.ShirtTypes == null)
+                //{
+                //    shirtError = ShirtStatus.NoShirtType;
+                //    return false;
+                //}
+                //else
+                //if (shirt.ShirtTypes.Where(x => x.IsActive).Count() == 0)
+                //{
+                //    shirtError = ShirtStatus.NoShirtType;
+                //    return false;
+                //}
 
                 if (string.IsNullOrEmpty(shirt.ImagePath))
                 {

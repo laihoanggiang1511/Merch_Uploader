@@ -130,6 +130,7 @@
   <ItemGroup>
     <Compile Include="Converter\BoolReverseConverter.cs" />
     <Compile Include="Converter\MultiBindingConverter.cs" />
+    <Compile Include="Converter\PlatformVisibilityConverter.cs" />
     <Compile Include="MultiReplace.xaml.cs">
       <DependentUpon>MultiReplace.xaml</DependentUpon>
     </Compile>
@@ -423,6 +424,10 @@
     <None Include="Resources\Mesa de trabajo 1.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Upload.Common\Upload.Common.csproj">
+      <Project>{aab3edd2-00c8-474e-b933-7f7904264a58}</Project>
+      <Name>Upload.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Upload.ViewModel\Upload.ViewModel.csproj">
       <Project>{FB7A56A9-B95B-401A-AEDD-A3F8F5AA6E5C}</Project>
       <Name>Upload.ViewModel</Name>

@@ -77,21 +77,21 @@ namespace EzUpload.Actions
         private void RunTeePublicUploadCmdInvoke(object obj)
         {
             MainWindow mainWin = obj as MainWindow;
-            (new UploadActions()).ShowWindow();
+            (new UploadActions()).ShowWindow(UploadPlatform.TeePublic);
             if (mainWin != null)
                 mainWin.Close();
 
 
-            ChromeDriver driver = Helper.StartChromeWithOptions("E:\\Cookies");
-            driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
-            IWebElement element1 = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[1]/div[2]/div[1]/div[1]"));
-            //element1.Click();
-            IWebElement element = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[3]/div/div[2]/div[3]/div/form/div[1]/div[2]/input"));
-            element = Helper.GetElementWithWait(driver, By.Name("file"));
+            //ChromeDriver driver = Helper.StartChromeWithOptions("E:\\Cookies");
+            //driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
+            //IWebElement element1 = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[1]/div[2]/div[1]/div[1]"));
+            ////element1.Click();
+            //IWebElement element = Helper.GetElementWithWait(driver, By.XPath("/html/body/div[3]/div/div[2]/div[3]/div/form/div[1]/div[2]/input"));
+            //element = Helper.GetElementWithWait(driver, By.Name("file"));
 
 
 
-            element.SendKeys(@"C:\Users\laiho\Desktop\TEST\1st.PNG");
+            //element.SendKeys(@"C:\Users\laiho\Desktop\TEST\1st.PNG");
         }
 
         private void HelpCmdInvoke(object obj)

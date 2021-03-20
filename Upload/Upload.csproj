@@ -229,9 +229,11 @@
     </ApplicationDefinition>
     <Compile Include="Actions\AutoUpload.cs" />
     <Compile Include="Actions\Chrome\Helper.cs" />
+    <Compile Include="Actions\Chrome\UploadTeePublic.cs" />
     <Compile Include="Actions\Chrome\UploadMerch.cs" />
-    <Compile Include="Actions\GlobalVariables.cs" />
+    <Compile Include="Actions\Chrome\Global.cs" />
     <Compile Include="Actions\ImageEditorActions.cs" />
+    <Compile Include="Actions\Chrome\IUpload.cs" />
     <Compile Include="Actions\MainActions.cs" />
     <Compile Include="Actions\UploadActions.cs" />
     <Compile Include="App.xaml.cs">

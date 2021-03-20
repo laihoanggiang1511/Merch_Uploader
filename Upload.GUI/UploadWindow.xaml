@@ -18,6 +18,7 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility"/>
         <converter:InvertableBoolToVisibility x:Key="ReverseBoolToVis"/>
+        <converter:PlatformVisibilityConverter x:Key="PlatformVisibility"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Key="Delete"
@@ -114,18 +115,22 @@
                             ToolTip="Cancel" Click="button_close_folder_Click"/>
                     </StackPanel>
                 </Grid>
-                <TextBlock Grid.Row ="2" Grid.Column="0" Text="Merch Email:" Margin="5" VerticalAlignment="Center"/>
-                <TextBox Margin="5,5,105,5" Text="{Binding Email}" Grid.Row ="2" Grid.Column="1" HorizontalAlignment="Stretch"/>
-                <TextBlock Grid.Row ="3" Grid.Column="0" Text="Merch Password:" Margin="5" VerticalAlignment="Center"/>
+                <TextBlock Visibility="{Binding UploadPlatform, Converter = {StaticResource PlatformVisibility}}"
+                    Grid.Row ="2" Grid.Column="0" Text="Merch Email:" Margin="5" VerticalAlignment="Center"/>
+                <TextBox Visibility="{Binding UploadPlatform, Converter = {StaticResource PlatformVisibility}}"
+                    Margin="5,5,105,5" Text="{Binding Email}" Grid.Row ="2" Grid.Column="1" HorizontalAlignment="Stretch"/>
+                <TextBlock Visibility="{Binding UploadPlatform, Converter = {StaticResource PlatformVisibility}}"
+                    Grid.Row ="3" Grid.Column="0" Text="Merch Password:" Margin="5" VerticalAlignment="Center"/>
+                <PasswordBox Visibility="{Binding UploadPlatform, Converter = {StaticResource PlatformVisibility}}"
+                    Grid.Row ="3" Grid.Column="1"
+                    x:Name="password" Margin="5,5,105,5" HorizontalAlignment="Stretch"
+                             ToolTip="Your password will be encrypted"/>
+
                 <Grid Grid.Row ="3" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
-                    <PasswordBox Grid.Column="0" x:Name="password" Margin="5" HorizontalAlignment="Stretch"
-                             ToolTip="Your password will be encrypted"/>
-                    <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Manual Log In" Padding="0" FontSize="10" Height="25" VerticalAlignment="Center"
-                            ToolTip="Manual log in for first time or in case Merch requires Authentication"/>
                 </Grid>
             </Grid>
         </GroupBox>
@@ -146,6 +151,8 @@
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Width="120" Orientation="Vertical" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch">
+                        <Button Grid.Column="1" Command="{Binding OpenChromeCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" Margin="5" Content="Manual Log In" Padding="0" FontSize="10" Height="25" VerticalAlignment="Center"
+                            ToolTip="Manual log in for first time or in case Merch requires Authentication"/>
                         <Button Command="{Binding BrowseCmd}" CommandParameter="{Binding}"  Margin="5" Content="Browse..." Height="25" VerticalAlignment="Center" FontSize="12"/>
                         <!--<Button Command="{Binding EditShirtCmd}" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}" Margin="5" Content="Edit Shirt"  Height="25" VerticalAlignment="Center" FontSize="12"/>-->
                         <Button Command="{Binding DeleteCmd}" Background="Crimson" BorderBrush="Crimson" Visibility="{Binding AllowDelete, Converter={StaticResource BoolToVisibility}}" CommandParameter="{Binding}"  Margin="5" Content="Remove"  Height="25" VerticalAlignment="Center" FontSize="12"/>

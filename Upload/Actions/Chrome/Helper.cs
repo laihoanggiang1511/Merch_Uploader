@@ -21,10 +21,32 @@ using MessageBox = System.Windows.MessageBox;
 namespace EzUpload.Actions.Chrome
 {
     public delegate bool LogIn();
-    public class Helper
+    public class ChromeHelper
     {
         public static LogIn LogInCallBack;
 
+        public void QuitDriver()
+        {
+            //try
+            //{
+            //    Log.log.Info("---Quit Driver---");
+            //    if (Driver != null)
+            //        Driver.Close();
+            //    Driver = null;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Log.log.Fatal(ex);
+            //}
+            //finally
+            //{
+            if (Global.Driver != null)
+            {
+                Global.Driver.Quit();
+            }
+            //}
+
+        }
         public static ChromeDriver StartChromeWithOptions(string userFolderPath)
         {
             ChromeDriver cDriver = null;
@@ -40,14 +62,14 @@ namespace EzUpload.Actions.Chrome
                     ChromeOptions chrOption = new ChromeOptions();
                     chrOption.AddArguments("user-data-dir=" + userFolderPath);
                     var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = false;
+                    chromeDriverService.HideCommandPromptWindow = true;
                     cDriver = new ChromeDriver(chromeDriverService, chrOption);
                 }
                 else
                 {
                     ChromeOptions chrOption = new ChromeOptions();
                     var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = false;
+                    chromeDriverService.HideCommandPromptWindow = true;
                     cDriver = new ChromeDriver(chromeDriverService, chrOption);
                 }
             }
@@ -125,6 +147,10 @@ namespace EzUpload.Actions.Chrome
                         }
                         Log.log.Info(string.Format("--Success--"));
                         return true;
+                    }
+                    else if(click ==true)
+                    {
+                        webElement.Click();
                     }
                 }
             }

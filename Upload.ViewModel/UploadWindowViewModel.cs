@@ -61,7 +61,8 @@ namespace EzUpload.ViewModel
                                 Descriptions += "Design Title: " + activeLanguage.Title + "\n" + "\n";
                                 Descriptions += "Feature Bullet 1: " + activeLanguage.FeatureBullet1 + "\n" + "\n";
                                 Descriptions += "Feature Bullet 2: " + activeLanguage.FeatureBullet2 + "\n" + "\n";
-                                Descriptions += "Description: " + activeLanguage.Description;
+                                Descriptions += "Description: " + activeLanguage.Description + "\n" + "\n";
+                                Descriptions += "Main Tags: " + selectedShirt.MainTags + "\n" + "\n";
                             }
                         }
 

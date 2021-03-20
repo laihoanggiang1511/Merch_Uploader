@@ -141,7 +141,7 @@ namespace EzUpload.Actions
                     if (UploadMerch.driver != null)
                     {
                         UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                        bool uploadSuccess = upload.Log_In();
+                        bool uploadSuccess = upload.LogIn();
                         if (uploadSuccess)
                         {
                             uploadSuccess = upload.Upload(shirt);

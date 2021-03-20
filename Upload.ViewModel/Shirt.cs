@@ -11,7 +11,9 @@ namespace EzUpload.ViewModel
 {
     public class Shirt : ICloneable
     {
-        public string Tags { get; set; }
+        public string MainTags { get; set; }
+        public string SupportingTags { get; set; }
+
         public string ImagePath { get; set; }
         public int ImageType { get; set; }
 

@@ -37,7 +37,7 @@ namespace EzUpload.Actions
             uploadWindow.Closed += this.OnExit;
             string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             dataFolder += $"\\{Constants.PRODUCT_NAME}\\UserFolders";
-            UploadWindowViewModel mainVM = new UploadWindowViewModel (dataFolder)
+            UploadWindowViewModel mainVM = new UploadWindowViewModel(dataFolder)
             {
                 BrowseCmd = new RelayCommand(BrowseCmdInvoke),
                 OpenChromeCmd = new RelayCommand(OpenChromeCmdInvoke),
@@ -267,17 +267,17 @@ namespace EzUpload.Actions
                         }
                         else
                         {
-                            Helper.ShowErrorMessageBox("Name already exist, please choose a new name");
+                            ChromeHelper.ShowErrorMessageBox("Name already exist, please choose a new name");
                         }
                     }
                     else
                     {
-                        Helper.ShowErrorMessageBox("Name contains invalid character, please choose a new name");
+                        ChromeHelper.ShowErrorMessageBox("Name contains invalid character, please choose a new name");
                     }
                 }
                 else
                 {
-                    Helper.ShowErrorMessageBox("Folder name is empty");
+                    ChromeHelper.ShowErrorMessageBox("Folder name is empty");
                 }
                 //uploadVM.UserFolderPath
                 //if (!string.IsNullOrEmpty(uploadVM.UserFolderPath) && uploadVM.UserFolderPath .
@@ -292,12 +292,12 @@ namespace EzUpload.Actions
                 uploadVM.password = GetPassword(uploadWind);
                 if (uploadVM.IsUploading == true)
                 {
-                    Helper.ShowInfoMessageBox("Another proccess is running");
+                    ChromeHelper.ShowInfoMessageBox("Another proccess is running");
                     return;
                 }
                 if (!Directory.Exists(uploadVM.UserFolderPath))
                 {
-                    Helper.ShowErrorMessageBox("User folder does not exist");
+                    ChromeHelper.ShowErrorMessageBox("User folder does not exist");
                     return;
                 }
 
@@ -314,16 +314,25 @@ namespace EzUpload.Actions
                 {
                     UploadMerch upload = new UploadMerch(uploadVM.password, uploadVM.Email);
                     upload.OpenChrome(uploadVM.UserFolderPath);
-                    UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                    upload.Log_In();
-                    if (UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
+
+                    if (uploadVM.UploadPlatform == UploadPlatform.Merch)
                     {
-                        Helper.ShowInfoMessageBox("Log in Sucess!");
-                        uploadVM.IsUploading = false;
+                        UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
+                        upload.LogIn();
+                        if (UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
+                        {
+                            ChromeHelper.ShowInfoMessageBox("Log in Sucess!");
+                            uploadVM.IsUploading = false;
+                        }
+                    }
+                    else if(uploadVM.UploadPlatform == UploadPlatform.TeePublic)
+                    {
+                        UploadMerch.driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.log.Fatal(ex);
                 }
             }
 
@@ -340,7 +349,7 @@ namespace EzUpload.Actions
                 {
                     if (mainVM.IsUploading == true)
                     {
-                        Helper.ShowInfoMessageBox("Another proccess is running!");
+                        ChromeHelper.ShowInfoMessageBox("Another proccess is running!");
                         return;
                     }
                     Thread thread = new Thread(UploadShirt);
@@ -384,16 +393,14 @@ namespace EzUpload.Actions
                             Utils.ShowErrorMessageBox(message);
                             return;
                         }
-
                         UploadMerch upload = new UploadMerch(mainVM.password, mainVM.Email);
-
                         if (Directory.Exists(mainVM.UserFolderPath))
                         {
                             upload.OpenChrome(mainVM.UserFolderPath);
                             if (UploadMerch.driver != null)
                             {
                                 UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                                upload.Log_In();
+                                upload.LogIn();
 
                                 for (int i = 0; i < mainVM.Shirts.Count; i++)
                                 {
@@ -417,7 +424,7 @@ namespace EzUpload.Actions
                         }
                         else
                         {
-                            Helper.ShowErrorMessageBox("User folder does not exist");
+                            ChromeHelper.ShowErrorMessageBox("User folder does not exist");
                         }
                     }
                     catch (Exception ex)
