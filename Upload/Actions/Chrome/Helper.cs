@@ -32,6 +32,7 @@ namespace EzUpload.Actions.Chrome
                 if (Driver != null)
                 {
                     Driver.Quit();
+                    Driver = null;
                 }
             }
             catch (Exception ex)
@@ -56,14 +57,14 @@ namespace EzUpload.Actions.Chrome
                         ChromeOptions chrOption = new ChromeOptions();
                         chrOption.AddArguments("user-data-dir=" + userFolderPath);
                         var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
+                        chromeDriverService.HideCommandPromptWindow = false;
                         Driver = new ChromeDriver(chromeDriverService, chrOption);
                     }
                     else
                     {
                         ChromeOptions chrOption = new ChromeOptions();
                         var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                        chromeDriverService.HideCommandPromptWindow = true;
+                        chromeDriverService.HideCommandPromptWindow = false;
                         Driver = new ChromeDriver(chromeDriverService, chrOption);
                     }
                 }
@@ -187,10 +188,6 @@ namespace EzUpload.Actions.Chrome
             {
                 if (Driver != null)
                 {
-                    if (LogInCallBack != null && !LogInCallBack.Invoke())
-                    {
-                        return null;
-                    }
                     WebDriverWait webdriverWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(waitTime));
                     IWebElement webElement = webdriverWait.Until(ExpectedConditions.ElementExists(by));
                     Random random = new Random();

@@ -312,7 +312,6 @@ namespace EzUpload.Actions
             {
                 try
                 {
-                    uploadVM.IsUploading = true;
                     IUpload upload = null;
                     if (uploadVM.UploadPlatform == UploadPlatform.Merch)
                     {
@@ -325,7 +324,6 @@ namespace EzUpload.Actions
                     upload.OpenChrome(uploadVM.UserFolderPath);
                     upload.GoToUploadPage();
                     upload.LogIn();
-                    uploadVM.IsUploading = false;
                 }
                 catch (Exception ex)
                 {

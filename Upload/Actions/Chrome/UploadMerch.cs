@@ -33,8 +33,7 @@ namespace EzUpload.Actions.Chrome
                     if (ChromeHelper.Driver.Url.Contains("www.amazon.com/ap/signin"))
                     {
                         Log.log.Info("------Start Log In----------");
-                        if (!string.IsNullOrEmpty(_email) &&
-                            ChromeHelper.GetElementWithWait(By.Id("ap_email"), 10) != null)
+                        if (!string.IsNullOrEmpty(_email))
                         {
                             ChromeHelper.SendKeysElement(By.Id("ap_email"), _email);
                         }
@@ -61,10 +60,14 @@ namespace EzUpload.Actions.Chrome
         {
             try
             {
-                if (ChromeHelper.Driver != null && shirt != null)
+                if (shirt != null)
                 {
                     Log.log.Info($"-----------Start Upload-------------");
                     GoToUploadPage();
+                    while (ChromeHelper.GetElementWithWait(By.Id("select-marketplace-button"), 5) == null)
+                    {
+                        GoToUploadPage();
+                    }
                     //Set descriptions
                     Log.log.Info("---Descriptions---");
                     ChromeHelper.ClickElement(By.Id("acc-control-all"));
@@ -87,16 +90,15 @@ namespace EzUpload.Actions.Chrome
                         }
                     }
 
+
                     // Select Products
                     if (!ChromeHelper.ClickElement(By.Id("select-marketplace-button")))
                         return false;
+                    Thread.Sleep(1000);
                     if (!SelectProduct(shirt))
                         return false;
 
-                    while (ChromeHelper.GetElementWithWait(By.Id("select-marketplace-button"), 5) == null)
-                    {
-                        GoToUploadPage();
-                    }
+                   
                     // Upload .png files
                     if (!UploadFilePNG(shirt))
                         return false;
@@ -268,26 +270,26 @@ namespace EzUpload.Actions.Chrome
                     case (int)PNGImageType.Standard_Front:
                         {
                             Log.log.Info("-STANDARD_TSHIRT-FRONT-");
-                            ChromeHelper.SendKeysElement(By.Id("STANDARD_TSHIRT-FRONT"), shirt.ImagePath);
-                            //IWebElement webElement = ChromeHelper.GetElementWithWait();
-                            //webElement.SendKeys(shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("STANDARD_TSHIRT-FRONT"), shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.Driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
+                            webElement.SendKeys(shirt.ImagePath);
                             break;
                         }
                     case (int)PNGImageType.Standard_Back:
                         {
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
-                            ChromeHelper.SendKeysElement(By.Id("STANDARD_TSHIRT-BACK"), shirt.ImagePath);
-                            //IWebElement webElement = Driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("STANDARD_TSHIRT-BACK"), shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.Driver.FindElement(By.Id("STANDARD_TSHIRT-BACK"));
+                            webElement.SendKeys(shirt.ImagePath);
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[1]/div[1]/product-card/div/button"));
                             break;
                         }
                     case (int)PNGImageType.Hoodie_Front:
                         {
-                            ChromeHelper.SendKeysElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"), shirt.ImagePath);
-                            //IWebElement webElement = Driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"), shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.Driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-FRONT"));
+                            webElement.SendKeys(shirt.ImagePath);
                             break;
                         }
                     case (int)PNGImageType.Hoodie_Back:
@@ -296,38 +298,38 @@ namespace EzUpload.Actions.Chrome
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/product-editor/div/div[2]/div/div[1]/product-asset-editor/div/div[2]/div/button[2]"));
 
-                            ChromeHelper.SendKeysElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"), shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"), shirt.ImagePath);
 
-                            //IWebElement webElement = Driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.Driver.FindElement(By.Id("STANDARD_PULLOVER_HOODIE-BACK"));
+                            webElement.SendKeys(shirt.ImagePath);
                             ChromeHelper.ClickElement(By.XPath("/html/body/div[1]/div/app-root/div/ng-component/div/ng-component/div[2]/div[2]/div[4]/product-card/div/button"));
                             break;
                         }
                     case (int)PNGImageType.Popsockets:
                         {
                             Log.log.Info("-POP_SOCKET-FRONT-");
-                            ChromeHelper.SendKeysElement(By.Id("POP_SOCKET-FRONT"), shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("POP_SOCKET-FRONT"), shirt.ImagePath);
 
-                            //IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("POP_SOCKET-FRONT"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("POP_SOCKET-FRONT"));
+                            webElement.SendKeys(shirt.ImagePath);
                             break;
                         }
 
                     case (int)PNGImageType.iPhoneCase:
                         {
                             Log.log.Info("-Phone Case-");
-                            ChromeHelper.SendKeysElement(By.Id("PHONE_CASE_APPLE_IPHONE-BACK"), shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("PHONE_CASE_APPLE_IPHONE-BACK"), shirt.ImagePath);
 
-                            //IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("PHONE_CASE_APPLE_IPHONE-BACK"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("PHONE_CASE_APPLE_IPHONE-BACK"));
+                            webElement.SendKeys(shirt.ImagePath);
                             break;
                         }
                     case (int)PNGImageType.SamsungCase:
                         {
                             Log.log.Info("-Phone Case-");
-                            ChromeHelper.SendKeysElement(By.Id("PHONE_CASE_SAMSUNG_GALAXY-BACK"), shirt.ImagePath);
-                            //IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("PHONE_CASE_SAMSUNG_GALAXY-BACK"));
-                            //webElement.SendKeys(shirt.ImagePath);
+                            //ChromeHelper.SendKeysElement(By.Id("PHONE_CASE_SAMSUNG_GALAXY-BACK"), shirt.ImagePath);
+                            IWebElement webElement = ChromeHelper.GetElementWithWait(By.Id("PHONE_CASE_SAMSUNG_GALAXY-BACK"));
+                            webElement.SendKeys(shirt.ImagePath);
                             break;
                         }
                 }

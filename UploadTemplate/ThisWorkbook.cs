@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using Common.LicenseManager;
+using EzUpload;
 using Microsoft.Office.Tools.Excel;
 using Microsoft.VisualStudio.Tools.Applications.Runtime;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -20,8 +21,8 @@ namespace UploadTemplate
         {
 #if !DEBUG
             //Setup License
-            string subkey = $@"{GlobalVariables.PRODUCT_MANUFACTURER}\{GlobalVariables.PRODUCT_NAME}";
-            LicenseManager.SetLicenseData(subkey, "LicenseKey", GlobalVariables.PRODUCT_DATA, GlobalVariables.PRODUCT_ID, 1);
+            string subkey = $@"{Constants.PRODUCT_MANUFACTURER}\{Constants.PRODUCT_NAME}";
+            LicenseManager.SetLicenseData(subkey, "LicenseKey", Constants.PRODUCT_DATA, Constants.PRODUCT_ID, 1);
             bool allowOpen = false;
             if (LicenseManager.IsLicenseOK() == true)
             {
