@@ -222,7 +222,7 @@ namespace EzUpload.Actions
                     //Save Setting
                     EzUpload.Properties.Settings.Default.UserFolderPath = uploadVM.UserFolderPath;
                     EzUpload.Properties.Settings.Default.Save();
-                    UploadMerch.QuitDriver();
+                    ChromeHelper.QuitDriver();
                 }
             }
             catch
@@ -312,23 +312,20 @@ namespace EzUpload.Actions
             {
                 try
                 {
-                    UploadMerch upload = new UploadMerch(uploadVM.password, uploadVM.Email);
-                    upload.OpenChrome(uploadVM.UserFolderPath);
-
+                    uploadVM.IsUploading = true;
+                    IUpload upload = null;
                     if (uploadVM.UploadPlatform == UploadPlatform.Merch)
                     {
-                        UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                        upload.LogIn();
-                        if (UploadMerch.driver.Url.Contains("merch.amazon.com/designs/new"))
-                        {
-                            ChromeHelper.ShowInfoMessageBox("Log in Sucess!");
-                            uploadVM.IsUploading = false;
-                        }
+                        upload = new UploadMerch(uploadVM.password, uploadVM.Email);
                     }
-                    else if(uploadVM.UploadPlatform == UploadPlatform.TeePublic)
+                    else if (uploadVM.UploadPlatform == UploadPlatform.TeePublic)
                     {
-                        UploadMerch.driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
+                        upload = new UploadTeePublic();
                     }
+                    upload.OpenChrome(uploadVM.UserFolderPath);
+                    upload.GoToUploadPage();
+                    upload.LogIn();
+                    uploadVM.IsUploading = false;
                 }
                 catch (Exception ex)
                 {
@@ -352,13 +349,40 @@ namespace EzUpload.Actions
                         ChromeHelper.ShowInfoMessageBox("Another proccess is running!");
                         return;
                     }
-                    Thread thread = new Thread(UploadShirt);
-                    thread.SetApartmentState(ApartmentState.STA);
-                    thread.Start(mainVM);
-                    mainVM.IsUploading = true;
-
+                    if (ValidateShirt(mainVM.Shirts.ToList()))
+                    {
+                        Thread thread = new Thread(UploadShirt);
+                        thread.SetApartmentState(ApartmentState.STA);
+                        thread.Start(mainVM);
+                        mainVM.IsUploading = true;
+                    }
                 }
             }
+        }
+
+        private bool ValidateShirt(List<Shirt> shirts)
+        {
+            Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
+            bool bContinue = true;
+            foreach (Shirt s in shirts)
+            {
+                ShirtStatus errorCode = 0;
+                if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
+                {
+                    invalidShirts.Add(s, errorCode);
+                    bContinue = false;
+                }
+            }
+            if (bContinue == false)
+            {
+                string message = "Following shirt(s) are invalid, please check them again before upload:\n";
+                foreach (var pair in invalidShirts)
+                {
+                    message += pair.Key.ImagePath + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
+                }
+                Utils.ShowErrorMessageBox(message);
+            }
+            return bContinue;
         }
 
         private void UploadShirt(object obj)
@@ -371,56 +395,39 @@ namespace EzUpload.Actions
                 {
                     try
                     {
-
-                        Dictionary<Shirt, ShirtStatus> invalidShirts = new Dictionary<Shirt, ShirtStatus>();
-                        bool bContinue = true;
-                        foreach (Shirt s in mainVM.Shirts)
-                        {
-                            ShirtStatus errorCode = 0;
-                            if (!ShirtCreatorActions.ValidateShirt(s, ref errorCode))
-                            {
-                                invalidShirts.Add(s, errorCode);
-                                bContinue = false;
-                            }
-                        }
-                        if (bContinue == false)
-                        {
-                            string message = "Following shirt(s) are invalid, please check them again before upload:\n";
-                            foreach (var pair in invalidShirts)
-                            {
-                                message += pair.Key.ImagePath + ":\n" + ShirtCreatorActions.GetErrorMessage(pair.Value) + "\n";
-                            }
-                            Utils.ShowErrorMessageBox(message);
-                            return;
-                        }
-                        UploadMerch upload = new UploadMerch(mainVM.password, mainVM.Email);
                         if (Directory.Exists(mainVM.UserFolderPath))
                         {
-                            upload.OpenChrome(mainVM.UserFolderPath);
-                            if (UploadMerch.driver != null)
+                            IUpload upload = null;
+                            if (mainVM.UploadPlatform == UploadPlatform.Merch)
                             {
-                                UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                                upload.LogIn();
-
-                                for (int i = 0; i < mainVM.Shirts.Count; i++)
-                                {
-                                    mainVM.SelectedShirt = mainVM.Shirts[i];
-                                    if (!upload.Upload(mainVM.Shirts[i]))
-                                        failShirts.Add(mainVM.Shirts[i]);
-                                }
-                                UploadMerch.QuitDriver();
-                                if (failShirts == null || failShirts.Count == 0)
-                                {
-                                    System.Windows.MessageBox.Show("Job Done!");
-                                }
-                                else
-                                {
-                                    string message = "Fail to upload following shirt(s):\n";
-                                    foreach (Shirt shirt in failShirts)
-                                        message += shirt.ImagePath + "\n";
-                                    System.Windows.MessageBox.Show(message);
-                                }
+                                upload = new UploadMerch(mainVM.password, mainVM.Email);
                             }
+                            else if(mainVM.UploadPlatform == UploadPlatform.TeePublic)
+                            {
+                                //TODO Tee   constructor
+                            }
+                            upload.OpenChrome(mainVM.UserFolderPath);
+                            upload.GoToUploadPage();
+                            upload.LogIn();
+                            for (int i = 0; i < mainVM.Shirts.Count; i++)
+                            {
+                                mainVM.SelectedShirt = mainVM.Shirts[i];
+                                if (!upload.Upload(mainVM.Shirts[i]))
+                                    failShirts.Add(mainVM.Shirts[i]);
+                            }
+                            upload.QuitDriver();
+                            if (failShirts.Count == 0)
+                            {
+                                System.Windows.MessageBox.Show("Job Done!");
+                            }
+                            else
+                            {
+                                string message = "Fail to upload following shirt(s):\n";
+                                foreach (Shirt shirt in failShirts)
+                                    message += shirt.ImagePath + "\n";
+                                System.Windows.MessageBox.Show(message);
+                            }
+
                         }
                         else
                         {

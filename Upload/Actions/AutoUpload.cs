@@ -18,28 +18,28 @@ namespace EzUpload.Actions
     public class AutoUpload
     {
 
-        BlockingCollection<KeyValuePair<string, Shirt>> shirtQueue = new BlockingCollection<KeyValuePair<string, Shirt>>();
-        string userFolderPath;
-        string email;
-        string password;
-        readonly int dailyUploadLimit;
-        DateTime startTime;
-        int countUploadToday;
+        private BlockingCollection<KeyValuePair<string, Shirt>> _shirtQueue = new BlockingCollection<KeyValuePair<string, Shirt>>();
+        private string _userFolderPath;
+        private string _email;
+        private string _password;
+        private readonly int _dailyUploadLimit;
+        private DateTime _startTime;
+        private int _countUploadToday;
         public Action<UploadWindowViewModel, string> WriteLog;
-        UploadWindowViewModel uploadVM;
+        private UploadWindowViewModel _uploadVM;
 
         public AutoUpload(UploadWindowViewModel uploadVM)
         {
-            this.userFolderPath = uploadVM.UserFolderPath;
-            this.email = uploadVM.Email;
-            this.password = uploadVM.password;
-            this.dailyUploadLimit = uploadVM.DailyUploadLimit;
-            this.uploadVM = uploadVM;
+            this._userFolderPath = uploadVM.UserFolderPath;
+            this._email = uploadVM.Email;
+            this._password = uploadVM.password;
+            this._dailyUploadLimit = uploadVM.DailyUploadLimit;
+            this._uploadVM = uploadVM;
             WriteLog = new Action<UploadWindowViewModel, string>((x, y) => Console.WriteLine(y));
         }
         public void StartWatching(string folderToWatch)
         {
-            WriteLog.Invoke(uploadVM, $"Waiting for files in folder: {folderToWatch}");
+            WriteLog.Invoke(_uploadVM, $"Waiting for files in folder: {folderToWatch}");
 
             //Scan for firstTime
             string[] filesInDir = Directory.GetFiles(folderToWatch, "*.*", SearchOption.TopDirectoryOnly);
@@ -48,7 +48,7 @@ namespace EzUpload.Actions
                 AddToQueue(file);
             }
 
-            startTime = Utils.ConvertToLATime(System.DateTime.Now).Date;
+            _startTime = Utils.ConvertToLATime(System.DateTime.Now).Date;
             Thread thread = new Thread(new ThreadStart(OnStartUpload));
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
@@ -101,8 +101,8 @@ namespace EzUpload.Actions
             }
             if (shirt != null)
             {
-                WriteLog.Invoke(uploadVM, $"File added: {filePath} ");
-                shirtQueue.Add(new KeyValuePair<string, Shirt>(filePath, shirt));
+                WriteLog.Invoke(_uploadVM, $"File added: {filePath} ");
+                _shirtQueue.Add(new KeyValuePair<string, Shirt>(filePath, shirt));
             }
         }
 
@@ -112,21 +112,21 @@ namespace EzUpload.Actions
             {
                 Thread.Sleep(10000);
                 DateTime today = Utils.ConvertToLATime(System.DateTime.Now).Date;
-                if (!today.Equals(startTime))
+                if (!today.Equals(_startTime))
                 {
-                    countUploadToday = 0;
-                    startTime = today;
+                    _countUploadToday = 0;
+                    _startTime = today;
                 }
             }
         }
 
         private void OnStartUpload()
         {
-            foreach (var pair in shirtQueue.GetConsumingEnumerable(CancellationToken.None))
+            foreach (var pair in _shirtQueue.GetConsumingEnumerable(CancellationToken.None))
             {
                 try
                 {
-                    while (countUploadToday >= dailyUploadLimit)
+                    while (_countUploadToday >= _dailyUploadLimit)
                     {
                         //block upload
                         Thread.Sleep(10000);
@@ -135,42 +135,50 @@ namespace EzUpload.Actions
                     string jsonFullFileName = pair.Key;
                     string dir = Path.GetDirectoryName(jsonFullFileName);
                     string jsonFileName = Path.GetFileName(jsonFullFileName);
-                    WriteLog.Invoke(uploadVM, $"Uploading {jsonFileName}");
-                    UploadMerch upload = new UploadMerch(password, email);
-                    upload.OpenChrome(userFolderPath);
-                    if (UploadMerch.driver != null)
+                    WriteLog.Invoke(_uploadVM, $"Uploading {jsonFileName}");
+                    
+                    IUpload upload = null;
+                    if(_uploadVM.UploadPlatform == UploadPlatform.Merch)
                     {
-                        UploadMerch.driver.Navigate().GoToUrl("https://merch.amazon.com/designs/new");
-                        bool uploadSuccess = upload.LogIn();
-                        if (uploadSuccess)
-                        {
-                            uploadSuccess = upload.Upload(shirt);
-                        }
-
-                        UploadMerch.QuitDriver();
-                        //Copy to success or fail folder
-                        string dateFolder = Utils.ConvertToLATime(DateTime.Now).ToString("yyyy-MM-dd");
-                        if (uploadSuccess == true)
-                        {
-                            string successDir = Path.Combine(dir, "Success", dateFolder);
-                            CutFile(Path.GetFileName(jsonFullFileName), dir, successDir);
-                            CutFile(Path.GetFileName(shirt.ImagePath), dir, successDir);
-                            countUploadToday++;
-                            WriteLog.Invoke(uploadVM, $"Upload Success {jsonFileName}");
-                            WriteLog.Invoke(uploadVM, $"Uploaded today: {countUploadToday}");
-                        }
-                        else
-                        {
-                            WriteLog.Invoke(uploadVM, $"Upload Fail: {jsonFileName}");
-                            string failDir = Path.Combine(dir, "Fail", dateFolder);
-                            CutFile(Path.GetFileName(jsonFullFileName), dir, failDir);
-                            CutFile(Path.GetFileName(shirt.ImagePath), dir, failDir);
-                        }
+                        upload = new UploadMerch(_password, _email);
                     }
+                    else
+                    {
+                        //TODO teepublic
+                    }
+
+                    upload.OpenChrome(_userFolderPath);
+                    upload.GoToUploadPage();
+                    bool uploadSuccess = upload.LogIn();
+                    if (uploadSuccess)
+                    {
+                        uploadSuccess = upload.Upload(shirt);
+                    }
+                    upload.QuitDriver();
+
+                    //Copy to success or fail folder
+                    string dateFolder = Utils.ConvertToLATime(DateTime.Now).ToString("yyyy-MM-dd");
+                    if (uploadSuccess == true)
+                    {
+                        string successDir = Path.Combine(dir, "Success", dateFolder);
+                        CutFile(Path.GetFileName(jsonFullFileName), dir, successDir);
+                        CutFile(Path.GetFileName(shirt.ImagePath), dir, successDir);
+                        _countUploadToday++;
+                        WriteLog.Invoke(_uploadVM, $"Upload Success {jsonFileName}");
+                        WriteLog.Invoke(_uploadVM, $"Uploaded today: {_countUploadToday}");
+                    }
+                    else
+                    {
+                        WriteLog.Invoke(_uploadVM, $"Upload Fail: {jsonFileName}");
+                        string failDir = Path.Combine(dir, "Fail", dateFolder);
+                        CutFile(Path.GetFileName(jsonFullFileName), dir, failDir);
+                        CutFile(Path.GetFileName(shirt.ImagePath), dir, failDir);
+                    }
+
                 }
                 catch (Exception ex)
                 {
-                    WriteLog.Invoke(uploadVM, ex.Message);
+                    WriteLog.Invoke(_uploadVM, ex.Message);
                 }
             }
         }
@@ -192,7 +200,7 @@ namespace EzUpload.Actions
             }
             catch (Exception ex)
             {
-                WriteLog.Invoke(uploadVM, ex.Message);
+                WriteLog.Invoke(_uploadVM, ex.Message);
             }
         }
     }

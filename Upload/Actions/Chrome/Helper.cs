@@ -24,68 +24,87 @@ namespace EzUpload.Actions.Chrome
     public class ChromeHelper
     {
         public static LogIn LogInCallBack;
-
-        public void QuitDriver()
+        public static ChromeDriver Driver { get; set; }
+        public static void QuitDriver()
         {
-            //try
-            //{
-            //    Log.log.Info("---Quit Driver---");
-            //    if (Driver != null)
-            //        Driver.Close();
-            //    Driver = null;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Log.log.Fatal(ex);
-            //}
-            //finally
-            //{
-            if (Global.Driver != null)
-            {
-                Global.Driver.Quit();
-            }
-            //}
-
-        }
-        public static ChromeDriver StartChromeWithOptions(string userFolderPath)
-        {
-            ChromeDriver cDriver = null;
-
-            string storedVariable = System.Environment.GetEnvironmentVariable("PATH");
             try
             {
-                string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                System.Environment.SetEnvironmentVariable("PATH", executingFolder);
-
-                if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+                if (Driver != null)
                 {
-                    ChromeOptions chrOption = new ChromeOptions();
-                    chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = true;
-                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
-                }
-                else
-                {
-                    ChromeOptions chrOption = new ChromeOptions();
-                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = true;
-                    cDriver = new ChromeDriver(chromeDriverService, chrOption);
+                    Driver.Quit();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                Log.log.Fatal(ex);
             }
-            System.Environment.SetEnvironmentVariable("PATH", storedVariable);
-            return cDriver;
+
         }
-        public static bool ClickElement(ChromeDriver driver, By by)
+
+        public static void StartChromeWithOptions(string userFolderPath)
+        {
+            if (Driver == null)
+            {
+                string storedVariable = System.Environment.GetEnvironmentVariable("PATH");
+                try
+                {
+                    string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    System.Environment.SetEnvironmentVariable("PATH", executingFolder);
+
+                    if (!string.IsNullOrEmpty(userFolderPath) && Directory.Exists(userFolderPath))
+                    {
+                        ChromeOptions chrOption = new ChromeOptions();
+                        chrOption.AddArguments("user-data-dir=" + userFolderPath);
+                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                        chromeDriverService.HideCommandPromptWindow = true;
+                        Driver = new ChromeDriver(chromeDriverService, chrOption);
+                    }
+                    else
+                    {
+                        ChromeOptions chrOption = new ChromeOptions();
+                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                        chromeDriverService.HideCommandPromptWindow = true;
+                        Driver = new ChromeDriver(chromeDriverService, chrOption);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                System.Environment.SetEnvironmentVariable("PATH", storedVariable);
+            }
+        }
+        public static bool PasteContent(By by, string content)
+        {
+            try
+            {
+                IWebElement element = GetElementWithWait(by);
+                if (element != null)
+                {
+                    //element.SendKeys("1");
+                    System.Windows.Forms.Clipboard.SetText(content);
+                    OpenQA.Selenium.Interactions.Actions action = new OpenQA.Selenium.Interactions.Actions(Driver);
+                    action.MoveToElement(element).Perform();
+                    action.DoubleClick().Perform();
+                    element.SendKeys(OpenQA.Selenium.Keys.Control + 'v');
+                    //Helper.Paste();
+                    //Helper.SendKeysElement(Driver, By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input"),
+                    //                        s.Prices[j].ToString()); 
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
+            return false;
+        }
+        public static bool ClickElement(By by)
         {
             try
             {
                 Log.log.Info(string.Format("--Click Element {0}--", by));
-                IWebElement webElement = GetElementWithWait(driver, by);
+                IWebElement webElement = GetElementWithWait(by);
                 if (webElement != null)
                 {
                     webElement.Click();
@@ -100,12 +119,12 @@ namespace EzUpload.Actions.Chrome
             Log.log.Info(string.Format("--Failed--"));
             return false;
         }
-        public static bool SendKeysElement(ChromeDriver driver, By by, string input)
+        public static bool SendKeysElement(By by, string input)
         {
             try
             {
                 Log.log.Info(string.Format("--Send Key Element {0}--", by));
-                IWebElement webElement = GetElementWithWait(driver, by);
+                IWebElement webElement = GetElementWithWait(by);
                 if (webElement != null)
                 {
                     webElement.Clear();
@@ -122,16 +141,16 @@ namespace EzUpload.Actions.Chrome
             Log.log.Info(string.Format("--Failed--"));
             return false;
         }
-        public static bool ClickCheckBox(ChromeDriver driver, string xPath, bool click = true)
+        public static bool ClickCheckBox(string xPath, bool click = true)
         {
             try
             {
                 Log.log.Info(string.Format("--Click Check Box {0}, {1}--", xPath, click.ToString()));
-                IWebElement webElement = GetElementWithWait(driver, By.XPath(xPath));
+                IWebElement webElement = GetElementWithWait(By.XPath(xPath));
                 if (webElement != null)
                 {
                     string childXpath = xPath + "/i";
-                    IWebElement iChildWebElement = GetElementWithWait(driver, By.XPath(childXpath));
+                    IWebElement iChildWebElement = GetElementWithWait(By.XPath(childXpath));
                     if (iChildWebElement != null)
                     {
                         bool IsChecked = true;
@@ -148,7 +167,7 @@ namespace EzUpload.Actions.Chrome
                         Log.log.Info(string.Format("--Success--"));
                         return true;
                     }
-                    else if(click ==true)
+                    else if (click == true)
                     {
                         webElement.Click();
                     }
@@ -162,20 +181,23 @@ namespace EzUpload.Actions.Chrome
             return false;
         }
 
-        public static IWebElement GetElementWithWait(ChromeDriver driver, By by, int waitTime = 5)
+        public static IWebElement GetElementWithWait(By by, int waitTime = 5)
         {
             try
             {
-                if (LogInCallBack != null && !LogInCallBack.Invoke())
+                if (Driver != null)
                 {
-                    return null;
+                    if (LogInCallBack != null && !LogInCallBack.Invoke())
+                    {
+                        return null;
+                    }
+                    WebDriverWait webdriverWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(waitTime));
+                    IWebElement webElement = webdriverWait.Until(ExpectedConditions.ElementExists(by));
+                    Random random = new Random();
+                    int r = random.Next(100, 200);
+                    Thread.Sleep(r);
+                    return webElement;
                 }
-                WebDriverWait webdriverWait = new WebDriverWait(driver, TimeSpan.FromSeconds(waitTime));
-                IWebElement webElement = webdriverWait.Until(ExpectedConditions.ElementExists(by));
-                Random random = new Random();
-                int r = random.Next(100, 200);
-                Thread.Sleep(r);
-                return webElement;
             }
             catch (Exception ex)
             {
