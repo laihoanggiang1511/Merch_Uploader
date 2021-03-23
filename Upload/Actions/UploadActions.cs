@@ -402,7 +402,7 @@ namespace EzUpload.Actions
                             }
                             else if(mainVM.UploadPlatform == UploadPlatform.TeePublic)
                             {
-                                //TODO Tee   constructor
+                                upload = new UploadTeePublic();
                             }
                             upload.OpenChrome(mainVM.UserFolderPath);
                             upload.GoToUploadPage();

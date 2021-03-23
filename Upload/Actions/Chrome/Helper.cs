@@ -94,7 +94,7 @@ namespace EzUpload.Actions.Chrome
                     return true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.log.Fatal(ex);
             }
@@ -179,6 +179,41 @@ namespace EzUpload.Actions.Chrome
                 Log.log.Fatal(ex);
             }
             Log.log.Info(string.Format("--Failed--"));
+            return false;
+        }
+
+        public static bool SelectByIndex(By by, int index)
+        {
+            try
+            {
+                IWebElement element = GetElementWithWait(by);
+                if (element != null)
+                {
+                    SelectElement selectElement = new SelectElement(element);
+                    selectElement.SelectByIndex(index);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
+            return false;
+        }
+        public static bool SelectByText(By by, string text)
+        {
+            try
+            {
+                IWebElement element = GetElementWithWait(by);
+                if (element != null)
+                {
+                    SelectElement selectElement = new SelectElement(element);
+                    selectElement.SelectByText(text);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.log.Fatal(ex);
+            }
             return false;
         }
 

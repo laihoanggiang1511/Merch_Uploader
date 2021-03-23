@@ -2,6 +2,7 @@
 using EzUpload.ViewModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -13,13 +14,7 @@ namespace EzUpload.Actions.Chrome
     {
         public UploadTeePublic()
         {
-            ChromeHelper.LogInCallBack = new LogIn(Log_In);
-        }
-        public bool Log_In()
-        {
-            // Log In 
-            ChromeHelper.Driver.Navigate().GoToUrl("https://www.teepublic.com/design/quick_create");
-            return true;
+            ChromeHelper.LogInCallBack = new LogIn(LogIn);
         }
         public bool Upload(Shirt shirt)
         {
@@ -31,7 +26,7 @@ namespace EzUpload.Actions.Chrome
 
 
                     UploadFilePNG(shirt);
-                    Thread.Sleep(10000);
+                    Thread.Sleep(30000);
                     if (shirt.Languages != null && shirt.Languages.Count > 0)
                     {
                         ChromeHelper.SendKeysElement(By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[2]/div[1]/div[1]/div[1]/div[1]/input"),
@@ -47,11 +42,11 @@ namespace EzUpload.Actions.Chrome
                     //TODO Maintags to Supporting tags
 
                     //Default black color
-                    ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[2]/td/div[1]/div[1]/div/div/a/label"));
-                    ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[2]/td/div[1]/div[1]/div/ul/li[4]/a/label"));
+                    ChromeHelper.SelectByIndex(By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[2]/td/div[1]/div[1]/div/div/"),3);
+                    //ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[2]/td/div[1]/div[1]/div/ul/li[4]/a/label"));
                     //Baseball color
-                    ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[7]/td/div/div[1]/div/div/a/label"));
-                    ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[7]/td/div/div[1]/div/ul/li[2]/a/label"));
+                    ChromeHelper.SelectByIndex(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[7]/td/div/div[1]/div/div/a/label"),3);
+                    //ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[2]/div/table/tbody/tr[7]/td/div/div[1]/div/ul/li[2]/a/label"));
 
                     //All color
                     ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/div[3]/div[3]/div/form/div[2]/div[2]/div[3]/div[4]/div[1]/div/a[1]"));
@@ -76,6 +71,7 @@ namespace EzUpload.Actions.Chrome
             {
                 Log.log.Info("---Start UploadFilePNG---");
                 IWebElement fileInputElement = ChromeHelper.GetElementWithWait(By.XPath("/html/body/div[3]/div/div[2]/div[3]/div/form/div[1]/div[2]/input"));
+                fileInputElement = ChromeHelper.GetElementWithWait(By.ClassName("jsUploaderFileInput m-uploader__dropzone-input hidden cloudinary-fileupload"));
                 fileInputElement.SendKeys(shirt.ImagePath);
                 Thread.Sleep(3000);
                 Log.log.Info("---End UploadFilePNG---");
@@ -94,10 +90,10 @@ namespace EzUpload.Actions.Chrome
             {
                 Log.log.Info("---Open Chrome---");
                 Cursor.Current = Cursors.WaitCursor;
-                if (ChromeHelper.Driver != null)
-                {
-                    QuitDriver();
-                }
+                //if (ChromeHelper.Driver != null)
+                //{
+                //    QuitDriver();
+                //}
                 ChromeHelper.StartChromeWithOptions(userFolderPath);
             }
             catch (Exception ex)
@@ -121,6 +117,13 @@ namespace EzUpload.Actions.Chrome
 
         public bool LogIn()
         {
+            ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/header/div[1]/div/nav/div[2]/div[2]/div/a/i"));
+            ChromeHelper.ClickElement(By.XPath("/html/body/div[2]/div/header/div[1]/div/nav/div[2]/div[2]/div/div[2]/nav/a[2]"));
+
+            while (!ChromeHelper.Driver.Url.Contains("https://www.teepublic.com/designs"))
+            {
+
+            }
             GoToUploadPage();
             return true;
         }
