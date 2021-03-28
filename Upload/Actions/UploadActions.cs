@@ -319,7 +319,7 @@ namespace EzUpload.Actions
                     }
                     else if (uploadVM.UploadPlatform == UploadPlatform.TeePublic)
                     {
-                        upload = new UploadTeePublic();
+                        upload = new UploadTeePublic(uploadVM.password, uploadVM.Email);
                     }
                     upload.OpenChrome(uploadVM.UserFolderPath);
                     upload.GoToUploadPage();
@@ -402,7 +402,7 @@ namespace EzUpload.Actions
                             }
                             else if(mainVM.UploadPlatform == UploadPlatform.TeePublic)
                             {
-                                upload = new UploadTeePublic();
+                                upload = new UploadTeePublic(mainVM.Email, mainVM.password);
                             }
                             upload.OpenChrome(mainVM.UserFolderPath);
                             upload.GoToUploadPage();
@@ -413,7 +413,7 @@ namespace EzUpload.Actions
                                 if (!upload.Upload(mainVM.Shirts[i]))
                                     failShirts.Add(mainVM.Shirts[i]);
                             }
-                            upload.QuitDriver();
+                            //upload.QuitDriver();
                             if (failShirts.Count == 0)
                             {
                                 System.Windows.MessageBox.Show("Job Done!");

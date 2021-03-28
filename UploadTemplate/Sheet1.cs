@@ -26,12 +26,13 @@ namespace UploadTemplate
         }
         private void Sheet1_SelectionChange1(Range Target)
         {
+            //TODO something here
             // Static OldRange As Range
             // If Not OldRange Is Nothing Then
             if (Target.Value != null)
             {
                 string content = Target.Value.ToString();
-                if (Target.Column % 5 == 4)
+                if ((Target.Column - 6) % 5 == 0)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/50" + ")";
                     if (content.Length > 50)
@@ -39,7 +40,7 @@ namespace UploadTemplate
                     else
                         Target.Font.ColorIndex = 1;
                 }
-                if (Target.Column % 5 == 0)
+                if ((Target.Column - 6) % 5 == 1)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/60" + ")";
                     if (content.Length > 60)
@@ -47,7 +48,7 @@ namespace UploadTemplate
                     else
                         Target.Font.ColorIndex = 1;
                 }
-                if (Target.Column % 5 == 1 && Target.Column >= 6)
+                if ((Target.Column - 6) % 5 == 2)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/256" + ")";
                     if (content.Length > 256)
@@ -55,7 +56,7 @@ namespace UploadTemplate
                     else
                         Target.Font.ColorIndex = 1;
                 }
-                if (Target.Column % 5 == 2 && Target.Column >= 7)
+                if ((Target.Column - 6) % 5 == 3)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/256" + ")";
                     if (content.Length > 256)
@@ -63,7 +64,7 @@ namespace UploadTemplate
                     else
                         Target.Font.ColorIndex = 1;
                 }
-                if (Target.Column % 5 == 3 && Target.Column >= 8)
+                if ((Target.Column - 6) % 5 == 4)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/2000" + ")";
                     if (content.Length > 2000 || (content.Length > 0 && content.Length < 70))

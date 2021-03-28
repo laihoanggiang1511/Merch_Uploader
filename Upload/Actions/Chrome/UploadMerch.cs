@@ -64,7 +64,7 @@ namespace EzUpload.Actions.Chrome
                 {
                     Log.log.Info($"-----------Start Upload-------------");
                     GoToUploadPage();
-                    while (ChromeHelper.GetElementWithWait(By.Id("select-marketplace-button"), 5) == null)
+                    if (ChromeHelper.GetElementWithWait(By.Id("select-marketplace-button")) == null)
                     {
                         GoToUploadPage();
                     }

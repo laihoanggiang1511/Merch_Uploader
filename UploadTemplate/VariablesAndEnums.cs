@@ -16,7 +16,8 @@ namespace UploadTemplate
         Name = 1,
         Folder = 2,
         JSON = 3,
-        Tags = 4,
-        Description = 5
+        MainTag = 4,
+        SupportingTags = 5,
+        Description = 6
     }
 }
