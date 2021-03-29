@@ -252,7 +252,6 @@ namespace UploadTemplate
             {
                string result = TagGenerator.GenerateTag(seedingKey);
                Globals.Sheet1.Cells[row, supportingTagColumn].Value = result;
-
             }
             row++;
          }

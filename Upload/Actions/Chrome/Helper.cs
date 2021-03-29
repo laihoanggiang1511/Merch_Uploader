@@ -1,21 +1,14 @@
 ﻿using Common;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using MessageBox = System.Windows.MessageBox;
 
 namespace EzUpload.Actions.Chrome
@@ -41,7 +34,6 @@ namespace EzUpload.Actions.Chrome
          }
 
       }
-
       public static void StartChromeWithOptions(string userFolderPath)
       {
          if (Driver == null)
@@ -56,27 +48,15 @@ namespace EzUpload.Actions.Chrome
                {
                   ChromeOptions chrOption = new ChromeOptions();
                   chrOption.AddArguments("user-data-dir=" + userFolderPath);
-                  chrOption.AddArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.63");
-                  chrOption.AddArguments("--disable-extensions");
-                  chrOption.AddArguments("--profile-directory=Default");
-                  chrOption.AddArguments("--incognito");
-                  chrOption.AddArguments("--disable-plugins-discovery");
-                  chrOption.AddArguments("--start-maximized");
                   var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                  chromeDriverService.HideCommandPromptWindow = false;
+                  chromeDriverService.HideCommandPromptWindow = true;
                   Driver = new ChromeDriver(chromeDriverService, chrOption);
                }
                else
                {
                   ChromeOptions chrOption = new ChromeOptions();
-                  chrOption.AddArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.63");
-                  chrOption.AddArguments("--disable-extensions");
-                  chrOption.AddArguments("--profile-directory=Default");
-                  chrOption.AddArguments("--incognito");
-                  chrOption.AddArguments("--disable-plugins-discovery");
-                  chrOption.AddArguments("--start-maximized");
                   var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                  chromeDriverService.HideCommandPromptWindow = false;
+                  chromeDriverService.HideCommandPromptWindow = true;
                   Driver = new ChromeDriver(chromeDriverService, chrOption);
                }
             }
