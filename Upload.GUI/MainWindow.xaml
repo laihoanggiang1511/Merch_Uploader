@@ -45,7 +45,7 @@
                 <Button.Content>
                     <StackPanel Orientation="Vertical">
                         <Image Width="80" Height="80" Source="Resources/Pencilcase-2.ico" />
-                        <TextBlock HorizontalAlignment="Center" Text="Create Data"/>
+                        <TextBlock HorizontalAlignment="Center" Text="Write Content"/>
                     </StackPanel>
                 </Button.Content>
             </Button>
@@ -54,7 +54,7 @@
                 <Button.Content>
                     <StackPanel Orientation="Vertical">
                         <Image Width="80" Height="80" Source="Resources/Upload-2.png" />
-                        <TextBlock Text="Run Upload" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Upload Merch" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </Button.Content>
             </Button>

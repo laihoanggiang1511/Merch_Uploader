@@ -19,7 +19,7 @@ namespace EzUpload.ViewModel
       public ICommand OpenChromeCmd { get; set; }
       public ICommand BrowseCmd { get; set; }
       public ICommand UploadCmd { get; set; }
-      public ICommand AbortCmd { get; set; }
+      public ICommand AddTagCmd { get; set; }
       public ICommand DeleteCmd { get; set; }
       public ICommand ChooseFolderCmd { get; set; }
       public ICommand SaveXmlCmd { get; set; }
@@ -187,7 +187,22 @@ namespace EzUpload.ViewModel
             }
          }
       }
-
+      private string seedingTag = string.Empty;
+      public string SeedingTag
+      {
+         get
+         {
+            return seedingTag;
+         }
+         set
+         {
+            if (seedingTag != value)
+            {
+               seedingTag = value;
+               RaisePropertyChanged(nameof(SeedingTag));
+            }
+         }
+      }
 
       private string userFolderPath;
       public string UserFolderPath

@@ -14,7 +14,7 @@ namespace EzUpload.GUI.Converter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is UploadPlatform && ((UploadPlatform)value) == UploadPlatform.Merch)
+            if (value is UploadPlatform && ((UploadPlatform)value) == UploadPlatform.TeePublic)
             {
                 return Visibility.Visible;
             }

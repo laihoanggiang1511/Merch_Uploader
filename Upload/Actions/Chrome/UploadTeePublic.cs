@@ -141,7 +141,7 @@ namespace EzUpload.Actions.Chrome
                chrOption.AddArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.63");
                chrOption.AddArguments("--disable-extensions");
                chrOption.AddArguments("--profile-directory=Default");
-               chrOption.AddArguments("--incognito");
+               //chrOption.AddArguments("--incognito");
                chrOption.AddArguments("--disable-plugins-discovery");
                chrOption.AddArguments("--start-maximized");
                var chromeDriverService = ChromeDriverService.CreateDefaultService();
@@ -156,7 +156,7 @@ namespace EzUpload.Actions.Chrome
                chrOption.AddArguments("--disable-blink-features=AutomationControlled");
                chrOption.AddArguments("--disable-extensions");
                chrOption.AddArguments("--profile-directory=Default");
-               chrOption.AddArguments("--incognito");
+               //chrOption.AddArguments("--incognito");
                chrOption.AddArguments("--disable-plugins-discovery");
                chrOption.AddArguments("--start-maximized");
                var chromeDriverService = ChromeDriverService.CreateDefaultService();
