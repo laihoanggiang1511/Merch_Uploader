@@ -229,14 +229,41 @@ namespace EzUpload.Actions.Chrome
 
       private void CheckCaptcha()
       {
-         while (true)
+         try
          {
-            IWebElement element = ChromeHelper.GetElementWithWait(By.Id("main-iframe"),
-               By.XPath("/html/body/div[2]/div[3]/div[1]/div/div/span/div[1]"));
-            if (element == null)
+            IWebElement iFrame = ChromeHelper.GetElementWithWait(By.Id("main-iframe"));
+            if (iFrame != null)
             {
-               break;
+               IWebDriver iFrameDriver = ChromeHelper.Driver.SwitchTo().Frame(iFrame);
+               IWebElement siteKeyElement = iFrameDriver.FindElement(By.XPath("/html/body/div[1]/div/div/div[1]/div[2]/div[1]/div/div"));
+               if (siteKeyElement != null)
+               {
+                  string sitekey = siteKeyElement.GetAttribute("data-sitekey");
+                  CaptchaResolver captchaResolver = new CaptchaResolver(sitekey, "https://www.teepublic.com");
+                  string response = captchaResolver.SolveV2Captcha();
+                  IWebElement gRespondElement = iFrameDriver.FindElement(By.Id("g-recaptcha-response"));
+                  string script = string.Format("document.getElementById(\"g-recaptcha-response\").innerHTML=\"{0}\";", response);
+                  (iFrameDriver as IJavaScriptExecutor).ExecuteScript(script);
+                  //script = string.Format($"document.getElementById(\"g-recaptcha-response\").removeAttribute(\"display\");");
+                  //(iFrameDriver as IJavaScriptExecutor).ExecuteScript(script);
+                  script = string.Format("onCaptchaFinished(\"{0}\");", response);
+                  (iFrameDriver as IJavaScriptExecutor).ExecuteScript(script);
+               }
+               ChromeHelper.Driver.SwitchTo().DefaultContent();
             }
+            //while (true)
+            //{
+            //   IWebElement element = ChromeHelper.GetElementWithWait(By.Id("main-iframe"),
+            //      By.XPath("/html/body/div[2]/div[3]/div[1]/div/div/span/div[1]"));
+            //   if (element == null)
+            //   {
+            //      break;
+            //   }
+            //}
+         }
+         catch (Exception ex)
+         {
+            Log.log.Fatal(ex);
          }
       }
 

@@ -13,6 +13,7 @@ using MessageBox = System.Windows.MessageBox;
 using EzUpload.ViewModel;
 using EzUpload.DataAccess.Model;
 using EzUpload.DataAccess.DTO;
+using System.Text.RegularExpressions;
 
 namespace EzUpload
 {
@@ -111,6 +112,14 @@ namespace EzUpload
             listTags.Add(tags[i].TrimStart(' '));
          }
          return listTags;
+      }
+      public static string Between(string source, string left, string right)
+      {
+         string temp = Regex.Match(source, string.Format(@"{0}([\s\S]*?){1}", left, right)).Value;
+         if (temp.Length == 0)
+            return temp;
+         else
+            return temp.Substring(left.Length, temp.Length - left.Length - right.Length);
       }
    }
 
