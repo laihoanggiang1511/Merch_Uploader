@@ -409,8 +409,8 @@ namespace EzUpload.Actions
                         upload = new UploadTeePublic(mainVM.Email, mainVM.password);
                      }
                      upload.OpenChrome(mainVM.UserFolderPath);
-                     upload.GoToUploadPage();
-                     upload.LogIn();
+                     //upload.GoToUploadPage();
+                     //upload.LogIn();
                      for (int i = 0; i < mainVM.Shirts.Count; i++)
                      {
                         mainVM.SelectedShirt = mainVM.Shirts[i];

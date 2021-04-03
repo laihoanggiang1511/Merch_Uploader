@@ -149,12 +149,10 @@ namespace EzUpload.Actions
                }
 
                upload.OpenChrome(_userFolderPath);
-               upload.GoToUploadPage();
-               bool uploadSuccess = upload.LogIn();
-               if (uploadSuccess)
-               {
-                  uploadSuccess = upload.Upload(shirt);
-               }
+               //upload.GoToUploadPage();
+
+               bool uploadSuccess = upload.Upload(shirt);
+               
                //upload.QuitDriver();
 
                //Copy to success or fail folder

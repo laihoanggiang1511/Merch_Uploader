@@ -28,6 +28,8 @@ namespace EzUpload.Actions.Chrome
          {
             if (shirt != null)
             {
+               GoToUploadPage();
+               LogIn();
                Log.log.Info($"-----------Start Upload-------------");
                UploadFilePNG(shirt);
                ChromeHelper.ClickElement(By.Id("design_content_flag_false"));
@@ -221,6 +223,7 @@ namespace EzUpload.Actions.Chrome
             catch (Exception ex)
             {
                Log.log.Fatal(ex);
+               return false;
             }
             GoToUploadPage();
          }
