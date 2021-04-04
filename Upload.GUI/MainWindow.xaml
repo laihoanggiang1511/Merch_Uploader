@@ -14,77 +14,77 @@
          Background="{DynamicResource MaterialDesignPaper}"
          FontFamily="{DynamicResource MaterialDesignFont}"
          WindowStartupLocation="CenterScreen" HorizontalAlignment="Right" Topmost="True">
-    <Window.Resources>
-        <Style TargetType="Button">
-            <Setter Property="Margin" Value="10,0,10,0"/>
-            <Setter Property="Width" Value="80"/>
-            <Setter Property="Height" Value="100"/>
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Style.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="Gray"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Resources>
-    <StackPanel>
-        <TextBlock Text="{Binding LicenseStatus}" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
-        <Grid  HorizontalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Button Command="{Binding CreateWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+   <Window.Resources>
+      <Style TargetType="Button">
+         <Setter Property="Margin" Value="10,0,10,0"/>
+         <Setter Property="Width" Value="80"/>
+         <Setter Property="Height" Value="100"/>
+         <Setter Property="Background" Value="Transparent"/>
+         <Setter Property="BorderThickness" Value="0"/>
+         <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+               <Setter Property="Background" Value="Gray"/>
+            </Trigger>
+         </Style.Triggers>
+      </Style>
+   </Window.Resources>
+   <StackPanel>
+      <TextBlock Text="{Binding LicenseStatus}" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"/>
+      <Grid  HorizontalAlignment="Stretch">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+         </Grid.ColumnDefinitions>
+         <Button Command="{Binding CreateWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 IsEnabled="{Binding EnableCreate}"
                 Style="{StaticResource MaterialDesignFlatButton}" Height="110"
                 Grid.Column="0">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <Image Width="80" Height="80" Source="Resources/Pencilcase-2.ico" />
-                        <TextBlock HorizontalAlignment="Center" Text="Write Content"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}" Height="110" IsEnabled="{Binding EnableUpload}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+            <Button.Content>
+               <StackPanel Orientation="Vertical">
+                  <Image Width="80" Height="80" Source="Resources/Pencilcase-2.ico" />
+                  <TextBlock HorizontalAlignment="Center" Text="Write Content"/>
+               </StackPanel>
+            </Button.Content>
+         </Button>
+         <Button Style="{StaticResource MaterialDesignFlatButton}" Height="110" IsEnabled="{Binding MerchUploadEnable}" Command="{Binding UploadWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Grid.Column="1">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <Image Width="80" Height="80" Source="Resources/Upload-2.png" />
-                        <TextBlock Text="Upload Merch" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Style="{StaticResource MaterialDesignFlatButton}" Height="110" IsEnabled="{Binding EnableUpload}" Command="{Binding RunTeePublicUploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+            <Button.Content>
+               <StackPanel Orientation="Vertical">
+                  <Image Width="80" Height="80" Source="Resources/Upload-2.png" />
+                  <TextBlock Text="Upload Merch" HorizontalAlignment="Center"/>
+               </StackPanel>
+            </Button.Content>
+         </Button>
+         <Button Style="{StaticResource MaterialDesignFlatButton}" Height="110" IsEnabled="{Binding TeePublicUploadEnable}" Command="{Binding RunTeePublicUploadCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
                 Grid.Column="2">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <Image Width="80" Height="80" Source="Resources/Upload-2.png" />
-                        <TextBlock Text="Tee Public" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="3" Command="{Binding LicenseWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+            <Button.Content>
+               <StackPanel Orientation="Vertical">
+                  <Image Width="80" Height="80" Source="Resources/Upload-2.png" />
+                  <TextBlock Text="Tee Public" HorizontalAlignment="Center"/>
+               </StackPanel>
+            </Button.Content>
+         </Button>
+         <Button Grid.Column="3" Command="{Binding LicenseWindowCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                 Style="{StaticResource MaterialDesignFlatButton}" Height="110">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <Image Width="90" Height="80" Source="Resources/License.ico"/>
-                        <TextBlock HorizontalAlignment="Center" Text="License"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="4" Command="{Binding HelpCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+            <Button.Content>
+               <StackPanel Orientation="Vertical">
+                  <Image Width="90" Height="80" Source="Resources/License.ico"/>
+                  <TextBlock HorizontalAlignment="Center" Text="License"/>
+               </StackPanel>
+            </Button.Content>
+         </Button>
+         <Button Grid.Column="4" Command="{Binding HelpCmd}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                 Style="{StaticResource MaterialDesignFlatButton}" Height="110">
-                <Button.Content>
-                    <StackPanel Orientation="Vertical">
-                        <Image Width="90" Height="80" Source="Resources/Help.ico"/>
-                        <TextBlock HorizontalAlignment="Center" Text="Help"/>
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-        </Grid>
-    </StackPanel>
+            <Button.Content>
+               <StackPanel Orientation="Vertical">
+                  <Image Width="90" Height="80" Source="Resources/Help.ico"/>
+                  <TextBlock HorizontalAlignment="Center" Text="Help"/>
+               </StackPanel>
+            </Button.Content>
+         </Button>
+      </Grid>
+   </StackPanel>
 </Window>

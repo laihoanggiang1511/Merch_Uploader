@@ -31,7 +31,10 @@ namespace EzUpload.Actions.Chrome
                GoToUploadPage();
                LogIn();
                Log.log.Info($"-----------Start Upload-------------");
-               UploadFilePNG(shirt);
+               if(UploadFilePNG(shirt) == false)
+               {
+                  return false;
+               }
                ChromeHelper.ClickElement(By.Id("design_content_flag_false"));
                if (shirt.Languages != null && shirt.Languages.Count > 0)
                {
@@ -106,10 +109,18 @@ namespace EzUpload.Actions.Chrome
             fileInputElement.SendKeys(shirt.ImagePath);
             IWebElement statusElement = ChromeHelper.GetElementWithWait(By.XPath("/html/body/div[2]/div/div[2]/div[3]/div/form/div[1]/div[2]/div[2]"),
                By.XPath("/html/body/div[3]/div/div[2]/div[3]/div/form/div[1]/div[2]/div[2]"));
-
+            int countTime = 0;
             while (statusElement.Text.Length > 1)
             {
-
+               if(statusElement.Text.Contains("CHECKING"))
+               {
+                  if (countTime > 180)
+                  {
+                     return false;
+                  }
+                  Thread.Sleep(1000);
+                  countTime++;
+               }
             }
             Log.log.Info("---End UploadFilePNG---");
             return true;
