@@ -24,7 +24,7 @@ namespace EzUpload
             request.AddHeader("accept", "*/*");
             request.AddHeader("User-Agent", @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36");
             request.AddParameter("query", seedingKeyword);
-            client.Timeout = 5000;
+            client.Timeout = 10000;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             IRestResponse response = client.Execute(request);
