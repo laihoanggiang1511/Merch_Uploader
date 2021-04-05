@@ -44,10 +44,10 @@ namespace EzUpload.Actions
                mainVM.MerchUploadEnable = true;
                mainVM.TeePublicUploadEnable = true;
                //Allow UploadMerch
-               string metaData = LicenseManager.GetLicenseMetadata("Merch");
-               if (bool.TryParse(metaData, out bool enableMerch))
+               string metaData = LicenseManager.GetLicenseMetadata("platform");
+               if (!string.IsNullOrEmpty(metaData))
                {
-                  if (enableMerch)
+                  if (metaData.ToLower().Contains("merch"))
                   {
                      mainVM.MerchUploadEnable = true;
                   }
@@ -55,12 +55,7 @@ namespace EzUpload.Actions
                   {
                      mainVM.MerchUploadEnable = false;
                   }
-               }
-               //Allow upload teepublic
-
-               if (bool.TryParse(metaData, out bool enableTeePublic))
-               {
-                  if (enableTeePublic)
+                  if (metaData.ToLower().Contains("teepublic"))
                   {
                      mainVM.TeePublicUploadEnable = true;
                   }

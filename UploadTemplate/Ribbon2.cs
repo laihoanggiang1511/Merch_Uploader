@@ -27,43 +27,42 @@ namespace UploadTemplate
       static Dispatcher MainDispatcher = null;
       private void Ribbon2_Load(object sender, RibbonUIEventArgs e)
       {
-         cbb_Language.Text = "German";
       }
 
-      private void Btn_Translate_Click(object sender, RibbonControlEventArgs e)
-      {
-         int startRow = Globals.Sheet1.Application.ActiveCell.Row;
-         if (startRow < 4)
-         {
-            startRow = 4;
-         }
-         int startCell = 4;
+      //private void Btn_Translate_Click(object sender, RibbonControlEventArgs e)
+      //{
+      //   int startRow = Globals.Sheet1.Application.ActiveCell.Row;
+      //   if (startRow < 4)
+      //   {
+      //      startRow = 4;
+      //   }
+      //   int startCell = 4;
 
-         for (int i = startCell; i <= startCell + 4; i++)
-         {
-            if (Globals.Sheet1.Cells[startRow, i].Value != null)
-            {
-               string textToTrans = (string)Globals.Sheet1.Cells[startRow, i].Value;
-               switch (cbb_Language.Text)
-               {
-                  case "German":
-                     Globals.Sheet1.Cells[startRow, i + 5] = TranslateAPI.Translate(textToTrans, "de");
-                     break;
-                  case "French":
-                     Globals.Sheet1.Cells[startRow, i + 10] = TranslateAPI.Translate(textToTrans, "fr");
-                     break;
-                  case "Italian":
-                     Globals.Sheet1.Cells[startRow, i + 15] = TranslateAPI.Translate(textToTrans, "it");
-                     break;
-                  case "Spanish":
-                     Globals.Sheet1.Cells[startRow, i + 20] = TranslateAPI.Translate(textToTrans, "es");
-                     break;
-               }
+      //   for (int i = startCell; i <= startCell + 4; i++)
+      //   {
+      //      if (Globals.Sheet1.Cells[startRow, i].Value != null)
+      //      {
+      //         string textToTrans = (string)Globals.Sheet1.Cells[startRow, i].Value;
+      //         switch (cbb_Language.Text)
+      //         {
+      //            case "German":
+      //               Globals.Sheet1.Cells[startRow, i + 5] = TranslateAPI.Translate(textToTrans, "de");
+      //               break;
+      //            case "French":
+      //               Globals.Sheet1.Cells[startRow, i + 10] = TranslateAPI.Translate(textToTrans, "fr");
+      //               break;
+      //            case "Italian":
+      //               Globals.Sheet1.Cells[startRow, i + 15] = TranslateAPI.Translate(textToTrans, "it");
+      //               break;
+      //            case "Spanish":
+      //               Globals.Sheet1.Cells[startRow, i + 20] = TranslateAPI.Translate(textToTrans, "es");
+      //               break;
+      //         }
 
-            }
-         }
+      //      }
+      //   }
 
-      }
+      //}
 
       private void Btn_Browse_Click(object sender, RibbonControlEventArgs e)
       {
