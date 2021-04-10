@@ -1,23 +1,14 @@
-﻿using Common;
-using Common.LicenseManager;
+﻿using Common.LicenseManager;
 using Common.MVVMCore;
-using Common.Update;
-using Microsoft.Office.Interop.Excel;
+using EzUpload.GUI;
+using EzUpload.ViewModel;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
-using System.Windows;
-using EzUpload.GUI;
-using EzUpload.ViewModel;
-using UploadTemplate;
-using OpenQA.Selenium.Chrome;
-using EzUpload.Actions.Chrome;
-using OpenQA.Selenium;
 
 namespace EzUpload.Actions
 {
-   public class MainActions
+    public class MainActions
    {
       public void ShowMainWindow(string jsonShirt, string excelFile)
       {
@@ -49,19 +40,19 @@ namespace EzUpload.Actions
                {
                   if (metaData.ToLower().Contains("merch"))
                   {
-                     mainVM.MerchUploadEnable = true;
+                     mainVM.MerchUploadEnable = false;
                   }
                   else
                   {
-                     mainVM.MerchUploadEnable = false;
+                     mainVM.MerchUploadEnable = true;
                   }
                   if (metaData.ToLower().Contains("teepublic"))
                   {
-                     mainVM.TeePublicUploadEnable = true;
+                     mainVM.TeePublicUploadEnable = false;
                   }
                   else
                   {
-                     mainVM.TeePublicUploadEnable = false;
+                     mainVM.TeePublicUploadEnable = true;
                   }
                }
 
