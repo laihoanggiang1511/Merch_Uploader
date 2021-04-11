@@ -60,6 +60,7 @@
     <ROW Component="ProductInformation" ComponentId="{1044CEEC-79DE-4862-8218-0741416AA040}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="RestSharp.dll" ComponentId="{521FCC6A-6977-4927-B400-8510DA3AD004}" Directory_="APPDIR" Attributes="0" KeyPath="RestSharp.dll"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{01FC87EB-4234-4E6C-B950-8233B42D369F}" Directory_="SHORTCUTDIR" Attributes="0"/>
+    <ROW Component="Upload.Common.dll" ComponentId="{A23DA5DC-7153-40C9-96FA-D06AF98A7928}" Directory_="APPDIR" Attributes="0" KeyPath="Upload.Common.dll"/>
     <ROW Component="Upload.DataAccess.dll" ComponentId="{4064C98C-A035-4B2B-873A-81D07489A722}" Directory_="APPDIR" Attributes="0" KeyPath="Upload.DataAccess.dll"/>
     <ROW Component="Upload.GUI.dll" ComponentId="{E01B3202-9155-4421-9392-7D8FB9BF121A}" Directory_="APPDIR" Attributes="0" KeyPath="Upload.GUI.dll"/>
     <ROW Component="Upload.ViewModel.dll" ComponentId="{1016E5E3-D0DB-4B1A-B7AF-60FD9FB62435}" Directory_="APPDIR" Attributes="0" KeyPath="Upload.ViewModel.dll"/>
@@ -106,6 +107,7 @@
     <ROW File="UploadTemplate.xltx" Component_="EzUpload.application" FileName="UPLOAD~1.XLT|UploadTemplate.xltx" Attributes="0" SourcePath="Upload\bin\Publish\UploadTemplate.xltx" SelfReg="false"/>
     <ROW File="WebDriver.dll" Component_="WebDriver.dll" FileName="WEBDRI~1.DLL|WebDriver.dll" Attributes="0" SourcePath="Upload\bin\Publish\WebDriver.dll" SelfReg="false"/>
     <ROW File="WebDriver.Support.dll" Component_="WebDriver.Support.dll" FileName="WEBDRI~2.DLL|WebDriver.Support.dll" Attributes="0" SourcePath="Upload\bin\Publish\WebDriver.Support.dll" SelfReg="false"/>
+    <ROW File="Upload.Common.dll" Component_="Upload.Common.dll" FileName="UPLOAD~5.DLL|Upload.Common.dll" Attributes="0" SourcePath="Upload\bin\Publish\Upload.Common.dll" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AiRemoveRegComponent">
     <ROW RemoveReg="_" InstallMode="2" Condition="(AI_CLEAN_RESOURCES_UNINSTALL = &quot;1&quot;) AND (NOT UPGRADINGPRODUCTCODE)"/>
@@ -271,6 +273,7 @@
     <ROW Feature_="MainFeature" Component_="Manufacturer_1"/>
     <ROW Feature_="MainFeature" Component_="Path_2"/>
     <ROW Feature_="MainFeature" Component_="Version_2"/>
+    <ROW Feature_="MainFeature" Component_="Upload.Common.dll"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="app.exe" SourcePath="app.ico" Index="0"/>

@@ -139,10 +139,10 @@ namespace EzUpload.Actions.Chrome
          {
             Log.log.Info("---Open Chrome---");
             Cursor.Current = Cursors.WaitCursor;
-            if (ChromeHelper.Driver != null)
-            {
-               QuitDriver();
-            }
+            //if (ChromeHelper.Driver != null)
+            //{
+            //   QuitDriver();
+            //}
             string executingFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             System.Environment.SetEnvironmentVariable("PATH", executingFolder);
 

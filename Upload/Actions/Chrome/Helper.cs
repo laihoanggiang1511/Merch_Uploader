@@ -224,7 +224,7 @@ namespace EzUpload.Actions.Chrome
                WebDriverWait webdriverWait = new WebDriverWait(Driver, TimeSpan.FromSeconds(waitTime));
                IWebElement webElement = webdriverWait.Until(ExpectedConditions.ElementExists(by));
                Random random = new Random();
-               int r = random.Next(500, 3000);
+               int r = random.Next(200, 1000);
                Thread.Sleep(r);
                return webElement;
             }

@@ -72,7 +72,7 @@
             </TextBlock>
             <TextBlock Margin="5" FontSize="16">
                 <!--<Run Text="Support Group: "/>-->
-                <Hyperlink NavigateUri="https://www.facebook.com/profile.php?id=100048979920714" Click="Hyperlink_Click"> Contact </Hyperlink>
+                <Hyperlink NavigateUri="ttps://www.facebook.com/lai.giang.944" Click="Hyperlink_Click"> Contact </Hyperlink>
             </TextBlock>
         </StackPanel>
     </Grid>
