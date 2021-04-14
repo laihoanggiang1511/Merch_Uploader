@@ -97,10 +97,20 @@ namespace UploadTemplate
             {
                countBlank = 0;
                ShirtData sData = Actions.MapExcelToShirt(i);
-               if (sData != null && !string.IsNullOrEmpty(sData.ImagePath))
+               Shirt shirt = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
+               string errorMessage = string.Empty;
+               if (shirt != null && shirt.Validate(out errorMessage))
                {
                   new JsonDataAccess().SaveShirt(sData);
                }
+               else
+               {
+                  MessageBox.Show($"Error in row {i}:\n" + errorMessage);
+               }
+               //if (sData != null && !string.IsNullOrEmpty(sData.ImagePath))
+               //{
+               //   new JsonDataAccess().SaveShirt(sData);
+               //}
             }
             if (countBlank > 10)
                break;
