@@ -81,33 +81,43 @@ namespace UploadTemplate
             }
         }
 
-        private void Btn_SaveFile_Click(object sender, RibbonControlEventArgs e)
-        {
-            int startRow = 4;
-            int i = startRow;
-            int countBlank = 0;
-            while (true)
+      private void Btn_SaveFile_Click(object sender, RibbonControlEventArgs e)
+      {
+         int startRow = 4;
+         int i = startRow;
+         int countBlank = 0;
+         while (true)
+         {
+            string strJSON = Globals.Sheet1.Cells[i, (int)ColumnDefinitions.JSON].Value;
+            if (string.IsNullOrEmpty(strJSON))
             {
-                string strJSON = Globals.Sheet1.Cells[i, (int)ColumnDefinitions.JSON].Value;
-                if (string.IsNullOrEmpty(strJSON))
-                {
-                    countBlank++;
-                }
-                else
-                {
-                    countBlank = 0;
-                    ShirtData sData = Actions.MapExcelToShirt(i);
-                    if (sData != null && !string.IsNullOrEmpty(sData.ImagePath))
-                    {
-                        new JsonDataAccess().SaveShirt(sData);
-                    }
-                }
-                if (countBlank > 10)
-                    break;
-                i++;
+               countBlank++;
             }
-            MessageBox.Show("Saved!");
-        }
+            else
+            {
+               countBlank = 0;
+               ShirtData sData = Actions.MapExcelToShirt(i);
+               Shirt shirt = ShirtDTO.MapData(sData, typeof(Shirt)) as Shirt;
+               string errorMessage = string.Empty;
+               if (shirt != null && shirt.Validate(out errorMessage))
+               {
+                  new JsonDataAccess().SaveShirt(sData);
+               }
+               else
+               {
+                  MessageBox.Show($"Error in row {i}:\n" + errorMessage);
+               }
+               //if (sData != null && !string.IsNullOrEmpty(sData.ImagePath))
+               //{
+               //   new JsonDataAccess().SaveShirt(sData);
+               //}
+            }
+            if (countBlank > 10)
+               break;
+            i++;
+         }
+         MessageBox.Show("Saved!");
+      }
 
         private void btn_Edit_Click(object sender, RibbonControlEventArgs e)
         {
