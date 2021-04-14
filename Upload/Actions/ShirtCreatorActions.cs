@@ -79,7 +79,7 @@ namespace EzUpload.Actions
                     shirtVM.SelectedShirtType = shirtVM.SelectedShirt.ShirtTypes.FirstOrDefault(x => x.IsActive == true);
                 if (editShirt == null)
                 {
-                    shirtVM.LightColor = true;
+                    shirtVM.LightColor = false;
                 }
             }
             return shirtVM;
