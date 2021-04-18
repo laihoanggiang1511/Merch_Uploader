@@ -29,7 +29,7 @@ namespace Common.LicenseManager
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.facebook.com/giang.lai.1511");
+            Process.Start("https://www.facebook.com/caylavagio");
         }
     }
 }
