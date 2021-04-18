@@ -79,15 +79,15 @@ namespace UploadTemplate
                 {
                     ShirtData sData = JsonConvert.DeserializeObject<ShirtData>(jsonData);
                     sData.ImagePath = Path.Combine(rFolder.Value, rName.Value);
-                    sData.MainTag = rTags.Value.ToString();
-                    sData.SupportingTags = rSupportingTags.Value.ToString();
+                    sData.MainTag = rTags.Value?.ToString();
+                    sData.SupportingTags = rSupportingTags.Value?.ToString();
                     for (int i = 0; i < sData.Languages.Count; i++)
                     {
-                        sData.Languages[i].BrandName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 5 * i].Value.ToString();
-                        sData.Languages[i].Title = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 1 + 5 * i].Value.ToString();
-                        sData.Languages[i].FeatureBullet1 = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 2 + 5 * i].Value.ToString();
-                        sData.Languages[i].FeatureBullet2 = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 3 + 5 * i].Value.ToString();
-                        sData.Languages[i].Description = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 4 + 5 * i].Value.ToString();
+                        sData.Languages[i].BrandName = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 5 * i].Value?.ToString();
+                        sData.Languages[i].Title = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 1 + 5 * i].Value?.ToString();
+                        sData.Languages[i].FeatureBullet1 = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 2 + 5 * i].Value?.ToString();
+                        sData.Languages[i].FeatureBullet2 = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 3 + 5 * i].Value?.ToString();
+                        sData.Languages[i].Description = Globals.Sheet1.Cells[row, (int)ColumnDefinitions.Description + 4 + 5 * i].Value?.ToString();
                     }
                     return sData;
                 }

@@ -31,7 +31,7 @@ namespace UploadTemplate
             // If Not OldRange Is Nothing Then
             if (Target.Value != null)
             {
-                string content = Target.Value.ToString();
+                string content = Target.Value?.ToString();
                 if ((Target.Column - 6) % 5 == 0)
                 {
                     Globals.Sheet1.Cells[3, Target.Column] = "(" + System.Convert.ToString(content.Length) + "/50" + ")";

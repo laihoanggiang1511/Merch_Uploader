@@ -44,8 +44,8 @@ namespace UploadTemplate
             {
                 if (row.Cells[0].Value != null && row.Cells[1].Value != null)
                 {
-                    string key = row.Cells[0].Value.ToString();
-                    string value = row.Cells[1].Value.ToString();
+                    string key = row.Cells[0].Value?.ToString();
+                    string value = row.Cells[1].Value?.ToString();
                     if (!GlobalVariables.replaceDict.ContainsKey(key))
                     {
                         GlobalVariables.replaceDict.Add(key, value);
