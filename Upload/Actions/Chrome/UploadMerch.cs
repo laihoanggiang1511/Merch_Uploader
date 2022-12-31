@@ -10,6 +10,7 @@ using EzUpload.ViewModel;
 using OpenQA.Selenium.Interactions;
 using System.Reflection;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace EzUpload.Actions.Chrome
 {
@@ -79,15 +80,15 @@ namespace EzUpload.Actions.Chrome
                   {
                      string rootXPath = $"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/product-text/ngb-accordion/div[{i + 1}]/div[2]/div/product-text-editor/div/div/";
                      if (!string.IsNullOrEmpty(shirt.Languages[i].BrandName))
-                        ChromeHelper.SendKeysElement(By.XPath(rootXPath + "div[1]/div[3]/input"), shirt.Languages[i].BrandName);
+                        ChromeHelper.SendKeysElement(By.Id("designCreator-productEditor-brandName"), shirt.Languages[i].BrandName);
                      if (!string.IsNullOrEmpty(shirt.Languages[i].Title))
-                        ChromeHelper.SendKeysElement(By.XPath(rootXPath + "div[1]/div[2]/input"), shirt.Languages[i].Title);
+                        ChromeHelper.SendKeysElement(By.Id("designCreator-productEditor-title"), shirt.Languages[i].Title);
                      if (!string.IsNullOrEmpty(shirt.Languages[i].FeatureBullet1))
-                        ChromeHelper.SendKeysElement(By.XPath(rootXPath + "div[2]/div[2]/input"), shirt.Languages[i].FeatureBullet1);
+                        ChromeHelper.SendKeysElement(By.Id("designCreator-productEditor-featureBullet1"), shirt.Languages[i].FeatureBullet1);
                      if (!string.IsNullOrEmpty(shirt.Languages[i].FeatureBullet2))
-                        ChromeHelper.SendKeysElement(By.XPath(rootXPath + "div[2]/div[3]/input"), shirt.Languages[i].FeatureBullet2);
+                        ChromeHelper.SendKeysElement(By.Id("designCreator-productEditor-featureBullet2"), shirt.Languages[i].FeatureBullet2);
                      if (!string.IsNullOrEmpty(shirt.Languages[i].Description))
-                        ChromeHelper.SendKeysElement(By.XPath(rootXPath + "div[2]/div[4]/input"), shirt.Languages[i].Description);
+                        ChromeHelper.SendKeysElement(By.Id("designCreator-productEditor-description"), shirt.Languages[i].Description);
                   }
                }
 
@@ -135,86 +136,139 @@ namespace EzUpload.Actions.Chrome
          try
          {
             Log.log.Info("---Input Detail---");
-            for (int i = 0; i < shirt.ShirtTypes.Count; i++)
+
+            ChromeHelper.ClickElement(By.XPath("//*[@id=\"STANDARD_TSHIRT-card\"]/div[2]/button"));
+            ShirtType standardType = shirt.ShirtTypes[0];
+
+            // Shirt type
+            if (standardType != null && standardType.FitTypes != null && standardType.FitTypes.Count > 1)
             {
-               int row = (i) / 4 + 1;
-               int column = (i) % 4 + 1;
-               ShirtType s = shirt.ShirtTypes[i];
-               if (s.IsActive)
+               for (int fitTypeIndex = 0; fitTypeIndex < standardType.FitTypes.Count; fitTypeIndex++)
                {
-                  Log.log.Info($"---i={i}---");
-                  // Edit Detail-Standard                
-                  ChromeHelper.ClickElement(By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
-                  // Choose Fit type
-                  if (s.FitTypes != null && s.FitTypes.Count > 1)
-                  {
-                     for (int j = 0; j < s.FitTypes.Count; j++)
-                     {
-                        ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
-                            s.FitTypes[j]);
-                     }
-                  }
-
-                  // Select Color - non japanese types
-                  if (s.TypeName != "StandardTShirt" &&
-                     s.TypeName != "LongSleeveTShirt" &&
-                     s.TypeName != "SweetShirt" &&
-                     s.TypeName != "PullOverHoodie")
-                  {
-                     for (int j = 0; j < s.Colors.Count; j++)
-                     {
-                        Color color = s.Colors[j];
-                        ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 1}]/colorcheckbox/span", color.IsActive);
-                     }
-                  }
-                  else
-                  {
-                     List<Color> japaneseColor = new List<Color>();
-                     List<Color> nonJapaneseColor = new List<Color>();
-
-                     //Process for japanese colors
-                     for (int j = 0; j < s.Colors.Count; j++)
-                     {
-
-                        Color col = s.Colors[j];
-                        if (col.ColorName == "Brown" ||
-                            col.ColorName == "Dark Heather" ||
-                            col.ColorName == "Grass" ||
-                            col.ColorName == "Heather Blue" ||
-                            col.ColorName == "Silver" ||
-                            col.ColorName == "Slate")
-                        {
-                           japaneseColor.Add(col);
-                        }
-                        else
-                        {
-                           nonJapaneseColor.Add(col);
-                        }
-                     }
-                     for (int j = 0; j < nonJapaneseColor.Count; j++)
-                     {
-                        ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 2}]/colorcheckbox/span", nonJapaneseColor[j].IsActive);
-                     }
-                     for (int j = 0; j < japaneseColor.Count; j++)
-                     {
-                        ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[3]/div[{j + 2}]/colorcheckbox/span", japaneseColor[j].IsActive);
-                     }
-                  }
-
-                  // Set Price
-                  for (int j = 0; j < s.MarketPlaces.Count; j++)
-                  {
-                     if (s.MarketPlaces[j])
-                     {
-                        By by = By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input");
-                        string price = s.Prices[j].ToString();
-                        ChromeHelper.PasteContent(by, price);
-                     }
-                  }
-                  //Click again to close pallete
-                  ChromeHelper.ClickElement(By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+                  ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/div[2]/ng-component/div/product-config-editor/div[3]/div[{1}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{fitTypeIndex+1}]/flowcheckbox/span",
+                      standardType.FitTypes[fitTypeIndex]);
                }
             }
+
+            // Colors
+            var checkedColors = ChromeHelper.Driver.FindElements(By.CssSelector(".sci-check.checkmark"));
+
+            foreach(IWebElement checkedColor in checkedColors)
+            {
+               IWebElement parentElement = checkedColor.FindElement(By.XPath("./.."));
+
+               if(parentElement != null)
+               {
+                  parentElement.Click();
+                  Thread.Sleep(100);
+               }
+            }
+
+            var colorCheckBoxElements = ChromeHelper.Driver.FindElements(By.ClassName("color-checkbox"));
+
+            foreach (Color color in standardType.Colors)
+            {
+               string colorName = Regex.Replace(color.ColorName, "[^a-zA-Z0-9]", "").ToLower();
+
+               if (color.IsActive == false)
+                  continue;
+
+               IWebElement colorCheckboxElement = colorCheckBoxElements.FirstOrDefault(p => Regex.Replace(p.GetAttribute("class"), "[^a-zA-Z0-9]", "").ToLower().Contains(colorName));
+
+               colorCheckboxElement?.Click();
+               Thread.Sleep(100);
+            }
+
+
+
+            //for (int j = 0; j < standardType.Colors.Count; j++)
+            //{
+            //   Color color = standardType.Colors[j];
+            //   ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[1]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 1}]/colorcheckbox/span", color.IsActive);
+               
+            
+            //}
+
+            //for (int i = 0; i < shirt.ShirtTypes.Count; i++)
+            //{
+            //   int row = (i) / 4 + 1;
+            //   int column = (i) % 4 + 1;
+            //   ShirtType s = shirt.ShirtTypes[i];
+            //   if (s.IsActive)
+            //   {
+            //      Log.log.Info($"---i={i}---");
+            //      // Edit Detail-Standard                
+            //      ChromeHelper.ClickElement(By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+            //      // Choose Fit type
+            //      if (s.FitTypes != null && s.FitTypes.Count > 1)
+            //      {
+            //         for (int j = 0; j < s.FitTypes.Count; j++)
+            //         {
+            //            ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{j + 1}]/flowcheckbox/span",
+            //                s.FitTypes[j]);
+            //         }
+            //      }
+
+            //      // Select Color - non japanese types
+            //      if (s.TypeName != "StandardTShirt" &&
+            //         s.TypeName != "LongSleeveTShirt" &&
+            //         s.TypeName != "SweetShirt" &&
+            //         s.TypeName != "PullOverHoodie")
+            //      {
+            //         for (int j = 0; j < s.Colors.Count; j++)
+            //         {
+            //            Color color = s.Colors[j];
+            //            ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 1}]/colorcheckbox/span", color.IsActive);
+            //         }
+            //      }
+            //      else
+            //      {
+            //         List<Color> japaneseColor = new List<Color>();
+            //         List<Color> nonJapaneseColor = new List<Color>();
+
+            //         //Process for japanese colors
+            //         for (int j = 0; j < s.Colors.Count; j++)
+            //         {
+
+            //            Color col = s.Colors[j];
+            //            if (col.ColorName == "Brown" ||
+            //                col.ColorName == "Dark Heather" ||
+            //                col.ColorName == "Grass" ||
+            //                col.ColorName == "Heather Blue" ||
+            //                col.ColorName == "Silver" ||
+            //                col.ColorName == "Slate")
+            //            {
+            //               japaneseColor.Add(col);
+            //            }
+            //            else
+            //            {
+            //               nonJapaneseColor.Add(col);
+            //            }
+            //         }
+            //         for (int j = 0; j < nonJapaneseColor.Count; j++)
+            //         {
+            //            ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 2}]/colorcheckbox/span", nonJapaneseColor[j].IsActive);
+            //         }
+            //         for (int j = 0; j < japaneseColor.Count; j++)
+            //         {
+            //            ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[3]/div[{j + 2}]/colorcheckbox/span", japaneseColor[j].IsActive);
+            //         }
+            //      }
+
+            //      // Set Price
+            //      for (int j = 0; j < s.MarketPlaces.Count; j++)
+            //      {
+            //         if (s.MarketPlaces[j])
+            //         {
+            //            By by = By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input");
+            //            string price = s.Prices[j].ToString();
+            //            ChromeHelper.PasteContent(by, price);
+            //         }
+            //      }
+            //      //Click again to close pallete
+            //      ChromeHelper.ClickElement(By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+            //   }
+            //}
             return true;
          }
          catch (Exception ex)
@@ -229,23 +283,24 @@ namespace EzUpload.Actions.Chrome
          {
             Log.log.Info("---Select Product---");
             //Check then Uncheck All Checkbox
-            ChromeHelper.ClickCheckBox("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", true);
-            ChromeHelper.ClickCheckBox("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[1]/div/flowcheckbox/span", false);
+            ChromeHelper.ClickElement(By.Id("select-none"));
 
-            for (int i = 0; i < shirt.ShirtTypes.Count; i++)
-            {
-               ShirtType sb = shirt.ShirtTypes[i];
-               Log.log.Info(sb.TypeName.ToString());
-               for (int j = 0; j < sb.MarketPlaces.Count; j++)
-               {
-                  Log.log.Info($"i={i};j={j}");
-                  if (!ChromeHelper.ClickCheckBox($"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
-                                          sb.IsActive && sb.MarketPlaces[j]))
-                  {
-                     return false;
-                  }
-               }
-            }
+            ChromeHelper.ClickElement(By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[2]/div/div/table/tbody/tr[3]/td[2]/flowcheckbox"));
+
+            //for (int i = 0; i < shirt.ShirtTypes.Count; i++)
+            //{
+            //   ShirtType sb = shirt.ShirtTypes[i];
+            //   Log.log.Info(sb.TypeName.ToString());
+            //   for (int j = 0; j < sb.MarketPlaces.Count; j++)
+            //   {
+            //      Log.log.Info($"i={i};j={j}");
+            //      if (!ChromeHelper.ClickCheckBox($"/html/body/ngb-modal-window/div/div/ng-component/div[2]/div[2]/div/table/tbody/tr[{i + 3}]/td[{j + 2}]/flowcheckbox/span",
+            //                              sb.IsActive && sb.MarketPlaces[j]))
+            //      {
+            //         return false;
+            //      }
+            //   }
+            //}
             // next button
             Log.log.Info("---Next Button---");
             if (!ChromeHelper.ClickElement(By.XPath("/html/body/ngb-modal-window/div/div/ng-component/div[3]/button")))
@@ -272,7 +327,7 @@ namespace EzUpload.Actions.Chrome
                   {
                      Log.log.Info("-STANDARD_TSHIRT-FRONT-");
                      //ChromeHelper.SendKeysElement(By.Id("STANDARD_TSHIRT-FRONT"), shirt.ImagePath);
-                     IWebElement webElement = ChromeHelper.Driver.FindElement(By.Id("STANDARD_TSHIRT-FRONT"));
+                     IWebElement webElement = ChromeHelper.Driver.FindElement(By.ClassName("file-upload-input"));
                      webElement.SendKeys(shirt.ImagePath);
                      break;
                   }

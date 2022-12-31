@@ -22,9 +22,7 @@ namespace EzUpload
             ////Check for update
             //Thread thread = new Thread(x => MainActions.CheckForUpdate());
             //thread.Start();
-#if DEBUG
-            MessageBox.Show("AAA");
-#endif
+
             //Setup log
             string logPath = Constants.PRODUCT_NAME + "\\" + @"EzUploadLog.txt";
             Common.Log.SetUpLog("EzUploadLog.txt", logPath);

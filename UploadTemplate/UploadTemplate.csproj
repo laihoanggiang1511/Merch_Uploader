@@ -217,7 +217,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="UploadTemplate.xltx" />
-    <None Include="UploadTemplate_1_TemporaryKey.pfx" />
     <None Include="UploadTemplate_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -276,10 +275,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>UploadTemplate_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>UploadTemplate_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>6C833492AA046A89530EA3ACB27E9A84A49F0473</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>90AD2C559EE453279AE725ABFA0D1D65EF280B52</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>

@@ -170,6 +170,7 @@ namespace EzUpload.Actions.Chrome
          Log.log.Info(string.Format("--Failed--"));
          return false;
       }
+
       public static bool SelectByIndex(By by, int index)
       {
          try
