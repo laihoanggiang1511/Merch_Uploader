@@ -14,6 +14,8 @@ using UploadTemplate;
 using OpenQA.Selenium.Chrome;
 using EzUpload.Actions.Chrome;
 using OpenQA.Selenium;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EzUpload.Actions
 {

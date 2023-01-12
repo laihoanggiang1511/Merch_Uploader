@@ -137,32 +137,52 @@ namespace EzUpload.Actions.Chrome
          {
             Log.log.Info("---Input Detail---");
 
-            ChromeHelper.ClickElement(By.XPath("//*[@id=\"STANDARD_TSHIRT-card\"]/div[2]/button"));
+            ChromeHelper.ClickElement(By.CssSelector(".STANDARD_TSHIRT-edit-btn"));
             ShirtType standardType = shirt.ShirtTypes[0];
 
             // Shirt type
             if (standardType != null && standardType.FitTypes != null && standardType.FitTypes.Count > 1)
             {
-               for (int fitTypeIndex = 0; fitTypeIndex < standardType.FitTypes.Count; fitTypeIndex++)
+               IWebElement menCheckBox = ChromeHelper.GetElementWithWait(By.CssSelector(".men-checkbox"));
+               IWebElement womenCheckBox = ChromeHelper.GetElementWithWait(By.CssSelector(".women-checkbox"));
+               IWebElement youthCheckBox = ChromeHelper.GetElementWithWait(By.CssSelector(".youth-checkbox"));
+
+               string checkedCheckboxCssSelector = ".sci-icon.sci-check-box";
+               if (standardType.FitTypes[0] != IsChecked(menCheckBox, checkedCheckboxCssSelector))
                {
-                  ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/div[2]/ng-component/div/product-config-editor/div[3]/div[{1}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{fitTypeIndex+1}]/flowcheckbox/span",
-                      standardType.FitTypes[fitTypeIndex]);
+                  menCheckBox?.Click();
                }
+
+               if(standardType.FitTypes[1] != IsChecked(womenCheckBox, checkedCheckboxCssSelector))
+               {
+                  womenCheckBox?.Click();
+               }
+
+               if (standardType.FitTypes[2] != IsChecked(youthCheckBox, checkedCheckboxCssSelector))
+               {
+                  youthCheckBox?.Click();
+               }
+
+               //for (int fitTypeIndex = 0; fitTypeIndex < standardType.FitTypes.Count; fitTypeIndex++)
+               //{
+               //   ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/div[2]/ng-component/div/product-config-editor/div[3]/div[{1}]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/fit-type/div/div/label[{fitTypeIndex+1}]/flowcheckbox/span",
+               //       standardType.FitTypes[fitTypeIndex]);
+               //}
             }
 
             // Colors
-            var checkedColors = ChromeHelper.Driver.FindElements(By.CssSelector(".sci-check.checkmark"));
+            //var checkedColors = ChromeHelper.Driver.FindElements(By.CssSelector(".sci-check.checkmark"));
 
-            foreach(IWebElement checkedColor in checkedColors)
-            {
-               IWebElement parentElement = checkedColor.FindElement(By.XPath("./.."));
+            //foreach(IWebElement checkedColor in checkedColors)
+            //{
+            //   IWebElement parentElement = checkedColor.FindElement(By.XPath("./.."));
 
-               if(parentElement != null)
-               {
-                  parentElement.Click();
-                  Thread.Sleep(100);
-               }
-            }
+            //   if(parentElement != null)
+            //   {
+            //      parentElement.Click();
+            //      Thread.Sleep(300);
+            //   }
+            //}
 
             var colorCheckBoxElements = ChromeHelper.Driver.FindElements(By.ClassName("color-checkbox"));
 
@@ -170,13 +190,13 @@ namespace EzUpload.Actions.Chrome
             {
                string colorName = Regex.Replace(color.ColorName, "[^a-zA-Z0-9]", "").ToLower();
 
-               if (color.IsActive == false)
-                  continue;
-
                IWebElement colorCheckboxElement = colorCheckBoxElements.FirstOrDefault(p => Regex.Replace(p.GetAttribute("class"), "[^a-zA-Z0-9]", "").ToLower().Contains(colorName));
 
+               if(IsChecked(colorCheckboxElement, ".sci-icon.sci-check.checkmark") != color.IsActive)
+
                colorCheckboxElement?.Click();
-               Thread.Sleep(100);
+
+               Thread.Sleep(300);
             }
 
 
@@ -185,8 +205,8 @@ namespace EzUpload.Actions.Chrome
             //{
             //   Color color = standardType.Colors[j];
             //   ChromeHelper.ClickCheckBox($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[1]/product-editor/div/div[2]/div/div[2]/div[1]/dimension-editor/color/div/div/div[2]/div[{j + 1}]/colorcheckbox/span", color.IsActive);
-               
-            
+
+
             //}
 
             //for (int i = 0; i < shirt.ShirtTypes.Count; i++)
@@ -255,18 +275,12 @@ namespace EzUpload.Actions.Chrome
             //         }
             //      }
 
-            //      // Set Price
-            //      for (int j = 0; j < s.MarketPlaces.Count; j++)
-            //      {
-            //         if (s.MarketPlaces[j])
-            //         {
-            //            By by = By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/product-editor/div/div[2]/div/div[2]/div[2]/listing-details/div/price-editor[{j + 1}]/div/div/div[2]/div[1]/div[1]/input");
-            //            string price = s.Prices[j].ToString();
-            //            ChromeHelper.PasteContent(by, price);
-            //         }
-            //      }
-            //      //Click again to close pallete
-            //      ChromeHelper.ClickElement(By.XPath($"/html/body/div[1]/div/app-root/div/ng-component/div/product-config-editor/div[2]/div[{row}]/div[{column}]/product-card/div/div[2]/button"));
+            // Set Price
+            string price = standardType.Prices[0].ToString();
+            ChromeHelper.PasteContent(By.CssSelector(".form-control.pl-3"), price);
+
+            //Click again to close pallete
+            ChromeHelper.ClickElement(By.CssSelector(".STANDARD_TSHIRT-edit-btn"));
             //   }
             //}
             return true;
@@ -430,6 +444,22 @@ namespace EzUpload.Actions.Chrome
       public void QuitDriver()
       {
          ChromeHelper.QuitDriver();
+      }
+
+      private bool IsChecked(IWebElement checkBoxElement, string containClass)
+      {
+         try
+         {
+            IWebElement iElem = checkBoxElement?.FindElement(By.CssSelector(containClass));
+
+            if (iElem != null)
+               return true;
+         }
+         catch
+         {
+         }
+
+         return false;
       }
    }
 }
